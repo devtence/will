@@ -1,0 +1,7 @@
+*.bak
+Backend/test/
+Backend/Docs/
+Frontend/web_admin/test/
+Backend/Endpoints/src/main/webapp/dev/
+.idea
+Frontend.iml
