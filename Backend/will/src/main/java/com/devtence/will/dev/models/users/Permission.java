@@ -12,41 +12,54 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class Permission extends BaseModel {
 
-	@Id
-	private Long idPermission;
-	@Index
-	private String route;
+    @Id
+    private Long id;
+    @Index
+    private String route;
 
-	public Permission() {
-	}
+    public Permission() {
+    }
 
-	public Permission(String route) {
-		this.route = route;
-	}
+    public Permission(String route) {
+        this.route = route;
+    }
 
-	public Long getIdPermission() {
-		return idPermission;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setIdPermission(Long idPermission) {
-		this.idPermission = idPermission;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getRoute() {
-		return route;
-	}
+    public String getRoute() {
+        return route;
+    }
 
-	public void setRoute(String route) {
-		this.route = route;
-	}
+    public void setRoute(String route) {
+        this.route = route;
+    }
 
-	@Override
-	public void validate() throws Exception {
-		this.save();
-	}
+    @Override
+    public void validate() throws Exception {
+        this.save();
+    }
 
-	public static Permission getById(Long id) throws Exception {
-		return DbObjectify.ofy().load().type(Permission.class).id(id).now();
+    public static Permission getById(Long id) throws Exception {
+        return DbObjectify.ofy().load().type(Permission.class).id(id).now();
+    }
+
+	public void update(Permission toUpdate) throws Exception {
+		boolean mod = false;
+
+		if (toUpdate.getRoute() != null) {
+			setRoute(toUpdate.getRoute());
+			mod |= true;
+		}
+
+		if (mod){
+			this.validate();
+		}
 	}
 
 }

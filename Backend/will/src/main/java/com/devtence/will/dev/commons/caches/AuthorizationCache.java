@@ -70,7 +70,7 @@ public class AuthorizationCache {
 				if(user.getJwt() == null || user.getSecret() == null) {
 					throw new InvalidValueException(Constants.INVALID_JWT_OR_SECRET);
 				}
-				auth = new CacheAuthWrapper(user.getIdUser(), user.getJwt(), user.getSecret());
+				auth = new CacheAuthWrapper(user.getId(), user.getJwt(), user.getSecret());
 				userCache.put(id, auth);
 			} else {
 				throw new InvalidValueException(String.format(Constants.INVALID_ID, id));

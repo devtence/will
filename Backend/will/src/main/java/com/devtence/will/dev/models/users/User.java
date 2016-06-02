@@ -28,24 +28,24 @@ import java.util.Date;
 @Entity
 public class User extends BaseModel {
 
-	@Id
-    private Long idUser;
+    @Id
+    private Long id;
     private Integer status;
     private Boolean lastLoginStatus;
     private Integer failedLoginCounter;
     private Integer passwordRecoveryStatus;
-	@Index
+    @Index
     private String email;
-	@Index
+    @Index
     private String user;
     private String password;
-	@Index
+    @Index
     private String jwt;
     private String secret;
 
-	@Index
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private com.googlecode.objectify.Key<Role> role;
+    @Index
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    private com.googlecode.objectify.Key<Role> role;
 
     public User() {
     }
@@ -61,25 +61,25 @@ public class User extends BaseModel {
         this.password = password;
     }
 
-	public User(Integer status, Boolean lastLoginStatus, Integer failedLoginCounter, Integer passwordRecoveryStatus, String email, String user, String password, String jwt, String secret, com.googlecode.objectify.Key<Role> role) {
-		this.status = status;
-		this.lastLoginStatus = lastLoginStatus;
-		this.failedLoginCounter = failedLoginCounter;
-		this.passwordRecoveryStatus = passwordRecoveryStatus;
-		this.email = email;
-		this.user = user;
-		this.password = password;
-		this.jwt = jwt;
-		this.secret = secret;
-		this.role = role;
-	}
-
-	public Long getIdUser() {
-        return idUser;
+    public User(Integer status, Boolean lastLoginStatus, Integer failedLoginCounter, Integer passwordRecoveryStatus, String email, String user, String password, String jwt, String secret, com.googlecode.objectify.Key<Role> role) {
+        this.status = status;
+        this.lastLoginStatus = lastLoginStatus;
+        this.failedLoginCounter = failedLoginCounter;
+        this.passwordRecoveryStatus = passwordRecoveryStatus;
+        this.email = email;
+        this.user = user;
+        this.password = password;
+        this.jwt = jwt;
+        this.secret = secret;
+        this.role = role;
     }
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getStatus() {
@@ -159,15 +159,15 @@ public class User extends BaseModel {
         this.secret = secret;
     }
 
-	public com.googlecode.objectify.Key<Role> getRole() {
-		return role;
-	}
+    public com.googlecode.objectify.Key<Role> getRole() {
+        return role;
+    }
 
-	public void setRole(com.googlecode.objectify.Key<Role> role) {
-		this.role = role;
-	}
+    public void setRole(com.googlecode.objectify.Key<Role> role) {
+        this.role = role;
+    }
 
-	public boolean goodLogin(String inputPassword) throws Exception {
+    public boolean goodLogin(String inputPassword) throws Exception {
         BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
         lastLoginStatus = passwordEncryptor.checkPassword(inputPassword, password);
         if (lastLoginStatus) {
@@ -176,7 +176,7 @@ public class User extends BaseModel {
         } else {
             failedLoginCounter++;
         }
-		this.validate();
+        this.validate();
         return lastLoginStatus;
     }
 
@@ -188,9 +188,9 @@ public class User extends BaseModel {
         Key key = MacProvider.generateKey();
         jwt = Jwts.builder().setSubject(user).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + authTimeout)).signWith(SignatureAlgorithm.HS512, key).compact();
         secret = Base64.encodeBase64String(key.getEncoded());
-        AuthorizationCache.getInstance().setAuth(new CacheAuthWrapper(idUser, jwt, secret));
-		this.validate();
-        return new AuthorizationWrapper(jwt, idUser, 0);
+        AuthorizationCache.getInstance().setAuth(new CacheAuthWrapper(id, jwt, secret));
+        this.validate();
+        return new AuthorizationWrapper(jwt, id, 0);
     }
 
     @Override
@@ -211,17 +211,17 @@ public class User extends BaseModel {
         failedLoginCounter = 0;
         lastLoginStatus = false;
         passwordRecoveryStatus = 0;
-		this.save();
+        this.save();
     }
 
     /**
      * Method to find an Partner in the databse
-     * @param id	idUser of the Partner to find
+     * @param id	id of the Partner to find
      * @return	An Partner
      * @throws Exception an error ocurred
      */
     public static User getById(Long id) throws Exception {
-		return DbObjectify.ofy().load().type(User.class).id(id).now();
+        return DbObjectify.ofy().load().type(User.class).id(id).now();
     }
 
     /**
@@ -231,7 +231,65 @@ public class User extends BaseModel {
      * @throws Exception	an error ocurred
      */
     public static User getByUser(String user) throws Exception {
-		return DbObjectify.ofy().load().type(User.class).filter("user", user).first().now();
+        return DbObjectify.ofy().load().type(User.class).filter("user", user).first().now();
+    }
+
+    public void update(User toUpdate) throws Exception {
+        boolean mod = false;
+
+        if (toUpdate.getStatus() != null){
+            setStatus(toUpdate.getStatus());
+            mod |= true;
+        }
+
+        if (toUpdate.getLastLoginStatus() != null){
+            setLastLoginStatus(toUpdate.getLastLoginStatus());
+            mod |= true;
+        }
+
+        if (toUpdate.getFailedLoginCounter() != null){
+            setFailedLoginCounter(toUpdate.getFailedLoginCounter());
+            mod |= true;
+        }
+
+        if (toUpdate.getPasswordRecoveryStatus() != null){
+            setPasswordRecoveryStatus(toUpdate.getPasswordRecoveryStatus());
+            mod |= true;
+        }
+
+        if (toUpdate.getEmail() != null){
+            setEmail(toUpdate.getEmail());
+            mod |= true;
+        }
+
+        if (toUpdate.getUser() != null){
+            setUser(toUpdate.getUser());
+            mod |= true;
+        }
+
+        if (toUpdate.getPassword() != null){
+            setPassword(toUpdate.getPassword());
+            mod |= true;
+        }
+
+        if (toUpdate.getJwt() != null){
+            setUser(toUpdate.getJwt());
+            mod |= true;
+        }
+
+        if (toUpdate.getSecret() != null){
+            setUser(toUpdate.getSecret());
+            mod |= true;
+        }
+
+        if (toUpdate.getRole() != null){
+            setRole(toUpdate.getRole());
+            mod |= true;
+        }
+
+        if (mod){
+            this.validate();
+        }
     }
 
 }

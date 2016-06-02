@@ -14,17 +14,10 @@ import java.util.List;
  */
 public abstract class BaseModel {
 
-    /**mvz
-     * todos los modelos deben ser validados para la insercion o mod
-     * @throws Exception
-     */
     public abstract void validate() throws Exception;
 
-    /**
-     * funcion para salvar los objetos a datastorage
-     */
     protected void save(){
-            DbObjectify.ofy().save().entity(this).now();
+        DbObjectify.ofy().save().entity(this).now();
     }
 
     protected void delete(){
