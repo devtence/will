@@ -190,7 +190,7 @@ public class User extends BaseModel {
         secret = Base64.encodeBase64String(key.getEncoded());
         AuthorizationCache.getInstance().setAuth(new CacheAuthWrapper(id, jwt, secret, roles));
 		this.validate();
-        return new AuthorizationWrapper(jwt, idUser, 0);
+        return new AuthorizationWrapper(jwt, id, 0);
     }
 
     @Override
@@ -282,8 +282,8 @@ public class User extends BaseModel {
             mod |= true;
         }
 
-        if (toUpdate.getRole() != null){
-            setRole(toUpdate.getRole());
+        if (toUpdate.getRoles() != null){
+            setRoles(toUpdate.getRoles());
             mod |= true;
         }
 
