@@ -34,11 +34,15 @@ public abstract class BaseModel {
     public static ListItem getList(String startAt, int limit, Class fromDb, String sortField, String sortDir) {
         ListItem toReturn = new ListItem();
 
-        if (sortDir.equalsIgnoreCase("DESC")){
-            sortField = "-" + sortField;
+        Query query = null;
+        if (sortField != null) {
+            if (sortDir.equalsIgnoreCase("DESC")){
+                sortField = "-" + sortField;
+            }
+            query = DbObjectify.ofy().load().type(fromDb).order(sortField);
+        } else {
+            query = DbObjectify.ofy().load().type(fromDb);
         }
-
-        Query query = DbObjectify.ofy().load().type(fromDb).order(sortField);
 
         if (startAt != null) {
             query = query.startAt(Cursor.fromWebSafeString(startAt));

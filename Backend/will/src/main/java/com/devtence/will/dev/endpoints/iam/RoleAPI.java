@@ -8,6 +8,7 @@ import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.users.Role;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
+import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.DefaultValue;
 import com.google.api.server.spi.config.Nullable;
 import com.google.api.server.spi.response.BadRequestException;
@@ -35,6 +36,7 @@ public class RoleAPI extends BaseController<Role> {
 	private static final Logger log = Logger.getLogger(RoleAPI.class.getName());
 
 	@Override
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "role.create", path = "role")
 	public Role create(Role data, User user) throws BadRequestException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		try {
@@ -50,12 +52,8 @@ public class RoleAPI extends BaseController<Role> {
 	}
 
 	@Override
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.GET, name = "role.read", path = "role/{id}")
 	public Role read(@Named("id") Long id, User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
-		return null;
-	}
-
-	@Override
-	public Role update(@Named("id") Long id, Role data, User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		Role role = null;
 		try {
@@ -71,6 +69,30 @@ public class RoleAPI extends BaseController<Role> {
 	}
 
 	@Override
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.PUT, name = "role.update", path = "role/{id}")
+	public Role update(@Named("id") Long id, Role data, User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
+		validateUser(user);
+		Role role = null;
+		try {
+			role = Role.getById(id);
+		} catch (Exception e) {
+			log.log(Level.WARNING, Constants.ERROR, e);
+			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
+		}
+		if(role == null){
+			throw new NotFoundException(String.format(Constants.ROLE_ERROR_NOT_FOUND, id));
+		}
+		try {
+
+		} catch (Exception e) {
+			log.log(Level.WARNING, Constants.ERROR, e);
+			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
+		}
+		return null;
+	}
+
+	@Override
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.DELETE, name = "role.delete", path = "role/{id}")
 	public Role delete(@Named("id") Long id, User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		Role role = null;
@@ -93,14 +115,16 @@ public class RoleAPI extends BaseController<Role> {
 	}
 
 	@Override
-	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.GET, name = "role.list", path = "roles")
+	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
+		ListItem list = null;
 		try {
-
+			list = Role.getList(cursor, offset, Role.class, sortField, sortDirection);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
 		}
-		return null;
+		return list;
 	}
 }

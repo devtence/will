@@ -25,7 +25,7 @@ public abstract class BaseController<T> {
 
 	public abstract T delete(@Named("id") Long id, User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException;
 
-	public abstract ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException;
+	public abstract ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException;
 
 	public static void validateUser(User user) throws UnauthorizedException {
 		if(user == null){

@@ -1,4 +1,4 @@
-package com.devtence.api.dev.endpoints.iam;
+package com.devtence.will.dev.endpoints.iam;
 
 import com.devtence.will.Constants;
 import com.devtence.will.dev.commons.authenticators.UserAuthenticator;
@@ -7,6 +7,7 @@ import com.devtence.will.dev.exceptions.MissingFieldException;
 import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.users.User;
 import com.google.api.server.spi.config.Api;
+import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.DefaultValue;
 import com.google.api.server.spi.config.Nullable;
 import com.google.api.server.spi.response.BadRequestException;
@@ -34,6 +35,7 @@ public class UsersAPI extends BaseController<User> {
 	private static final Logger log = Logger.getLogger(UsersAPI.class.getName());
 
 	@Override
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "user.create", path = "user")
 	public User create(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		try {
@@ -49,6 +51,7 @@ public class UsersAPI extends BaseController<User> {
 	}
 
 	@Override
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.GET, name = "user.read", path = "user/{id}")
 	public User read(@Named("id") Long id, com.google.api.server.spi.auth.common.User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		User userDevtence = null;
@@ -65,6 +68,7 @@ public class UsersAPI extends BaseController<User> {
 	}
 
 	@Override
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.PUT, name = "user.update", path = "user/{id}")
 	public User update(@Named("id") Long id, User data, com.google.api.server.spi.auth.common.User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		User userDevtence = null;
@@ -87,6 +91,7 @@ public class UsersAPI extends BaseController<User> {
 	}
 
 	@Override
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.DELETE, name = "user.delete", path = "user/{id}")
 	public User delete(@Named("id") Long id, com.google.api.server.spi.auth.common.User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		User userDevtence = null;
@@ -109,14 +114,16 @@ public class UsersAPI extends BaseController<User> {
 	}
 
 	@Override
-	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable String sortDirection, @Named("cursor") @Nullable String cursor, com.google.api.server.spi.auth.common.User user) throws InternalServerErrorException, UnauthorizedException {
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.GET, name = "user.list", path = "users")
+	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, com.google.api.server.spi.auth.common.User user) throws InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
+		ListItem list = null;
 		try {
-
+			list = User.getList(cursor, offset, User.class, sortField, sortDirection);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
 		}
-		return null;
+		return list;
 	}
 }
