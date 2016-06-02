@@ -14,48 +14,66 @@ import java.util.List;
 @Entity
 public class Role extends BaseModel {
 
-	@Id
-	private Long idRole;
-	@Index
-	private String name;
-	private List<Permission> permissions;
+    @Id
+    private Long id;
+    @Index
+    private String name;
+    private List<Permission> permissions;
 
-	public Role(String name, List<Permission> permissions) {
-		this.name = name;
-		this.permissions = permissions;
-	}
+    public Role(String name, List<Permission> permissions) {
+        this.name = name;
+        this.permissions = permissions;
+    }
 
-	public Long getIdRole() {
-		return idRole;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setIdRole(Long idRole) {
-		this.idRole = idRole;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public List<Permission> getPermissions() {
-		return permissions;
-	}
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
 
-	public void setPermissions(List<Permission> permissions) {
-		this.permissions = permissions;
-	}
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
 
-	@Override
-	public void validate() throws Exception {
-		this.save();
-	}
+    @Override
+    public void validate() throws Exception {
+        this.save();
+    }
 
-	public static Role getById(Long id) throws Exception {
-		return DbObjectify.ofy().load().type(Role.class).id(id).now();
-	}
+    public static Role getById(Long id) throws Exception {
+        return DbObjectify.ofy().load().type(Role.class).id(id).now();
+    }
+
+    public void update(Role toUpdate) throws Exception {
+        boolean mod = false;
+
+        if (toUpdate.getName() != null){
+            setName(toUpdate.getName());
+            mod |= true;
+        }
+
+        if (toUpdate.getPermissions() != null){
+            setPermissions(toUpdate.getPermissions());
+            mod |=true;
+        }
+
+        if (mod){
+            this.validate();
+        }
+    }
 
 }

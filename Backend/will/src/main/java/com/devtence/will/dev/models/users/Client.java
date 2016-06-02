@@ -14,50 +14,68 @@ import java.util.List;
 @Entity
 public class Client extends BaseModel {
 
-	@Id
-	private Long idClient;
-	@Index
-	private String name;
-	private List<Permission> permissions;
+    @Id
+    private Long id;
+    @Index
+    private String name;
+    private List<Permission> permissions;
 
-	public Client() {
-	}
+    public Client() {
+    }
 
-	public Client(String name, List<Permission> permissions) {
-		this.name = name;
-		this.permissions = permissions;
-	}
+    public Client(String name, List<Permission> permissions) {
+        this.name = name;
+        this.permissions = permissions;
+    }
 
-	public Long getIdClient() {
-		return idClient;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setIdClient(Long idClient) {
-		this.idClient = idClient;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public List<Permission> getPermissions() {
-		return permissions;
-	}
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
 
-	public void setPermissions(List<Permission> permissions) {
-		this.permissions = permissions;
-	}
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
 
-	@Override
-	public void validate() throws Exception {
-		this.save();
-	}
+    @Override
+    public void validate() throws Exception {
+        this.save();
+    }
 
-	public static Client getById(Long id) throws Exception {
-		return DbObjectify.ofy().load().type(Client.class).id(id).now();
-	}
+    public static Client getById(Long id) throws Exception {
+        return DbObjectify.ofy().load().type(Client.class).id(id).now();
+    }
+
+    public void update(Client toUpdate) throws Exception {
+        boolean mod = false;
+
+        if (toUpdate.getName() != null){
+            setName(toUpdate.getName());
+            mod |= true;
+        }
+
+        if (toUpdate.getPermissions() != null){
+            setPermissions(toUpdate.getPermissions());
+            mod |=true;
+        }
+
+        if (mod){
+            this.validate();
+        }
+    }
 }
