@@ -2,7 +2,11 @@ package com.devtence.will.dev.commons.authenticators;
 
 import com.devtence.will.Constants;
 import com.devtence.will.dev.commons.caches.AuthorizationCache;
+import com.devtence.will.dev.commons.caches.ClientsCache;
 import com.devtence.will.dev.commons.wrappers.CacheAuthWrapper;
+import com.devtence.will.dev.models.users.Client;
+import com.devtence.will.dev.models.users.Permission;
+import com.devtence.will.dev.models.users.Role;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Authenticator;
 import com.google.appengine.api.utils.SystemProperty;
@@ -29,21 +33,47 @@ public class UserAuthenticator implements Authenticator {
 	 */
 	@Override
     public User authenticate(HttpServletRequest request) {
+		User user = null;
 		if(SystemProperty.environment.value() == SystemProperty.Environment.Value.Development){
-			return new User("OK", "user@devtence.com");
-		}
-		String token = request.getHeader(Constants.AUTHORIZATION);
-		String key = request.getHeader(Constants.AUTHORIZATION_KEY);
-		if(token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
-			try {
-				CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Integer.parseInt(key));
-				Jwts.parser().setSigningKey(value.getSecret()).parseClaimsJws(token);
-				return new User("OK", "user@devtence.com");
-			} catch (Exception e) {
-				log.log(Level.WARNING, Constants.ERROR, e);
+			user = new User("OK", "user@devtence.com");
+		} else {
+			String idClient = request.getHeader(Constants.AUTHORIZATION_CLIENT);
+			if (idClient != null && !idClient.isEmpty()) {
+				try {
+					Client client = ClientsCache.getInstance().getClient(Long.parseLong(idClient));
+					if (client != null) {
+						String pathTranslated = request.getPathTranslated();
+						pathTranslated = pathTranslated.substring(pathTranslated.lastIndexOf("com.devtence.will.dev.endpoints.") + 1);
+						Permission permission = new Permission(pathTranslated);
+						if (client.getPermissions().contains(permission)) {
+							String token = request.getHeader(Constants.AUTHORIZATION);
+							String key = request.getHeader(Constants.AUTHORIZATION_KEY);
+							if (token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
+								try {
+									CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Integer.parseInt(key));
+									boolean valid = false;
+									for (Role role : value.getRoles()) {
+										if (role.getPermissions().contains(permission)) {
+											valid = true;
+											break;
+										}
+									}
+									if (valid) {
+										Jwts.parser().setSigningKey(value.getSecret()).parseClaimsJws(token);
+										return new User(key, "user@devtence.com");
+									}
+								} catch (Exception e) {
+									log.log(Level.WARNING, Constants.ERROR, e);
+								}
+							}
+						}
+					}
+				} catch (Exception e) {
+					log.log(Level.WARNING, Constants.ERROR, e);
+				}
 			}
 		}
-		return null;
+		return user;
 	}
 
 }

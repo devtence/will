@@ -1,6 +1,7 @@
 package com.devtence.will.dev.models.users;
 
 import com.devtence.will.dev.commons.caches.AuthorizationCache;
+import com.devtence.will.dev.commons.caches.ConfigurationsCache;
 import com.devtence.will.dev.commons.wrappers.AuthorizationWrapper;
 import com.devtence.will.dev.commons.wrappers.CacheAuthWrapper;
 import com.devtence.will.dev.exceptions.MissingFieldException;
@@ -21,6 +22,7 @@ import org.jasypt.util.password.BasicPasswordEncryptor;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by plessmann on 02/06/16.
@@ -43,9 +45,7 @@ public class User extends BaseModel {
     private String jwt;
     private String secret;
 
-	@Index
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private com.googlecode.objectify.Key<Role> role;
+    private List<Role> roles;
 
     public User() {
     }
@@ -61,20 +61,20 @@ public class User extends BaseModel {
         this.password = password;
     }
 
-	public User(Integer status, Boolean lastLoginStatus, Integer failedLoginCounter, Integer passwordRecoveryStatus, String email, String user, String password, String jwt, String secret, com.googlecode.objectify.Key<Role> role) {
-		this.status = status;
-		this.lastLoginStatus = lastLoginStatus;
-		this.failedLoginCounter = failedLoginCounter;
-		this.passwordRecoveryStatus = passwordRecoveryStatus;
-		this.email = email;
-		this.user = user;
-		this.password = password;
-		this.jwt = jwt;
-		this.secret = secret;
-		this.role = role;
-	}
+    public User(Integer status, Boolean lastLoginStatus, Integer failedLoginCounter, Integer passwordRecoveryStatus, String email, String user, String password, String jwt, String secret, List<Role> roles) {
+        this.status = status;
+        this.lastLoginStatus = lastLoginStatus;
+        this.failedLoginCounter = failedLoginCounter;
+        this.passwordRecoveryStatus = passwordRecoveryStatus;
+        this.email = email;
+        this.user = user;
+        this.password = password;
+        this.jwt = jwt;
+        this.secret = secret;
+        this.roles = roles;
+    }
 
-	public Long getIdUser() {
+    public Long getIdUser() {
         return idUser;
     }
 
@@ -159,15 +159,15 @@ public class User extends BaseModel {
         this.secret = secret;
     }
 
-	public com.googlecode.objectify.Key<Role> getRole() {
-		return role;
-	}
+    public List<Role> getRoles() {
+        return roles;
+    }
 
-	public void setRole(com.googlecode.objectify.Key<Role> role) {
-		this.role = role;
-	}
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 
-	public boolean goodLogin(String inputPassword) throws Exception {
+    public boolean goodLogin(String inputPassword) throws Exception {
         BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
         lastLoginStatus = passwordEncryptor.checkPassword(inputPassword, password);
         if (lastLoginStatus) {
@@ -183,12 +183,12 @@ public class User extends BaseModel {
     public AuthorizationWrapper authorize() throws Exception{
         int authTimeout = 60 * 60000;
         try {
-            authTimeout = Configuration.getInt("auth-timeout");
+            authTimeout = Integer.parseInt(ConfigurationsCache.getInstance().getConfiguration("auth-timeout").getValue());
         } catch (Exception e) {}
         Key key = MacProvider.generateKey();
         jwt = Jwts.builder().setSubject(user).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + authTimeout)).signWith(SignatureAlgorithm.HS512, key).compact();
         secret = Base64.encodeBase64String(key.getEncoded());
-        AuthorizationCache.getInstance().setAuth(new CacheAuthWrapper(idUser, jwt, secret));
+        AuthorizationCache.getInstance().setAuth(new CacheAuthWrapper(idUser, jwt, secret, roles));
 		this.validate();
         return new AuthorizationWrapper(jwt, idUser, 0);
     }

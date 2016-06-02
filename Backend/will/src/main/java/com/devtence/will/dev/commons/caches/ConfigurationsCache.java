@@ -1,10 +1,7 @@
 package com.devtence.will.dev.commons.caches;
 
 import com.devtence.will.Constants;
-import com.devtence.will.dev.commons.wrappers.CacheAuthWrapper;
 import com.devtence.will.dev.models.commons.Configuration;
-import com.devtence.will.dev.models.users.Role;
-import com.devtence.will.dev.models.users.User;
 import com.google.appengine.api.memcache.InvalidValueException;
 import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
 
@@ -12,7 +9,6 @@ import javax.cache.Cache;
 import javax.cache.CacheFactory;
 import javax.cache.CacheManager;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -21,27 +17,27 @@ import java.util.concurrent.TimeUnit;
  *
  * Created by plessmann on 10/03/16.
  */
-public class AuthorizationCache {
+public class ConfigurationsCache {
 
 	/**
 	 * The protected instance
 	 */
-	private static AuthorizationCache me = null;
+	private static ConfigurationsCache me = null;
 
 	/**
 	 * The Member Cache element using the JCache library
 	 */
-	private Cache userCache;
+	private Cache configurationsCache;
 
 	/**
 	 * Contructor for the instance in which the cache timeout is defined
 	 * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
 	 */
-	public AuthorizationCache() throws Exception {
+	public ConfigurationsCache() throws Exception {
 		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
 		Map properties = new HashMap<>();
 		properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
-		userCache = cacheFactory.createCache(properties);
+		configurationsCache = cacheFactory.createCache(properties);
 	}
 
 	/**
@@ -49,9 +45,9 @@ public class AuthorizationCache {
 	 * @return the created instance
 	 * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
 	 */
-	public static synchronized AuthorizationCache getInstance() throws Exception {
+	public static synchronized ConfigurationsCache getInstance() throws Exception {
 		if(me == null){
-			me = new AuthorizationCache();
+			me = new ConfigurationsCache();
 		}
 		return me;
 	}
@@ -60,33 +56,21 @@ public class AuthorizationCache {
 	 * Access to the cache element
 	 * @return cache to be used to manage the authorization
 	 */
-	public Cache getUserCache() {
-		return userCache;
+	public Cache getConfigurationsCache() {
+		return configurationsCache;
 	}
 
-	public CacheAuthWrapper getAuth(long id) throws Exception {
-		CacheAuthWrapper auth = (CacheAuthWrapper) userCache.get(id);
-		if(auth == null) {
-			User user = User.getById(id);
-			if (user != null) {
-				if(user.getJwt() == null || user.getSecret() == null) {
-					throw new InvalidValueException(Constants.INVALID_JWT_OR_SECRET);
-				}
-				auth = new CacheAuthWrapper(user.getIdUser(), user.getJwt(), user.getSecret(), user.getRoles());
-				userCache.put(id, auth);
+	public Configuration getConfiguration(String id) throws Exception {
+		Configuration configuration = (Configuration) configurationsCache.get(id);
+		if(configuration == null) {
+			configuration = Configuration.getConfigByKey(id);
+			if (configuration != null) {
+				configurationsCache.put(id, configuration);
 			} else {
 				throw new InvalidValueException(String.format(Constants.INVALID_ID, id));
 			}
 		}
-		return auth;
-	}
-
-	public void setAuth(long id, String jwt, String secret, List<Role> roles) {
-		setAuth(new CacheAuthWrapper(id, jwt, secret, roles));
-	}
-
-	public void setAuth(CacheAuthWrapper cacheAuthWrapper){
-		userCache.put(cacheAuthWrapper.getId(), cacheAuthWrapper);
+		return configuration;
 	}
 
 }

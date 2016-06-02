@@ -49,4 +49,23 @@ public class Permission extends BaseModel {
 		return DbObjectify.ofy().load().type(Permission.class).id(id).now();
 	}
 
+	private static Permission getByKey(String route) throws Exception {
+		return DbObjectify.ofy().load().type(Permission.class).filter("route", route).first().now();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Permission that = (Permission) o;
+
+		return route != null ? route.equals(that.route) : that.route == null;
+
+	}
+
+	@Override
+	public int hashCode() {
+		return route != null ? route.hashCode() : 0;
+	}
 }

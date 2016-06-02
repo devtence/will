@@ -13,6 +13,7 @@ public class Constants {
 
   public static final String AUTHORIZATION = "Authorization";
   public static final String AUTHORIZATION_KEY = "Authorization-key";
+  public static final String AUTHORIZATION_CLIENT = "Authorization-client";
   public static final String ERROR = "Error";
   public static final String INVALID_JWT_OR_SECRET = "Invalid jwt or secret";
   public static final String INVALID_ID = "Invalid id = %d";
