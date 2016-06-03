@@ -2,7 +2,6 @@ package com.devtence.will.dev.models;
 
 import com.devtence.will.dev.models.commons.Configuration;
 import com.devtence.will.dev.models.users.Client;
-import com.devtence.will.dev.models.users.Permission;
 import com.devtence.will.dev.models.users.Role;
 import com.devtence.will.dev.models.users.User;
 import com.googlecode.objectify.Objectify;
@@ -18,7 +17,6 @@ public class DbObjectify {
     static {
         ObjectifyService.register(Configuration.class);
         ObjectifyService.register(Client.class);
-        ObjectifyService.register(Permission.class);
         ObjectifyService.register(Role.class);
         ObjectifyService.register(User.class);
     }

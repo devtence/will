@@ -15,20 +15,10 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class Configuration extends BaseModel {
 
-	@Id
-	private Long idConfiguration;
 	@Index
 	private String configKey;
 	private String value;
 	private String description;
-
-	public Long getIdConfiguration() {
-		return idConfiguration;
-	}
-
-	public void setIdConfiguration(Long idConfiguration) {
-		this.idConfiguration = idConfiguration;
-	}
 
 	public String getConfigKey() {
 		return configKey;

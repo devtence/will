@@ -14,8 +14,6 @@ import java.util.List;
 @Entity
 public class Role extends BaseModel {
 
-    @Id
-    private Long id;
     @Index
     private String name;
     private List<Permission> permissions;
@@ -23,14 +21,6 @@ public class Role extends BaseModel {
     public Role(String name, List<Permission> permissions) {
         this.name = name;
         this.permissions = permissions;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

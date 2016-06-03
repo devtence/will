@@ -1,6 +1,7 @@
 package com.devtence.will.dev.endpoints;
 
 import com.devtence.will.Constants;
+import com.devtence.will.dev.models.BaseModel;
 import com.devtence.will.dev.models.ListItem;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.DefaultValue;
@@ -15,7 +16,7 @@ import javax.inject.Named;
 /**
  * Created by plessmann on 02/06/16.
  */
-public abstract class BaseController<T> {
+public abstract class BaseController<T extends BaseModel> {
 
 	public abstract T create(T data, User user) throws BadRequestException, InternalServerErrorException, UnauthorizedException;
 

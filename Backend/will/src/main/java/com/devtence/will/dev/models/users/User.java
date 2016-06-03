@@ -7,9 +7,6 @@ import com.devtence.will.dev.commons.wrappers.CacheAuthWrapper;
 import com.devtence.will.dev.exceptions.MissingFieldException;
 import com.devtence.will.dev.models.BaseModel;
 import com.devtence.will.dev.models.DbObjectify;
-import com.devtence.will.dev.models.commons.Configuration;
-import com.google.api.server.spi.config.AnnotationBoolean;
-import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.repackaged.org.codehaus.jackson.annotate.JsonIgnore;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -30,8 +27,8 @@ import java.util.List;
 @Entity
 public class User extends BaseModel {
 
-    @Id
-    private Long id;
+//    @Id
+//    private Long id;
     private Integer status;
     private Boolean lastLoginStatus;
     private Integer failedLoginCounter;
@@ -74,13 +71,13 @@ public class User extends BaseModel {
         this.roles = roles;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public Integer getStatus() {
         return status;
@@ -188,9 +185,9 @@ public class User extends BaseModel {
         Key key = MacProvider.generateKey();
         jwt = Jwts.builder().setSubject(user).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + authTimeout)).signWith(SignatureAlgorithm.HS512, key).compact();
         secret = Base64.encodeBase64String(key.getEncoded());
-        AuthorizationCache.getInstance().setAuth(new CacheAuthWrapper(id, jwt, secret, roles));
+        AuthorizationCache.getInstance().setAuth(new CacheAuthWrapper(getId(), jwt, secret, roles));
 		this.validate();
-        return new AuthorizationWrapper(jwt, id, 0);
+        return new AuthorizationWrapper(jwt, getId(), 0);
     }
 
     @Override

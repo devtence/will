@@ -3,6 +3,7 @@ package com.devtence.will.dev.models;
 
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.Query;
 
 import java.util.ArrayList;
@@ -13,6 +14,17 @@ import java.util.List;
  * Created by sorcerer on 7/18/15.
  */
 public abstract class BaseModel {
+
+    @Id
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public abstract void validate() throws Exception;
 
