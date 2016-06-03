@@ -156,5 +156,8 @@ public class Configuration extends BaseModel {
 		this.save();
 	}
 
-
+	@Override
+	public void destroy() throws Exception {
+		this.delete();
+	}
 }

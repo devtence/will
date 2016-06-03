@@ -289,4 +289,8 @@ public class User extends BaseModel {
         }
     }
 
+    @Override
+    public void destroy() throws Exception {
+        this.delete();
+    }
 }

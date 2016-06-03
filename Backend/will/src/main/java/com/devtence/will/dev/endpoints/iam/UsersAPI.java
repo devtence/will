@@ -68,8 +68,12 @@ public class UsersAPI extends BaseController<User> {
 	}
 
 	@Override
-	@ApiMethod(httpMethod = ApiMethod.HttpMethod.PUT, name = "user.update", path = "user/{id}")
-	public User update(@Named("id") Long id, User data, com.google.api.server.spi.auth.common.User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.PUT,
+			name = "user.update",
+			path = "user/{id}")
+	public User update(@Named("id") Long id,
+					   User data,
+					   com.google.api.server.spi.auth.common.User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		User userDevtence = null;
 		try {
@@ -82,12 +86,13 @@ public class UsersAPI extends BaseController<User> {
 			throw new NotFoundException(String.format(Constants.USER_ERROR_NOT_FOUND, id));
 		}
 		try {
+			userDevtence.update(data);
 
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
 		}
-		return null;
+		return userDevtence;
 	}
 
 	@Override
