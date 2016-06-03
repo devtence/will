@@ -8,12 +8,14 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+import java.io.Serializable;
+
 /**
  * Configurations to be used in different apsects that can be changed real time
  * Created by plessmann on 10/03/16.
  */
 @Entity
-public class Configuration extends BaseModel {
+public class Configuration extends BaseModel implements Serializable {
 
 	@Index
 	private String configKey;
@@ -140,6 +142,10 @@ public class Configuration extends BaseModel {
 		Configuration c = getByKey(key);
 		int value = Integer.parseInt(c.getValue());
 		return value == 0 ? false : true;
+	}
+
+	public static Configuration getById(Long id) throws Exception {
+		return DbObjectify.ofy().load().type(Configuration.class).id(id).now();
 	}
 
 	@Override

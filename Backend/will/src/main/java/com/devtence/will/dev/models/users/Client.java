@@ -6,13 +6,14 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by plessmann on 02/06/16.
  */
 @Entity
-public class Client extends BaseModel {
+public class Client extends BaseModel implements Serializable {
 
     @Index
     private String name;

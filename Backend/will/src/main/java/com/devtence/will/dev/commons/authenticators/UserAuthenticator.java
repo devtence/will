@@ -3,6 +3,7 @@ package com.devtence.will.dev.commons.authenticators;
 import com.devtence.will.Constants;
 import com.devtence.will.dev.commons.caches.AuthorizationCache;
 import com.devtence.will.dev.commons.caches.ClientsCache;
+import com.devtence.will.dev.commons.caches.RolesCache;
 import com.devtence.will.dev.commons.wrappers.CacheAuthWrapper;
 import com.devtence.will.dev.models.users.Client;
 import com.devtence.will.dev.models.users.Permission;
@@ -10,6 +11,7 @@ import com.devtence.will.dev.models.users.Role;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Authenticator;
 import com.google.appengine.api.utils.SystemProperty;
+import com.googlecode.objectify.Key;
 import io.jsonwebtoken.Jwts;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,16 +45,17 @@ public class UserAuthenticator implements Authenticator {
 					Client client = ClientsCache.getInstance().getClient(Long.parseLong(idClient));
 					if (client != null) {
 						String pathTranslated = request.getPathTranslated();
-						pathTranslated = pathTranslated.substring(pathTranslated.lastIndexOf("com.devtence.will.dev.endpoints.") + 1);
 						Permission permission = new Permission(pathTranslated);
 						if (client.getPermissions().contains(permission)) {
 							String token = request.getHeader(Constants.AUTHORIZATION);
 							String key = request.getHeader(Constants.AUTHORIZATION_KEY);
 							if (token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
 								try {
-									CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Integer.parseInt(key));
+									CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Long.parseLong(key));
 									boolean valid = false;
-									for (Role role : value.getRoles()) {
+									Role role = null;
+									for (Long roleKey : value.getRoles()) {
+										role = RolesCache.getInstance().getRole(roleKey);
 										if (role.getPermissions().contains(permission)) {
 											valid = true;
 											break;

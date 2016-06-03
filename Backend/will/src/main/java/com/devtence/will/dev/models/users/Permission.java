@@ -1,9 +1,11 @@
 package com.devtence.will.dev.models.users;
 
+import java.io.Serializable;
+
 /**
  * Created by plessmann on 02/06/16.
  */
-public class Permission {
+public class Permission implements Serializable {
 
     private String route;
 
@@ -26,11 +28,8 @@ public class Permission {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-
 		Permission that = (Permission) o;
-
-		return route != null ? route.equals(that.route) : that.route == null;
-
+		return route != null ? route.endsWith(that.route) : that.route == null;
 	}
 
 	@Override

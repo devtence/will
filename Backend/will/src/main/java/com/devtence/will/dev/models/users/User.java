@@ -2,11 +2,15 @@ package com.devtence.will.dev.models.users;
 
 import com.devtence.will.dev.commons.caches.AuthorizationCache;
 import com.devtence.will.dev.commons.caches.ConfigurationsCache;
+import com.devtence.will.dev.commons.caches.RolesCache;
 import com.devtence.will.dev.commons.wrappers.AuthorizationWrapper;
 import com.devtence.will.dev.commons.wrappers.CacheAuthWrapper;
 import com.devtence.will.dev.exceptions.MissingFieldException;
+import com.devtence.will.dev.models.AuthenticableEntity;
 import com.devtence.will.dev.models.BaseModel;
 import com.devtence.will.dev.models.DbObjectify;
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.repackaged.org.codehaus.jackson.annotate.JsonIgnore;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -18,6 +22,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,10 +30,8 @@ import java.util.List;
  * Created by plessmann on 02/06/16.
  */
 @Entity
-public class User extends BaseModel {
+public class User extends BaseModel implements AuthenticableEntity{
 
-//    @Id
-//    private Long id;
     private Integer status;
     private Boolean lastLoginStatus;
     private Integer failedLoginCounter;
@@ -42,7 +45,8 @@ public class User extends BaseModel {
     private String jwt;
     private String secret;
 
-    private List<Role> roles;
+	@Index
+    private List<Long> roles;
 
     public User() {
     }
@@ -58,7 +62,7 @@ public class User extends BaseModel {
         this.password = password;
     }
 
-    public User(Integer status, Boolean lastLoginStatus, Integer failedLoginCounter, Integer passwordRecoveryStatus, String email, String user, String password, String jwt, String secret, List<Role> roles) {
+    public User(Integer status, Boolean lastLoginStatus, Integer failedLoginCounter, Integer passwordRecoveryStatus, String email, String user, String password, String jwt, String secret, List<Long> roles) {
         this.status = status;
         this.lastLoginStatus = lastLoginStatus;
         this.failedLoginCounter = failedLoginCounter;
@@ -70,14 +74,6 @@ public class User extends BaseModel {
         this.secret = secret;
         this.roles = roles;
     }
-
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
 
     public Integer getStatus() {
         return status;
@@ -156,16 +152,38 @@ public class User extends BaseModel {
         this.secret = secret;
     }
 
-    public List<Role> getRoles() {
+    public List<Long> getRolesKeys() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRolesKeys(List<Long> roles) {
         this.roles = roles;
     }
 
+    public void setRoles(List<Role> roles) {
+		if (this.roles == null) {
+			this.roles = new ArrayList<>();
+		}
+		if(!this.roles.isEmpty()){
+			this.roles.clear();
+		}
+		for (Role role : roles) {
+			this.roles.add(role.getId());
+		}
+    }
+
+	@JsonIgnore
+	public List<Role> getRoles() throws Exception {
+		List<Role> roles = new ArrayList<>(this.roles.size());
+		for (Long role : this.roles) {
+			roles.add(RolesCache.getInstance().getRole(role));
+		}
+		return roles;
+	}
+
+	@Override
     public boolean goodLogin(String inputPassword) throws Exception {
-        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+		BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
         lastLoginStatus = passwordEncryptor.checkPassword(inputPassword, password);
         if (lastLoginStatus) {
             failedLoginCounter = 0;
@@ -173,10 +191,11 @@ public class User extends BaseModel {
         } else {
             failedLoginCounter++;
         }
-        this.validate();
+		this.save();
         return lastLoginStatus;
     }
 
+	@Override
     public AuthorizationWrapper authorize() throws Exception{
         int authTimeout = 60 * 60000;
         try {
@@ -186,7 +205,7 @@ public class User extends BaseModel {
         jwt = Jwts.builder().setSubject(user).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + authTimeout)).signWith(SignatureAlgorithm.HS512, key).compact();
         secret = Base64.encodeBase64String(key.getEncoded());
         AuthorizationCache.getInstance().setAuth(new CacheAuthWrapper(getId(), jwt, secret, roles));
-		this.validate();
+		this.save();
         return new AuthorizationWrapper(jwt, getId(), 0);
     }
 
@@ -200,9 +219,6 @@ public class User extends BaseModel {
         }
         if(password == null || password.isEmpty()){
             throw new MissingFieldException("invalid password");
-        } else {
-            BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
-            password = passwordEncryptor.encryptPassword(password);
         }
         status = 2;
         failedLoginCounter = 0;

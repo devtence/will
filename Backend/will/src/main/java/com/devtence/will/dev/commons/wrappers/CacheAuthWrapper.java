@@ -1,6 +1,9 @@
 package com.devtence.will.dev.commons.wrappers;
 
 import com.devtence.will.dev.models.users.Role;
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
+import com.googlecode.objectify.Key;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,16 +11,16 @@ import java.util.List;
 /**
  * Created by plessmann on 06/05/16.
  */
-public class CacheAuthWrapper implements Serializable{
-
-
+public class CacheAuthWrapper implements Serializable {
 
 	private Long id;
 	private String jwt;
 	private String secret;
-	private List<Role> roles;
 
-	public CacheAuthWrapper(Long id, String jwt, String secret, List<Role> roles) {
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	private List<Long> roles;
+
+	public CacheAuthWrapper(Long id, String jwt, String secret, List<Long> roles) {
 		this.id = id;
 		this.jwt = jwt;
 		this.secret = secret;
@@ -48,11 +51,11 @@ public class CacheAuthWrapper implements Serializable{
 		this.secret = secret;
 	}
 
-	public List<Role> getRoles() {
+	public List<Long> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(List<Long> roles) {
 		this.roles = roles;
 	}
 }

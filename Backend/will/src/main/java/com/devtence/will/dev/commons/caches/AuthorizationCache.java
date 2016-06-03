@@ -7,6 +7,7 @@ import com.devtence.will.dev.models.users.Role;
 import com.devtence.will.dev.models.users.User;
 import com.google.appengine.api.memcache.InvalidValueException;
 import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
+import com.googlecode.objectify.Key;
 
 import javax.cache.Cache;
 import javax.cache.CacheFactory;
@@ -72,7 +73,7 @@ public class AuthorizationCache {
 				if(user.getJwt() == null || user.getSecret() == null) {
 					throw new InvalidValueException(Constants.INVALID_JWT_OR_SECRET);
 				}
-				auth = new CacheAuthWrapper(user.getId(), user.getJwt(), user.getSecret(), user.getRoles());
+				auth = new CacheAuthWrapper(user.getId(), user.getJwt(), user.getSecret(), user.getRolesKeys());
 				userCache.put(id, auth);
 			} else {
 				throw new InvalidValueException(String.format(Constants.INVALID_ID, id));
@@ -81,7 +82,7 @@ public class AuthorizationCache {
 		return auth;
 	}
 
-	public void setAuth(long id, String jwt, String secret, List<Role> roles) {
+	public void setAuth(long id, String jwt, String secret, List<Long> roles) {
 		setAuth(new CacheAuthWrapper(id, jwt, secret, roles));
 	}
 

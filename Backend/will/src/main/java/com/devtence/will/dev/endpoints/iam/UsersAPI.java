@@ -2,6 +2,8 @@ package com.devtence.will.dev.endpoints.iam;
 
 import com.devtence.will.Constants;
 import com.devtence.will.dev.commons.authenticators.UserAuthenticator;
+import com.devtence.will.dev.commons.wrappers.AuthorizationWrapper;
+import com.devtence.will.dev.endpoints.AuthenticableController;
 import com.devtence.will.dev.endpoints.BaseController;
 import com.devtence.will.dev.exceptions.MissingFieldException;
 import com.devtence.will.dev.models.ListItem;
@@ -14,6 +16,7 @@ import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.InternalServerErrorException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 
 import javax.inject.Named;
 import java.util.logging.Level;
@@ -30,7 +33,7 @@ import java.util.logging.Logger;
 		audiences = {Constants.ANDROID_AUDIENCE},
 		authenticators = {UserAuthenticator.class}
 )
-public class UsersAPI extends BaseController<User> {
+public class UsersAPI extends BaseController<User> implements AuthenticableController<User> {
 
 	private static final Logger log = Logger.getLogger(UsersAPI.class.getName());
 
@@ -39,6 +42,8 @@ public class UsersAPI extends BaseController<User> {
 	public User create(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		try {
+			BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+			data.setPassword(passwordEncryptor.encryptPassword(data.getPassword()));
 			data.validate();
 		} catch (MissingFieldException e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
@@ -125,5 +130,38 @@ public class UsersAPI extends BaseController<User> {
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
 		}
 		return list;
+	}
+
+	@Override
+	@ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "user.authenticate", path = "authenticate")
+	public AuthorizationWrapper authenticate(User data) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException {
+		User user;
+		try {
+			user = User.getByUser(data.getUser());
+		} catch (Exception e) {
+			log.log(Level.WARNING, Constants.ERROR, e);
+			throw new BadRequestException(String.format(Constants.USER_ERROR_CREATE, e.getMessage()));
+		}
+		if(user != null){
+			boolean allow = false;
+			try {
+				allow = user.goodLogin(data.getPassword());
+			} catch (Exception e) {
+				log.log(Level.WARNING, Constants.ERROR, e);
+				throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
+			}
+			if (allow) {
+				try {
+					return user.authorize();
+				} catch (Exception e) {
+					log.log(Level.WARNING, Constants.ERROR, e);
+					throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
+				}
+			} else {
+				throw new UnauthorizedException(Constants.INVALID_PASSWORD);
+			}
+		} else {
+			throw new NotFoundException(String.format(Constants.USER_NOT_FOUND, data.getUser()));
+		}
 	}
 }
