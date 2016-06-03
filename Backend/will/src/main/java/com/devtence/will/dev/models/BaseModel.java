@@ -28,6 +28,8 @@ public abstract class BaseModel {
 
     public abstract void validate() throws Exception;
 
+    public abstract void destroy() throws Exception;
+
     protected void save(){
         DbObjectify.ofy().save().entity(this).now();
     }

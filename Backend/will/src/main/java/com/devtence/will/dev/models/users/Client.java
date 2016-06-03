@@ -1,7 +1,10 @@
 package com.devtence.will.dev.models.users;
 
+import com.devtence.will.Constants;
 import com.devtence.will.dev.models.BaseModel;
 import com.devtence.will.dev.models.DbObjectify;
+import com.google.api.server.spi.response.InternalServerErrorException;
+import com.google.api.server.spi.response.NotFoundException;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -46,6 +49,11 @@ public class Client extends BaseModel implements Serializable {
     @Override
     public void validate() throws Exception {
         this.save();
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        this.delete();
     }
 
     public static Client getById(Long id) throws Exception {

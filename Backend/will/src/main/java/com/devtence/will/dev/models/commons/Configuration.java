@@ -162,5 +162,8 @@ public class Configuration extends BaseModel implements Serializable {
 		this.save();
 	}
 
-
+	@Override
+	public void destroy() throws Exception {
+		this.delete();
+	}
 }

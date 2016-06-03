@@ -305,4 +305,8 @@ public class User extends BaseModel implements AuthenticableEntity{
         }
     }
 
+    @Override
+    public void destroy() throws Exception {
+        this.delete();
+    }
 }

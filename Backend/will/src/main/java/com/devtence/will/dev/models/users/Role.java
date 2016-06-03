@@ -48,6 +48,11 @@ public class Role extends BaseModel implements Serializable {
         this.save();
     }
 
+    @Override
+    public void destroy() throws Exception {
+        this.delete();
+    }
+
     public static Role getById(Long id) throws Exception {
         return DbObjectify.ofy().load().type(Role.class).id(id).now();
     }
