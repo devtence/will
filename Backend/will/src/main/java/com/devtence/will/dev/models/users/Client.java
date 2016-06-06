@@ -1,12 +1,8 @@
 package com.devtence.will.dev.models.users;
 
-import com.devtence.will.Constants;
 import com.devtence.will.dev.models.BaseModel;
 import com.devtence.will.dev.models.DbObjectify;
-import com.google.api.server.spi.response.InternalServerErrorException;
-import com.google.api.server.spi.response.NotFoundException;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 import java.io.Serializable;
@@ -28,6 +24,12 @@ public class Client extends BaseModel<Client> implements Serializable {
     public Client(String name, List<Permission> permissions) {
         this.name = name;
         this.permissions = permissions;
+    }
+
+    public Client(Client me){
+        this.setId(me.getId());
+        this.name = me.name;
+        this.permissions = me.permissions;
     }
 
     public String getName() {
@@ -57,7 +59,7 @@ public class Client extends BaseModel<Client> implements Serializable {
     }
 
     public static Client getById(Long id) throws Exception {
-        return DbObjectify.ofy().load().type(Client.class).id(id).now();
+        return (Client) get(id, Client.class);
     }
 
     @Override
@@ -77,5 +79,13 @@ public class Client extends BaseModel<Client> implements Serializable {
         if (mod){
             this.validate();
         }
+    }
+
+    @Override
+    public void load(long id){
+        Client me = DbObjectify.ofy().load().type(Client.class).id(id).now();
+        this.setId(me.getId());
+        this.setName(me.getName());
+        this.setPermissions(me.getPermissions());
     }
 }

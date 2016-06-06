@@ -2,7 +2,6 @@ package com.devtence.will.dev.commons.caches;
 
 import com.devtence.will.Constants;
 import com.devtence.will.dev.models.commons.Configuration;
-import com.devtence.will.dev.models.users.Client;
 import com.devtence.will.dev.models.users.Role;
 import com.google.appengine.api.memcache.InvalidValueException;
 import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
@@ -65,7 +64,7 @@ public class RolesCache {
 	public Role getRole(long id) throws Exception {
 		Role role = (Role) rolesCache.get(id);
 		if(role == null) {
-			role = Role.getById(id);
+			role = Role.get(id);
 			if (role != null) {
 				rolesCache.put(id, role);
 			} else {

@@ -73,7 +73,12 @@ public class UserPasswordReset extends BaseModel<UserPasswordReset> implements S
 
 	@Override
 	public void update(UserPasswordReset data) throws Exception {
+		//do nothing
+	}
 
+	@Override
+	public void load(long id) {
+		//do nothing
 	}
 
 	public static UserPasswordReset getByToken(String webToken) throws Exception {

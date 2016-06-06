@@ -2,7 +2,6 @@ package com.devtence.will.dev.models.users;
 
 import com.devtence.will.dev.commons.caches.AuthorizationCache;
 import com.devtence.will.dev.commons.caches.ConfigurationsCache;
-import com.devtence.will.dev.commons.caches.RolesCache;
 import com.devtence.will.dev.commons.wrappers.AuthorizationWrapper;
 import com.devtence.will.dev.commons.wrappers.CacheAuthWrapper;
 import com.devtence.will.dev.exceptions.MissingFieldException;
@@ -10,11 +9,7 @@ import com.devtence.will.dev.exceptions.UserExistException;
 import com.devtence.will.dev.models.AuthenticableEntity;
 import com.devtence.will.dev.models.BaseModel;
 import com.devtence.will.dev.models.DbObjectify;
-import com.google.api.server.spi.config.AnnotationBoolean;
-import com.google.api.server.spi.config.ApiResourceProperty;
-import com.google.appengine.repackaged.org.codehaus.jackson.annotate.JsonIgnore;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,7 +18,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 
 import java.security.Key;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -280,6 +274,21 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         if (mod){
             this.validate();
         }
+    }
+
+    @Override
+    public void load(long id) {
+        User me  = (User) get(id, User.class);
+        setId(me.getId());
+        setStatus(me.getStatus());
+        setLastLoginStatus(me.getLastLoginStatus());
+        setFailedLoginCounter(me.getFailedLoginCounter());
+        setPasswordRecoveryStatus(me.getPasswordRecoveryStatus());
+        setEmail(me.getEmail());
+        setUser(me.getUser());
+        setJwt(me.getJwt());
+        setSecret(me.getSecret());
+        setRoles(me.getRoles());
     }
 
     @Override

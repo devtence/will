@@ -1,9 +1,7 @@
 package com.devtence.will.dev.models.users;
 
 import com.devtence.will.dev.models.BaseModel;
-import com.devtence.will.dev.models.DbObjectify;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 import java.io.Serializable;
@@ -53,8 +51,8 @@ public class Role extends BaseModel<Role> implements Serializable {
         this.delete();
     }
 
-    public static Role getById(Long id) throws Exception {
-        return DbObjectify.ofy().load().type(Role.class).id(id).now();
+    public static Role get(Long id) throws Exception {
+        return (Role) get(id, Role.class);
     }
 
     @Override
@@ -74,6 +72,14 @@ public class Role extends BaseModel<Role> implements Serializable {
         if (mod){
             this.validate();
         }
+    }
+
+    @Override
+    public void load(long id) {
+        Role me = (Role) get(id, Role.class);
+        setId(me.getId());
+        setName(me.getName());
+        setPermissions(me.getPermissions());
     }
 
 }

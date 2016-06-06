@@ -52,7 +52,7 @@ public class RoleAPI extends BaseController<Role> {
 		validateUser(user);
 		Role role = null;
 		try {
-			role = Role.getById(id);
+			role = Role.get(id);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
@@ -69,7 +69,7 @@ public class RoleAPI extends BaseController<Role> {
 		validateUser(user);
 		Role role = null;
 		try {
-			role = Role.getById(id);
+			role = Role.get(id);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
@@ -92,7 +92,7 @@ public class RoleAPI extends BaseController<Role> {
 		validateUser(user);
 		Role role = null;
 		try {
-			role = Role.getById(id);
+			role = Role.get(id);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
