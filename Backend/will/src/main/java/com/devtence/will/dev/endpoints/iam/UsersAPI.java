@@ -144,7 +144,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 	}
 
 	@Override
-	@ApiMethod(name = "user.authenticate", path = "users/authenticate")
+	@ApiMethod(name = "user.authenticate", path = "user/authenticate")
 	public AuthorizationWrapper authenticate(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException {
 		validateUser(user);
 		User userDevtence;

@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 public class UserAuthenticator implements Authenticator {
 
 	private static final Logger log = Logger.getLogger(UserAuthenticator.class.getName());
+	public static final String GENERIC_USER = "user@devtence.com";
+	public static final String GENERIC_KEY = "OK";
 
 	/**
 	 * The JWT must be set as header using the AUTHORIZATION key and the user id must be set as a header using the AUTHORIZATION_KEY.
@@ -37,7 +39,7 @@ public class UserAuthenticator implements Authenticator {
     public User authenticate(HttpServletRequest request) {
 		User user = null;
 		if(SystemProperty.environment.value() == SystemProperty.Environment.Value.Development){
-			user = new User("OK", "user@devtence.com");
+			user = new User(GENERIC_KEY, GENERIC_USER);
 		} else {
 			String idClient = request.getHeader(Constants.AUTHORIZATION_CLIENT);
 			if (idClient != null && !idClient.isEmpty()) {
@@ -47,27 +49,33 @@ public class UserAuthenticator implements Authenticator {
 						String pathTranslated = request.getPathTranslated();
 						Permission permission = new Permission(pathTranslated);
 						if (client.getPermissions().contains(permission)) {
-							String token = request.getHeader(Constants.AUTHORIZATION);
-							String key = request.getHeader(Constants.AUTHORIZATION_KEY);
-							if (token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
-								try {
-									CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Long.parseLong(key));
-									boolean valid = false;
-									Role role = null;
-									for (Long roleKey : value.getRoles()) {
-										role = RolesCache.getInstance().getRole(roleKey);
-										if (role.getPermissions().contains(permission)) {
-											valid = true;
-											break;
+							int permissionIndex = client.getPermissions().indexOf(permission);
+							permission = client.getPermissions().get(permissionIndex);
+							if(permission.getUserRequired()) {
+								String token = request.getHeader(Constants.AUTHORIZATION);
+								String key = request.getHeader(Constants.AUTHORIZATION_KEY);
+								if (token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
+									try {
+										CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Long.parseLong(key));
+										boolean valid = false;
+										Role role = null;
+										for (Long roleKey : value.getRoles()) {
+											role = RolesCache.getInstance().getRole(roleKey);
+											if (role.getPermissions().contains(permission)) {
+												valid = true;
+												break;
+											}
 										}
+										if (valid) {
+											Jwts.parser().setSigningKey(value.getSecret()).parseClaimsJws(token);
+											user =  new User(key, GENERIC_USER);
+										}
+									} catch (Exception e) {
+										log.log(Level.WARNING, Constants.ERROR, e);
 									}
-									if (valid) {
-										Jwts.parser().setSigningKey(value.getSecret()).parseClaimsJws(token);
-										return new User(key, "user@devtence.com");
-									}
-								} catch (Exception e) {
-									log.log(Level.WARNING, Constants.ERROR, e);
 								}
+							} else {
+								user = new User(GENERIC_KEY, GENERIC_USER);
 							}
 						}
 					}

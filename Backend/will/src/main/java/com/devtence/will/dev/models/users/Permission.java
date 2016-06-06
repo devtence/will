@@ -9,6 +9,8 @@ public class Permission implements Serializable {
 
     private String route;
 
+	private Boolean userRequired;
+
     public Permission() {
     }
 
@@ -23,6 +25,14 @@ public class Permission implements Serializable {
     public void setRoute(String route) {
         this.route = route;
     }
+
+	public Boolean getUserRequired() {
+		return userRequired;
+	}
+
+	public void setUserRequired(Boolean userRequired) {
+		this.userRequired = userRequired;
+	}
 
 	@Override
 	public boolean equals(Object o) {
