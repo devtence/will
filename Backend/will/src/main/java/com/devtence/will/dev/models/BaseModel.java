@@ -13,7 +13,7 @@ import java.util.List;
  * base class for all the models of LP
  * Created by sorcerer on 7/18/15.
  */
-public abstract class BaseModel<T> {
+public abstract class BaseModel<T extends BaseModel> {
 
     @Id
     private Long id;
@@ -85,8 +85,15 @@ public abstract class BaseModel<T> {
         return toReturn;
     }
 
-    public static List getAll(Class actual){
-        return DbObjectify.ofy().load().type(actual).list();
+    public static List getAll(Class objClass){
+        return DbObjectify.ofy().load().type(objClass).list();
     }
+
+    public static Object get(long id, Class objClass){
+       return DbObjectify.ofy().load().type(objClass).id(id).now();
+    }
+
+    public abstract void load(long id);
+
 
 }
