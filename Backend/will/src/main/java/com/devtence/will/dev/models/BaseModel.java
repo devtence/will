@@ -32,6 +32,10 @@ public abstract class BaseModel<T> {
 
     public abstract void update(T data) throws Exception;
 
+    public void update() {
+        DbObjectify.ofy().save().entity(this).now();
+    }
+
     protected void save(){
         DbObjectify.ofy().save().entity(this).now();
     }

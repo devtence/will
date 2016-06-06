@@ -191,7 +191,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 		if(userDevtence != null){
 			try {
 				userDevtence.setPasswordRecoveryStatus(1);
-				userDevtence.validate();
+				userDevtence.update();
 				TaskOptions taskOptions = TaskOptions.Builder.withUrl(Constants.NOTIFY).param(Constants.ID, userDevtence.getId().toString()).param(Constants.NOTIFICATION_MNEMONIC, Constants.PASSWORD_RECOVERY_NOTIFICATION).param(Constants.NOTIFICATOR_KEY, Constants.USER_PASSWORD_RECOVERY);
 				PushQueue.enqueueMail(taskOptions);
 				return new BooleanWrapper(true);
@@ -218,9 +218,8 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 		if(userDevtence != null){
 			if(userDevtence.getPasswordRecoveryStatus() == 3) {
 				try {
+					data.setPasswordRecoveryStatus(0);
 					userDevtence.update(data);
-					userDevtence.setPasswordRecoveryStatus(0);
-					userDevtence.validate();
 					return new BooleanWrapper(true);
 				} catch (Exception e) {
 					log.log(Level.WARNING, Constants.ERROR, e);

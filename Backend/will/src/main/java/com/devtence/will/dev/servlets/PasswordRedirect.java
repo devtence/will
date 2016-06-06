@@ -41,7 +41,7 @@ public class PasswordRedirect extends HttpServlet {
 				if (user != null) {
 					if (body.getSubject().equals(user.getUser())) {
 						user.setPasswordRecoveryStatus(3);
-						user.validate();
+						user.update();
 						passwordReset.destroy();
 						error = false;
 					}

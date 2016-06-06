@@ -45,7 +45,7 @@ public class UserPasswordRecovery extends Notificator {
 						UserPasswordReset passwordReset = new UserPasswordReset(id, webToken, secret);
 						passwordReset.validate();
 						user.setPasswordRecoveryStatus(2);
-						user.validate();
+						user.update();
 						String passwordRedirectServlet = ConfigurationsCache.getInstance().getConfiguration(PASSWORD_REDIRECT_SERVLET).getValue();
 						System.out.println(String.format(passwordRedirectServlet, webToken));
 						//TODO: ajustar el mensaje
