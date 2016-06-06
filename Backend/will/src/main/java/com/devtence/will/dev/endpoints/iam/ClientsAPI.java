@@ -1,7 +1,6 @@
 package com.devtence.will.dev.endpoints.iam;
 
 import com.devtence.will.Constants;
-import com.devtence.will.dev.commons.authenticators.UserAuthenticator;
 import com.devtence.will.dev.endpoints.BaseController;
 import com.devtence.will.dev.exceptions.MissingFieldException;
 import com.devtence.will.dev.models.ListItem;
@@ -25,18 +24,14 @@ import java.util.logging.Logger;
  */
 @Api(
 	name = Constants.IAM_API_NAME,
-	version = Constants.API_MASTER_VERSION,
-	scopes = {Constants.EMAIL_SCOPE},
-	clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID},
-	audiences = {Constants.ANDROID_AUDIENCE},
-	authenticators = {UserAuthenticator.class}
+	version = Constants.API_MASTER_VERSION
 )
 public class ClientsAPI extends BaseController<Client> {
 
 	private static final Logger log = Logger.getLogger(ClientsAPI.class.getName());
 
 	@Override
-	@ApiMethod(httpMethod = ApiMethod.HttpMethod.POST, name = "client.create", path = "client")
+	@ApiMethod(name = "client.create", path = "client")
 	public Client create(Client data, User user) throws BadRequestException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		try {
@@ -52,7 +47,7 @@ public class ClientsAPI extends BaseController<Client> {
 	}
 
 	@Override
-	@ApiMethod(httpMethod = ApiMethod.HttpMethod.GET, name = "client.read", path = "client/{id}")
+	@ApiMethod(name = "client.read", path = "client/{id}")
 	public Client read(@Named("id") Long id, User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		Client client = null;
@@ -69,7 +64,7 @@ public class ClientsAPI extends BaseController<Client> {
 	}
 
 	@Override
-	@ApiMethod(httpMethod = ApiMethod.HttpMethod.PUT, name = "client.update", path = "client/{id}")
+	@ApiMethod(name = "client.update", path = "client/{id}")
 	public Client update(@Named("id") Long id, Client data, User user)
 			throws NotFoundException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
@@ -93,9 +88,7 @@ public class ClientsAPI extends BaseController<Client> {
 	}
 
 	@Override
-	@ApiMethod(httpMethod = ApiMethod.HttpMethod.DELETE,
-			name = "client.delete",
-			path = "client/{id}")
+	@ApiMethod(name = "client.delete", path = "client/{id}")
 	public Client delete(@Named("id") Long id,
 						 User user)
 			throws NotFoundException, InternalServerErrorException, UnauthorizedException {
@@ -123,9 +116,7 @@ public class ClientsAPI extends BaseController<Client> {
 	}
 
 	@Override
-	@ApiMethod(httpMethod = ApiMethod.HttpMethod.GET,
-			name = "client.list",
-			path = "clients")
+	@ApiMethod(name = "client.list", path = "clients")
 	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index,
 						 @Named("offset") @Nullable @DefaultValue("100") Integer offset,
 						 @Named("sortField") @Nullable String sortField,

@@ -30,7 +30,7 @@ import java.util.List;
  * Created by plessmann on 02/06/16.
  */
 @Entity
-public class User extends BaseModel implements AuthenticableEntity{
+public class User extends BaseModel<User> implements AuthenticableEntity{
 
     private Integer status;
     private Boolean lastLoginStatus;
@@ -220,10 +220,6 @@ public class User extends BaseModel implements AuthenticableEntity{
         if(password == null || password.isEmpty()){
             throw new MissingFieldException("invalid password");
         }
-        status = 2;
-        failedLoginCounter = 0;
-        lastLoginStatus = false;
-        passwordRecoveryStatus = 0;
         this.save();
     }
 
@@ -247,56 +243,57 @@ public class User extends BaseModel implements AuthenticableEntity{
         return DbObjectify.ofy().load().type(User.class).filter("user", user).first().now();
     }
 
-    public void update(User toUpdate) throws Exception {
+    @Override
+    public void update(User data) throws Exception {
         boolean mod = false;
 
-        if (toUpdate.getStatus() != null){
-            setStatus(toUpdate.getStatus());
+        if (data.getStatus() != null){
+            setStatus(data.getStatus());
             mod |= true;
         }
 
-        if (toUpdate.getLastLoginStatus() != null){
-            setLastLoginStatus(toUpdate.getLastLoginStatus());
+        if (data.getLastLoginStatus() != null){
+            setLastLoginStatus(data.getLastLoginStatus());
             mod |= true;
         }
 
-        if (toUpdate.getFailedLoginCounter() != null){
-            setFailedLoginCounter(toUpdate.getFailedLoginCounter());
+        if (data.getFailedLoginCounter() != null){
+            setFailedLoginCounter(data.getFailedLoginCounter());
             mod |= true;
         }
 
-        if (toUpdate.getPasswordRecoveryStatus() != null){
-            setPasswordRecoveryStatus(toUpdate.getPasswordRecoveryStatus());
+        if (data.getPasswordRecoveryStatus() != null){
+            setPasswordRecoveryStatus(data.getPasswordRecoveryStatus());
             mod |= true;
         }
 
-        if (toUpdate.getEmail() != null){
-            setEmail(toUpdate.getEmail());
+        if (data.getEmail() != null){
+            setEmail(data.getEmail());
             mod |= true;
         }
 
-        if (toUpdate.getUser() != null){
-            setUser(toUpdate.getUser());
+        if (data.getUser() != null){
+            setUser(data.getUser());
             mod |= true;
         }
 
-        if (toUpdate.getPassword() != null){
-            setPassword(toUpdate.getPassword());
+        if (data.getPassword() != null){
+            setPassword(data.getPassword());
             mod |= true;
         }
 
-        if (toUpdate.getJwt() != null){
-            setUser(toUpdate.getJwt());
+        if (data.getJwt() != null){
+            setUser(data.getJwt());
             mod |= true;
         }
 
-        if (toUpdate.getSecret() != null){
-            setUser(toUpdate.getSecret());
+        if (data.getSecret() != null){
+            setUser(data.getSecret());
             mod |= true;
         }
 
-        if (toUpdate.getRoles() != null){
-            setRoles(toUpdate.getRoles());
+        if (data.getRoles() != null){
+            setRoles(data.getRoles());
             mod |= true;
         }
 

@@ -15,6 +15,32 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
+    <servlet>
+        <servlet-name>Notify</servlet-name>
+        <servlet-class>com.devtence.will.dev.servlets.Notify</servlet-class>
+        <init-param>
+            <param-name>notify</param-name>
+            <param-value>e</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Notify</servlet-name>
+        <url-pattern>/notify</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Pwd</servlet-name>
+        <servlet-class>com.devtence.will.dev.servlets.PasswordRedirect</servlet-class>
+        <init-param>
+            <param-name>pwd</param-name>
+            <param-value>e</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Pwd</servlet-name>
+        <url-pattern>/pwd</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>ObjectifyFilter</filter-name>
         <filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>

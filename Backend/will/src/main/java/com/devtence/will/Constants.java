@@ -40,4 +40,13 @@ public class Constants {
 
 	public static final String INVALID_PASSWORD = "Invalid password";
 
+	public static final String NOTIFY = "/notify";
+	public static final String ID = "id";
+	public static final String NOTIFICATION_MNEMONIC = "notification_mnemonic";
+	public static final String PASSWORD_RECOVERY_NOTIFICATION = "RECPWD";
+	public static final String NOTIFICATOR_KEY = "notificator";
+	public static final String USER_PASSWORD_RECOVERY = "com.devtence.will.dev.notificators.UserPasswordRecovery";
+	public static final String NO_PASSWORD_RESET_PROCESS_PENDING = "There is no password reset process pending";
+	public static final String TOKEN = "token";
+
 }

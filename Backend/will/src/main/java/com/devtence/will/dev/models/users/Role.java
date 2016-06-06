@@ -13,7 +13,7 @@ import java.util.List;
  * Created by plessmann on 02/06/16.
  */
 @Entity
-public class Role extends BaseModel implements Serializable {
+public class Role extends BaseModel<Role> implements Serializable {
 
     @Index
     private String name;
@@ -57,16 +57,17 @@ public class Role extends BaseModel implements Serializable {
         return DbObjectify.ofy().load().type(Role.class).id(id).now();
     }
 
-    public void update(Role toUpdate) throws Exception {
+    @Override
+    public void update(Role data) throws Exception {
         boolean mod = false;
 
-        if (toUpdate.getName() != null){
-            setName(toUpdate.getName());
+        if (data.getName() != null){
+            setName(data.getName());
             mod |= true;
         }
 
-        if (toUpdate.getPermissions() != null){
-            setPermissions(toUpdate.getPermissions());
+        if (data.getPermissions() != null){
+            setPermissions(data.getPermissions());
             mod |=true;
         }
 

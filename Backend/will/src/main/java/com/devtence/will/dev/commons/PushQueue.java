@@ -25,7 +25,7 @@ public class PushQueue {
 	}
 
 	public static void enqueueDefault(TaskOptions taskOptions) {
-		Queue queue = QueueFactory.getQueue(MAIL_QUEUE);
+		Queue queue = QueueFactory.getDefaultQueue();
 		queue.add(taskOptions);
 	}
 

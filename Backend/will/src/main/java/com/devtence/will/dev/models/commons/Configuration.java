@@ -15,7 +15,7 @@ import java.io.Serializable;
  * Created by plessmann on 10/03/16.
  */
 @Entity
-public class Configuration extends BaseModel implements Serializable {
+public class Configuration extends BaseModel<Configuration> implements Serializable {
 
 	@Index
 	private String configKey;
@@ -166,4 +166,11 @@ public class Configuration extends BaseModel implements Serializable {
 	public void destroy() throws Exception {
 		this.delete();
 	}
+
+	@Override
+	public void update(Configuration data) throws Exception {
+
+	}
+
+
 }

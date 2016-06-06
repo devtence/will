@@ -13,7 +13,7 @@ import java.util.List;
  * base class for all the models of LP
  * Created by sorcerer on 7/18/15.
  */
-public abstract class BaseModel {
+public abstract class BaseModel<T> {
 
     @Id
     private Long id;
@@ -29,6 +29,8 @@ public abstract class BaseModel {
     public abstract void validate() throws Exception;
 
     public abstract void destroy() throws Exception;
+
+    public abstract void update(T data) throws Exception;
 
     protected void save(){
         DbObjectify.ofy().save().entity(this).now();

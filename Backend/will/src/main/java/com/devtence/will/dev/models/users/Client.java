@@ -16,7 +16,7 @@ import java.util.List;
  * Created by plessmann on 02/06/16.
  */
 @Entity
-public class Client extends BaseModel implements Serializable {
+public class Client extends BaseModel<Client> implements Serializable {
 
     @Index
     private String name;
@@ -60,16 +60,17 @@ public class Client extends BaseModel implements Serializable {
         return DbObjectify.ofy().load().type(Client.class).id(id).now();
     }
 
-    public void update(Client toUpdate) throws Exception {
+    @Override
+    public void update(Client data) throws Exception {
         boolean mod = false;
 
-        if (toUpdate.getName() != null){
-            setName(toUpdate.getName());
+        if (data.getName() != null){
+            setName(data.getName());
             mod |= true;
         }
 
-        if (toUpdate.getPermissions() != null){
-            setPermissions(toUpdate.getPermissions());
+        if (data.getPermissions() != null){
+            setPermissions(data.getPermissions());
             mod |=true;
         }
 
