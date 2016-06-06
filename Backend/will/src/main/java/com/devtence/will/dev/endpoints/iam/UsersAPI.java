@@ -7,16 +7,14 @@ import com.devtence.will.dev.commons.wrappers.BooleanWrapper;
 import com.devtence.will.dev.endpoints.AuthenticableController;
 import com.devtence.will.dev.endpoints.BaseController;
 import com.devtence.will.dev.exceptions.MissingFieldException;
+import com.devtence.will.dev.exceptions.UserExistException;
 import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.users.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.DefaultValue;
 import com.google.api.server.spi.config.Nullable;
-import com.google.api.server.spi.response.BadRequestException;
-import com.google.api.server.spi.response.InternalServerErrorException;
-import com.google.api.server.spi.response.NotFoundException;
-import com.google.api.server.spi.response.UnauthorizedException;
+import com.google.api.server.spi.response.*;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 
@@ -37,7 +35,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 
 	@Override
 	@ApiMethod(name = "user.create", path = "user")
-	public User create(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, InternalServerErrorException, UnauthorizedException {
+	public User create(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		try {
 			BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
@@ -50,6 +48,9 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 		} catch (MissingFieldException e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new BadRequestException(String.format(Constants.USER_ERROR_CREATE, e.getMessage()));
+		} catch (UserExistException e){
+			log.log(Level.WARNING, Constants.ERROR, e);
+			throw new ConflictException(String.format(Constants.USER_ERROR_CREATE, e.getMessage()));
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
@@ -78,7 +79,8 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 	@ApiMethod(name = "user.update", path = "user/{id}")
 	public User update(@Named("id") Long id,
 					   User data,
-					   com.google.api.server.spi.auth.common.User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
+					   com.google.api.server.spi.auth.common.User user)
+			throws BadRequestException, NotFoundException, InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		User userDevtence = null;
 		try {
@@ -91,7 +93,12 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 			throw new NotFoundException(String.format(Constants.USER_ERROR_NOT_FOUND, id));
 		}
 		try {
+			BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+			data.setPassword(passwordEncryptor.encryptPassword(data.getPassword()));
 			userDevtence.update(data);
+		} catch (UserExistException e){
+			log.log(Level.WARNING, Constants.ERROR, e);
+			throw new BadRequestException(String.format(Constants.USER_ERROR_CREATE, e.getMessage()));
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);

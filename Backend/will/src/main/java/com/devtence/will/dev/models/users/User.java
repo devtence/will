@@ -6,6 +6,7 @@ import com.devtence.will.dev.commons.caches.RolesCache;
 import com.devtence.will.dev.commons.wrappers.AuthorizationWrapper;
 import com.devtence.will.dev.commons.wrappers.CacheAuthWrapper;
 import com.devtence.will.dev.exceptions.MissingFieldException;
+import com.devtence.will.dev.exceptions.UserExistException;
 import com.devtence.will.dev.models.AuthenticableEntity;
 import com.devtence.will.dev.models.BaseModel;
 import com.devtence.will.dev.models.DbObjectify;
@@ -83,7 +84,6 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.status = status;
     }
 
-    @JsonIgnore
     public Boolean getLastLoginStatus() {
         return lastLoginStatus;
     }
@@ -92,7 +92,6 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.lastLoginStatus = lastLoginStatus;
     }
 
-    @JsonIgnore
     public Integer getFailedLoginCounter() {
         return failedLoginCounter;
     }
@@ -101,7 +100,6 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.failedLoginCounter = failedLoginCounter;
     }
 
-    @JsonIgnore
     public Integer getPasswordRecoveryStatus() {
         return passwordRecoveryStatus;
     }
@@ -134,7 +132,6 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.email = email;
     }
 
-    @JsonIgnore
     public String getJwt() {
         return jwt;
     }
@@ -143,7 +140,6 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.jwt = jwt;
     }
 
-    @JsonIgnore
     public String getSecret() {
         return secret;
     }
@@ -152,34 +148,13 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.secret = secret;
     }
 
-    public List<Long> getRolesKeys() {
+    public List<Long> getRoles() {
         return roles;
     }
 
-    public void setRolesKeys(List<Long> roles) {
+    public void setRoles(List<Long> roles) {
         this.roles = roles;
     }
-
-    public void setRoles(List<Role> roles) {
-		if (this.roles == null) {
-			this.roles = new ArrayList<>();
-		}
-		if(!this.roles.isEmpty()){
-			this.roles.clear();
-		}
-		for (Role role : roles) {
-			this.roles.add(role.getId());
-		}
-    }
-
-	@JsonIgnore
-	public List<Role> getRoles() throws Exception {
-		List<Role> roles = new ArrayList<>(this.roles.size());
-		for (Long role : this.roles) {
-			roles.add(RolesCache.getInstance().getRole(role));
-		}
-		return roles;
-	}
 
 	@Override
     public boolean goodLogin(String inputPassword) throws Exception {
@@ -219,6 +194,11 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         }
         if(password == null || password.isEmpty()){
             throw new MissingFieldException("invalid password");
+        }
+        //verify if user exist
+        User exist = User.getByUser(this.getUser());
+        if (exist != null) {
+            throw new UserExistException("username already exists");
         }
         this.save();
     }
