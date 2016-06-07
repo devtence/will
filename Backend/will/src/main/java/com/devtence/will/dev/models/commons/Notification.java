@@ -98,6 +98,16 @@ public class Notification extends BaseModel<Notification> implements Serializabl
 
 	}
 
+	@Override
+	public void load(long id) {
+		Notification me = DbObjectify.ofy().load().type(Notification.class).id(id).now();
+		this.setId(me.getId());
+		this.setSender(me.getSender());
+		this.setRecipients(me.getRecipients());
+		this.setSubject(me.getSubject());
+		this.setMessage(me.getMessage());
+	}
+
 	public static Notification getById(Long id) throws Exception {
 		return DbObjectify.ofy().load().type(Notification.class).id(id).now();
 	}

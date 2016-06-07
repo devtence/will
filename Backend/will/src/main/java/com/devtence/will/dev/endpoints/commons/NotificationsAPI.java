@@ -110,6 +110,7 @@ public class NotificationsAPI extends BaseController<Notification> {
 	}
 
 	@Override
+	@ApiMethod(name = "notification.list", path = "notifications")
 	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		ListItem list = null;

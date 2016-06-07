@@ -25,8 +25,7 @@ import java.util.logging.Logger;
 public class UserAuthenticator implements Authenticator {
 
 	private static final Logger log = Logger.getLogger(UserAuthenticator.class.getName());
-	public static final String GENERIC_USER = "user@devtence.com";
-	public static final String GENERIC_KEY = "OK";
+
 
 	/**
 	 * The JWT must be set as header using the AUTHORIZATION key and the user id must be set as a header using the AUTHORIZATION_KEY.
@@ -39,7 +38,7 @@ public class UserAuthenticator implements Authenticator {
     public User authenticate(HttpServletRequest request) {
 		User user = null;
 		if(SystemProperty.environment.value() == SystemProperty.Environment.Value.Development){
-			user = new User(GENERIC_KEY, GENERIC_USER);
+			user = new User(Constants.GENERIC_KEY, Constants.GENERIC_USER);
 		} else {
 			String idClient = request.getHeader(Constants.AUTHORIZATION_CLIENT);
 			if (idClient != null && !idClient.isEmpty()) {
@@ -68,14 +67,14 @@ public class UserAuthenticator implements Authenticator {
 										}
 										if (valid) {
 											Jwts.parser().setSigningKey(value.getSecret()).parseClaimsJws(token);
-											user =  new User(key, GENERIC_USER);
+											user =  new User(key, Constants.GENERIC_USER);
 										}
 									} catch (Exception e) {
 										log.log(Level.WARNING, Constants.ERROR, e);
 									}
 								}
 							} else {
-								user = new User(GENERIC_KEY, GENERIC_USER);
+								user = new User(Constants.GENERIC_KEY, Constants.GENERIC_USER);
 							}
 						}
 					}

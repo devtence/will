@@ -20,6 +20,7 @@ public class Constants {
 
 	public static final String IAM_API_NAME = "iam";
 	public static final String COMMON_API_NAME = "commons";
+	public static final String FILES_API_NAME = "files";
 	public static final String API_MASTER_VERSION = "v1";
 	public static final String INVALID_USER = "Invalid user";
 	public static final String INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE = "there was an error processing the request";
@@ -48,5 +49,9 @@ public class Constants {
 	public static final String USER_PASSWORD_RECOVERY = "com.devtence.will.dev.notificators.UserPasswordRecovery";
 	public static final String NO_PASSWORD_RESET_PROCESS_PENDING = "There is no password reset process pending";
 	public static final String TOKEN = "token";
+	public static final String INVALID_PARAMS = "invalid params";
+
+	public static final String GENERIC_USER = "user@devtence.com";
+	public static final String GENERIC_KEY = "OK";
 
 }

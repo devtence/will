@@ -169,7 +169,16 @@ public class Configuration extends BaseModel<Configuration> implements Serializa
 
 	@Override
 	public void update(Configuration data) throws Exception {
+		this.save();
+	}
 
+	@Override
+	public void load(long id) {
+		Configuration me = DbObjectify.ofy().load().type(Configuration.class).id(id).now();
+		this.setId(me.getId());
+		this.setConfigKey(me.getConfigKey());
+		this.setValue(me.getValue());
+		this.setDescription(me.getDescription());
 	}
 
 

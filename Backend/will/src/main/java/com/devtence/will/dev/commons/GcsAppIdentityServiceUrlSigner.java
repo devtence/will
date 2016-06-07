@@ -21,13 +21,13 @@ public class GcsAppIdentityServiceUrlSigner {
 
 	private final AppIdentityService identityService = AppIdentityServiceFactory.getAppIdentityService();
 
-	public String getSignedUrl(final String httpVerb, final String fileName) throws Exception {
+	public String getSignedUrl(final String httpVerb, final String fileName, String bucket) throws Exception {
 		final long expiration = expiration();
 		final String unsigned = stringToSign(expiration, fileName, httpVerb);
 		final String signature = sign(unsigned);
 
 		return new StringBuilder(BASE_URL).append("/")
-				.append(BUCKET)
+				.append(bucket)
 				.append("/")
 //				.append(FOLDER)
 //				.append("/")
