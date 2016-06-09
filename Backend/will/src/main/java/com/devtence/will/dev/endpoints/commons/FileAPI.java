@@ -6,7 +6,6 @@ import com.devtence.will.dev.commons.authenticators.UserAuthenticator;
 import com.devtence.will.dev.commons.wrappers.BooleanWrapper;
 import com.devtence.will.dev.commons.wrappers.UploadWrapper;
 import com.devtence.will.dev.endpoints.BaseController;
-import com.devtence.will.dev.models.BaseModel;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;

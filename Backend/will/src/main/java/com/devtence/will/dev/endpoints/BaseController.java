@@ -8,7 +8,6 @@ import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.*;
 import com.google.api.server.spi.response.*;
 
-import javax.inject.Named;
 
 /**
  * Created by plessmann on 02/06/16.

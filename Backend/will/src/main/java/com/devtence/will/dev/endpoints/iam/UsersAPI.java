@@ -10,15 +10,11 @@ import com.devtence.will.dev.exceptions.MissingFieldException;
 import com.devtence.will.dev.exceptions.UserExistException;
 import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.users.User;
-import com.google.api.server.spi.config.Api;
-import com.google.api.server.spi.config.ApiMethod;
-import com.google.api.server.spi.config.DefaultValue;
-import com.google.api.server.spi.config.Nullable;
+import com.google.api.server.spi.config.*;
 import com.google.api.server.spi.response.*;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 
-import javax.inject.Named;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
