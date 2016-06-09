@@ -22,6 +22,15 @@ public class Configuration extends BaseModel<Configuration> implements Serializa
 	private String value;
 	private String description;
 
+	public Configuration() {
+	}
+
+	public Configuration(String configKey, String value, String description) {
+		this.configKey = configKey;
+		this.value = value;
+		this.description = description;
+	}
+
 	public String getConfigKey() {
 		return configKey;
 	}
@@ -148,6 +157,30 @@ public class Configuration extends BaseModel<Configuration> implements Serializa
 		return DbObjectify.ofy().load().type(Configuration.class).id(id).now();
 	}
 
+	public Long getLong() throws Exception {
+		return Long.parseLong(value);
+	}
+
+	public String[] getStringArray(String separator) throws Exception {
+		return value.split(separator);
+	}
+
+	public int getInt() throws Exception {
+		return Integer.parseInt(value);
+	}
+
+	public float getFloat() throws Exception {
+		return Float.parseFloat(value);
+	}
+
+	public double getDouble() throws Exception {
+		return Double.parseDouble(value);
+	}
+
+	public boolean getBoolean() throws Exception {
+		return Integer.parseInt(value) == 0 ? false : true;
+	}
+
 	@Override
 	public void validate() throws Exception {
 		if(configKey == null || configKey.isEmpty()){
@@ -169,7 +202,26 @@ public class Configuration extends BaseModel<Configuration> implements Serializa
 
 	@Override
 	public void update(Configuration data) throws Exception {
-		this.save();
+		boolean mod = false;
+
+		if (data.getConfigKey() != null){
+			setConfigKey(data.getConfigKey());
+			mod |= true;
+		}
+
+		if (data.getDescription() != null){
+			setDescription(data.getDescription());
+			mod |= true;
+		}
+
+		if (data.getValue() != null){
+			setValue(data.getValue());
+			mod |= true;
+		}
+
+		if (mod){
+			this.validate();
+		}
 	}
 
 	@Override

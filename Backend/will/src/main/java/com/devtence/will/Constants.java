@@ -54,4 +54,54 @@ public class Constants {
 	public static final String GENERIC_USER = "user@devtence.com";
 	public static final String GENERIC_KEY = "OK";
 
+	//Test constants
+	public static final String RESULT_MUST_BE_NULL = "Result must be null";
+	public static final String RESULT_MUST_NOT_BE_NULL = "Result must not be null";
+	public static final String ID_MUST_NOT_BE_NULL = "Id must not be null";
+	public static final String CONFIG_KEY_MUST_NOT_BE_NULL = "Config Key must not be null";
+	public static final String DESCRIPTION_MUST_NOT_BE_NULL = "Description must not be null";
+	public static final String VALUE_MUST_NOT_BE_NULL = "Value must not be null";
+	public static final String CONFIG_KEY_MUST_NOT_BE_EMPTY = "Config Key must not be empty";
+	public static final String DESCRIPTION_MUST_NOT_BE_EMPTY = "Description must not be empty";
+	public static final String VALUE_MUST_NOT_BE_EMPTY = "Value must not be empty";
+	public static final String CONFIG_KEY_MUST_BE_VALUE = "Config Key must be %s";
+	public static final String DESCRIPTION_MUST_BE_VALUE = "Description must be %s";
+	public static final String VALUE_MUST_BE_VALUE = "Value must be %s";
+	public static final String ARRAYS_MUST_HAVE_SAME_SIZE = "Arrays must have same size";
+	public static final String SEPARATOR = ";";
+	public static final String LIST_MUST_BE_NULL = "List must be null";
+	public static final String LIST_MUST_NOT_BE_NULL = "List must not be null";
+	public static final String LIST_MUST_NOT_BE_EMPTY = "List must not be empty";
+	public static final String CONFIG_KEY = "configKey";
+	public static final String ASC = "ASC";
+	public static final int INDEX = 0;
+	public static final int OFFSET = 100;
+	public static final String LIST_SIZE_MUST_BE_SEVEN = "List size must be seven";
+
+
+	public static final String SENDER_MUST_NOT_BE_NULL = "Sender must not be null";
+	public static final String RECIPIENTS_MUST_NOT_BE_NULL = "Recipients must not be null";
+	public static final String SUBJECT_MUST_NOT_BE_NULL = "Subject must not be null";
+	public static final String MESSAGE_MUST_NOT_BE_NULL = "Message must not be null";
+	public static final String MNEMONIC_MUST_NOT_BE_NULL = "Mnemonic must not be null";
+	public static final String SENDER_MUST_NOT_BE_EMPTY = "Sender must not be empty";
+	public static final String RECIPIENTS_MUST_NOT_BE_EMPTY = "Recipients must not be empty";
+	public static final String SUBJECT_MUST_NOT_BE_EMPTY = "Value must not be empty";
+	public static final String MESSAGE_MUST_NOT_BE_EMPTY = "Message must not be empty";
+	public static final String MNEMONIC_MUST_NOT_BE_EMPTY = "Mnemonic must not be empty";
+	public static final String SENDER_MUST_BE_VALUE = "Sender must be %s";
+	public static final String RECIPIENTS_MUST_BE_VALUE = "Recipients must be %s";
+	public static final String SUBJECT_MUST_BE_VALUE = "Subject must be %s";
+	public static final String MESSAGE_MUST_BE_VALUE = "Message must be %s";
+	public static final String MNEMONIC_MUST_BE_VALUE = "Mnemonic must be %s";
+	public static final String MNEMONIC = "mnemonic";
+	public static final String NAME = "name";
+
+	public static final String NAME_MUST_NOT_BE_NULL = "Name must not be null";
+	public static final String PERMISSION_MUST_NOT_BE_NULL = "Permission must not be null";
+	public static final String NAME_MUST_NOT_BE_EMPTY = "Name must not be empty";
+	public static final String PERMISSION_MUST_NOT_BE_EMPTY = "Permission must not be empty";
+	public static final String NAME_MUST_BE_VALUE = "Name must be %s";
+	public static final String PERMISSION_MUST_BE_VALUE = "Permission must be %s";
+
 }
