@@ -126,7 +126,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
 		}
-		return null;
+		return userDevtence;
 	}
 
 	@Override

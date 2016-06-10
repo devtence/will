@@ -228,7 +228,7 @@ public class RoleAPITest {
 
 		//</editor-fold>
 
-		list = roleAPI.list(0, 100, Constants.NAME, Constants.ASC, null, user);
+		list = roleAPI.list(Constants.INDEX, Constants.OFFSET, Constants.NAME, Constants.ASC, null, user);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, list);
 		assertNotNull(Constants.LIST_MUST_NOT_BE_NULL, list.getItems());
 		assertFalse(Constants.LIST_MUST_NOT_BE_EMPTY, list.getItems().isEmpty());

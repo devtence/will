@@ -96,6 +96,7 @@ public class Constants {
 	public static final String MNEMONIC_MUST_BE_VALUE = "Mnemonic must be %s";
 	public static final String MNEMONIC = "mnemonic";
 	public static final String NAME = "name";
+	public static final String USERNAME = "user";
 
 	public static final String NAME_MUST_NOT_BE_NULL = "Name must not be null";
 	public static final String PERMISSION_MUST_NOT_BE_NULL = "Permission must not be null";
@@ -103,5 +104,28 @@ public class Constants {
 	public static final String PERMISSION_MUST_NOT_BE_EMPTY = "Permission must not be empty";
 	public static final String NAME_MUST_BE_VALUE = "Name must be %s";
 	public static final String PERMISSION_MUST_BE_VALUE = "Permission must be %s";
+	public static final String USER_MUST_NOT_BE_NULL = "User must not be null";
+	public static final String EMAIL_MUST_NOT_BE_NULL = "Email must not be null";
+	public static final String PASSWORD_MUST_NOT_BE_NULL = "Password must not be null";
+	public static final String ROLES_MUST_NOT_BE_NULL = "Roles must not be null";
+	public static final String USER_MUST_NOT_BE_EMPTY = "User must not be empty";
+	public static final String EMAIL_MUST_NOT_BE_EMPTY = "Email must not be empty";
+	public static final String PASSWORD_MUST_NOT_BE_EMPTY = "Password must not be empty";
+	public static final String ROLES_MUST_NOT_BE_EMPTY = "Roles must not be empty";
+	public static final String USER_MUST_BE_VALUE = "User must be %s";
+	public static final String EMAIL_MUST_BE_VALUE = "Email must be %s";
+	public static final String PASSWORD_MUST_BE_VALUE = "Password must be %s";
+	public static final String ROLE_MUST_BE_VALUE = "Role must be %s";
+	public static final String AUTHORIZATION_MUST_NOT_BE_NULL = "Authotization must not be null";
+	public static final String AUTHORIZATION_KEY_MUST_NOT_BE_NULL = "Authotization key must not be null";
+	public static final String AUTHORIZATION_MUST_NOT_BE_EMPTY = "Authotization must not be empty";
+	public static final String AUTHORIZATION_KEY_MUST_NOT_BE_EMPTY = "Authotization key must not be empty";
+	public static final String RESULT_MUST_BE_TRUE = "Result must be true";
+	public static final String RESULT_MUST_BE_FALSE = "Result must be false";
+
+	public static final String WEB_TOKEN_MUST_NOT_BE_NULL = "Web token must not be null";
+	public static final String SECRET_MUST_NOT_BE_NULL = "Secret must not be null";
+	public static final String WEB_TOKEN_MUST_NOT_BE_EMPTY = "Web token must not be empty";
+	public static final String SECRET_MUST_NOT_BE_EMPTY = "Secret must not be empty";
 
 }

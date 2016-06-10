@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Entity
 public class UserPasswordReset extends BaseModel<UserPasswordReset> implements Serializable {
 
+	@Index
 	private Long idUser;
 	@Index
 	private String webToken;
@@ -84,4 +85,9 @@ public class UserPasswordReset extends BaseModel<UserPasswordReset> implements S
 	public static UserPasswordReset getByToken(String webToken) throws Exception {
 		return DbObjectify.ofy().load().type(UserPasswordReset.class).filter("webToken", webToken).first().now();
 	}
+
+	public static UserPasswordReset getUser(Long user) throws Exception {
+		return DbObjectify.ofy().load().type(UserPasswordReset.class).filter("idUser", user).first().now();
+	}
+
 }

@@ -28,11 +28,20 @@ public class PasswordRedirect extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
+		try {
+			String token = request.getParameter(Constants.TOKEN);
+			boolean error = processRequest(token);
+			response.sendRedirect(error ? ConfigurationsCache.getInstance().getConfiguration(PASSWORD_ERROR).getValue() : ConfigurationsCache.getInstance().getConfiguration(PASSWORD_VALID).getValue());
+		} catch (Exception e) {
+			log.log(Level.WARNING, Constants.ERROR, e);
+		}
+	}
+
+	public boolean processRequest(String token) {
 		boolean error = true;
 		UserPasswordReset passwordReset = null;
 		User user;
 		try {
-			String token = request.getParameter(Constants.TOKEN);
 			passwordReset = UserPasswordReset.getByToken(token);
 			if (passwordReset != null) {
 				Jws<Claims> claimsJws = Jwts.parser().setSigningKey(passwordReset.getSecret()).parseClaimsJws(token);
@@ -55,12 +64,8 @@ public class PasswordRedirect extends HttpServlet {
 			log.log(Level.WARNING, Constants.ERROR, e);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
-		} finally {
-			try {
-				response.sendRedirect(error ? ConfigurationsCache.getInstance().getConfiguration(PASSWORD_ERROR).getValue() : ConfigurationsCache.getInstance().getConfiguration(PASSWORD_VALID).getValue());
-			} catch (Exception e) {
-				log.log(Level.WARNING, Constants.ERROR, e);
-			}
 		}
+		return error;
 	}
+
 }

@@ -41,46 +41,52 @@ public class UserAuthenticator implements Authenticator {
 			user = new User(Constants.GENERIC_KEY, Constants.GENERIC_USER);
 		} else {
 			String idClient = request.getHeader(Constants.AUTHORIZATION_CLIENT);
-			if (idClient != null && !idClient.isEmpty()) {
-				try {
-					Client client = ClientsCache.getInstance().getClient(Long.parseLong(idClient));
-					if (client != null) {
-						String pathTranslated = request.getPathTranslated();
-						Permission permission = new Permission(pathTranslated);
-						if (client.getPermissions().contains(permission)) {
-							int permissionIndex = client.getPermissions().indexOf(permission);
-							permission = client.getPermissions().get(permissionIndex);
-							if(permission.getUserRequired()) {
-								String token = request.getHeader(Constants.AUTHORIZATION);
-								String key = request.getHeader(Constants.AUTHORIZATION_KEY);
-								if (token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
-									try {
-										CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Long.parseLong(key));
-										boolean valid = false;
-										Role role = null;
-										for (Long roleKey : value.getRoles()) {
-											role = RolesCache.getInstance().getRole(roleKey);
-											if (role.getPermissions().contains(permission)) {
-												valid = true;
-												break;
-											}
+			String pathTranslated = request.getPathTranslated();
+			String token = request.getHeader(Constants.AUTHORIZATION);
+			String key = request.getHeader(Constants.AUTHORIZATION_KEY);
+			user = authProduction(idClient, pathTranslated, token, key);
+		}
+		return user;
+	}
+
+	public User authProduction(String idClient, String pathTranslated, String token, String key){
+		User user = null;
+		if (idClient != null && !idClient.isEmpty()) {
+			try {
+				Client client = ClientsCache.getInstance().getClient(Long.parseLong(idClient));
+				if (client != null) {
+					Permission permission = new Permission(pathTranslated);
+					if (client.getPermissions().contains(permission)) {
+						int permissionIndex = client.getPermissions().indexOf(permission);
+						permission = client.getPermissions().get(permissionIndex);
+						if(permission.getUserRequired()) {
+							if (token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
+								try {
+									CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Long.parseLong(key));
+									boolean valid = false;
+									Role role = null;
+									for (Long roleKey : value.getRoles()) {
+										role = RolesCache.getInstance().getRole(roleKey);
+										if (role.getPermissions().contains(permission)) {
+											valid = true;
+											break;
 										}
-										if (valid) {
-											Jwts.parser().setSigningKey(value.getSecret()).parseClaimsJws(token);
-											user =  new User(key, Constants.GENERIC_USER);
-										}
-									} catch (Exception e) {
-										log.log(Level.WARNING, Constants.ERROR, e);
 									}
+									if (valid) {
+										Jwts.parser().setSigningKey(value.getSecret()).parseClaimsJws(token);
+										user =  new User(key, Constants.GENERIC_USER);
+									}
+								} catch (Exception e) {
+									log.log(Level.WARNING, Constants.ERROR, e);
 								}
-							} else {
-								user = new User(Constants.GENERIC_KEY, Constants.GENERIC_USER);
 							}
+						} else {
+							user = new User(Constants.GENERIC_KEY, Constants.GENERIC_USER);
 						}
 					}
-				} catch (Exception e) {
-					log.log(Level.WARNING, Constants.ERROR, e);
 				}
+			} catch (Exception e) {
+				log.log(Level.WARNING, Constants.ERROR, e);
 			}
 		}
 		return user;
