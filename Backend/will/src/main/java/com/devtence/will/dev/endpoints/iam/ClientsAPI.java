@@ -114,7 +114,7 @@ public class ClientsAPI extends BaseController<Client> {
 	@Override
 	@ApiMethod(name = "client.list", path = "clients")
 	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index,
-						 @Named("offset") @Nullable @DefaultValue("100") Integer offset,
+						 @Named("limit") @Nullable @DefaultValue("100") Integer limit,
 						 @Named("sortField") @Nullable String sortField,
 						 @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection,
 						 @Named("cursor") @Nullable String cursor,
@@ -123,7 +123,7 @@ public class ClientsAPI extends BaseController<Client> {
 		validateUser(user);
 		ListItem list = null;
 		try {
-			list = Client.getList(cursor, offset, Client.class, sortField, sortDirection);
+			list = Client.getList(cursor, limit, Client.class, sortField, sortDirection);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);

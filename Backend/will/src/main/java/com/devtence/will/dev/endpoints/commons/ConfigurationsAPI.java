@@ -107,11 +107,11 @@ public class ConfigurationsAPI extends BaseController<Configuration> {
 
 	@Override
 	@ApiMethod(name = "configuration.list", path = "configurations")
-	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
+	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("limit") @Nullable @DefaultValue("100") Integer limit, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		ListItem list = null;
 		try {
-			list = Configuration.getList(cursor, offset, Configuration.class, sortField, sortDirection);
+			list = Configuration.getList(cursor, limit, Configuration.class, sortField, sortDirection);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
