@@ -16,7 +16,6 @@ import com.google.api.server.spi.response.*;
  */
 public class ContentAPI extends BaseController<Content>{
 
-
     @Override
     public Content create(Content data, User user) throws BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException {
         return null;
@@ -38,7 +37,7 @@ public class ContentAPI extends BaseController<Content>{
     }
 
     @Override
-    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
+    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("limit") @Nullable @DefaultValue("100") Integer limit, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
         return null;
     }
 }

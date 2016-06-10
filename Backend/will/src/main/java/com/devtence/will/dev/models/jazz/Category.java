@@ -1,16 +1,20 @@
 package com.devtence.will.dev.models.jazz;
 
 import com.devtence.will.dev.models.BaseModel;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * Created by sorcerer on 6/9/16.
  */
+@Index
 public class Category extends BaseModel<Category>{
 
+    @Index
     private String name;
 
     private String description;
 
+    @Index
     private Long idLanguage;
 
     public String getName() {
@@ -49,11 +53,37 @@ public class Category extends BaseModel<Category>{
 
     @Override
     public void update(Category data) throws Exception {
+        boolean mod = false;
 
+        if (data.getName() != null){
+            setName(data.getName());
+            mod |= true;
+        }
+
+        if (data.getDescription() != null){
+            setDescription(data.getDescription());
+            mod |= true;
+        }
+
+        if (data.getIdLanguage() != null){
+            setIdLanguage(data.getIdLanguage());
+            mod |= true;
+        }
+
+        if (mod){
+            this.validate();
+        }
     }
 
     @Override
     public void load(long id) {
+        Category me  = get(id);
+        setName(me.getName());
+        setDescription(me.getDescription());
+        setIdLanguage(me.getIdLanguage());
+    }
 
+    public static Category get(long id){
+        return (Category) get(id, Category.class);
     }
 }

@@ -23,7 +23,6 @@ public class Creator extends BaseModel<Creator> {
 
     private List<Language> languages;
 
-
     public String getName() {
         return name;
     }

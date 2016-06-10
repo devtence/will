@@ -38,6 +38,8 @@ public class Constants {
 	public static final String USER_ERROR_NOT_FOUND = "User not found with index: %d";
 	public static final String USER_NOT_FOUND = "User not found with user: %s";
 
+	public static final String LANGUAGE_ERROR_CREATE = "Error creating language: %s";
+	public static final String LANGUAGE_ERROR_NOT_FOUND = "Language not found with index: %d";
 
 	public static final String INVALID_PASSWORD = "Invalid password";
 
