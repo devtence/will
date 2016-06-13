@@ -77,6 +77,10 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.roles = roles;
     }
 
+    public User(String user) {
+        this.user = user;
+    }
+
     public Integer getStatus() {
         return status;
     }
