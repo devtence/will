@@ -13,7 +13,7 @@ public class Content extends BaseModel<Content>{
 
     private String description;
 
-    private List<Creator> authors;
+    private List<Author> authors;
 
     private List<Long> categories;
 
@@ -37,11 +37,11 @@ public class Content extends BaseModel<Content>{
         this.description = description;
     }
 
-    public List<Creator> getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<Creator> authors) {
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
@@ -87,5 +87,9 @@ public class Content extends BaseModel<Content>{
     @Override
     public void load(long id) {
 
+    }
+
+    public static Content get(long id){
+        return (Content) get(id, Content.class);
     }
 }

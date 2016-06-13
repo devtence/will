@@ -41,6 +41,15 @@ public class Constants {
 	public static final String LANGUAGE_ERROR_CREATE = "Error creating language: %s";
 	public static final String LANGUAGE_ERROR_NOT_FOUND = "Language not found with index: %d";
 
+    public static final String AUTHOR_ERROR_CREATE = "Error creating author: %s";
+    public static final String AUTHOR_ERROR_NOT_FOUND = "Author not found with index: %d";
+
+    public static final String CATEGORY_ERROR_CREATE = "Error creating category: %s";
+    public static final String CATEGORY_ERROR_NOT_FOUND = "Category not found with index: %d";
+
+    public static final String CONTENT_ERROR_CREATE = "Error creating content: %d";
+    public static final String CONTENT_ERROR_NOT_FOUND = "Content not found with index: %d";
+
 	public static final String INVALID_PASSWORD = "Invalid password";
 
 	public static final String NOTIFY = "/notify";

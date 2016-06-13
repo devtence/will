@@ -10,7 +10,7 @@ import java.util.List;
  * Created by sorcerer on 6/9/16.
  */
 @Entity
-public class Creator extends BaseModel<Creator> {
+public class Author extends BaseModel<Author> {
 
     @Index
     private String name;
@@ -66,7 +66,7 @@ public class Creator extends BaseModel<Creator> {
     }
 
     @Override
-    public void update(Creator data) throws Exception {
+    public void update(Author data) throws Exception {
         boolean mod = false;
 
         if (data.getName() != null){
@@ -100,7 +100,7 @@ public class Creator extends BaseModel<Creator> {
 
     }
 
-    public static Creator get(long id){
-        return (Creator) get(id, Creator.class);
+    public static Author get(long id){
+        return (Author) get(id, Author.class);
     }
 }
