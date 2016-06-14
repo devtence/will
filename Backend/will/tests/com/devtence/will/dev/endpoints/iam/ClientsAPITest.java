@@ -73,7 +73,9 @@ public class ClientsAPITest {
 		}
 		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
-		client = ClientsCache.getInstance().getClient(client.getId());
+		configuration = ConfigurationsAPITest.createConfiguration("use-cache", "1", "Test String");
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
+		client = ClientsCache.getInstance().getElement(client.getId());
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
 	}
 

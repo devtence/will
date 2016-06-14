@@ -79,7 +79,9 @@ public class NotificationsAPITest {
 		assertTrue(String.format(Constants.MNEMONIC_MUST_BE_VALUE, mnemonic), notification.getMnemonic().equalsIgnoreCase(mnemonic));
 		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
-		notification = NotificationsCache.getInstance().getNotification(mnemonic);
+		configuration = ConfigurationsAPITest.createConfiguration("use-cache", "1", "Test String");
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
+		notification = NotificationsCache.getInstance().getElement(mnemonic);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, notification);
 	}
 

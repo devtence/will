@@ -3,7 +3,6 @@ package com.devtence.will.dev.commons.caches;
 import com.devtence.will.Constants;
 import com.devtence.will.dev.models.commons.Configuration;
 import com.devtence.will.dev.models.commons.Notification;
-import com.devtence.will.dev.models.users.Role;
 import com.google.appengine.api.memcache.InvalidValueException;
 import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
 
@@ -24,22 +23,49 @@ public class NotificationsCache {
 	/**
 	 * The protected instance
 	 */
-	private static NotificationsCache me = null;
+	protected static NotificationsCache me = null;
 
 	/**
 	 * The Member Cache element using the JCache library
 	 */
 	private Cache cache;
 
-	/**
-	 * Contructor for the instance in which the cache timeout is defined
-	 * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
-	 */
+	private boolean useCache;
+
 	public NotificationsCache() throws Exception {
+		useCache = Configuration.getBoolean("use-cache");
+		if(useCache) {
+			initCache();
+		}
+	}
+
+	protected void initCache() throws Exception {
 		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
 		Map properties = new HashMap<>();
 		properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
 		cache = cacheFactory.createCache(properties);
+	}
+
+	protected Notification getCacheElement(String key) throws Exception {
+		Notification element = null;
+		useCache = Configuration.getBoolean("use-cache");
+		if(useCache) {
+			if(cache == null) {
+				initCache();
+			}
+			element = (Notification) cache.get(key);
+		}
+		return element;
+	}
+
+	protected void putCacheElement(String key, Notification value) throws Exception{
+		useCache = Configuration.getBoolean("use-cache");
+		if(useCache) {
+			if(cache == null) {
+				initCache();
+			}
+			cache.put(key, value);
+		}
 	}
 
 	/**
@@ -54,22 +80,14 @@ public class NotificationsCache {
 		return me;
 	}
 
-	/**
-	 * Access to the cache element
-	 * @return cache to be used to manage the authorization
-	 */
-	public Cache getCache() {
-		return cache;
-	}
-
-	public Notification getNotification(String mnemonic) throws Exception {
-		Notification notification = (Notification) cache.get(mnemonic);
+	public Notification getElement(String key) throws Exception {
+		Notification notification = getCacheElement(key);
 		if(notification == null) {
-			notification = Notification.getByMnemonic(mnemonic);
+			notification = Notification.getByMnemonic(key);
 			if (notification != null) {
-				cache.put(mnemonic, notification);
+				putCacheElement(key, notification);
 			} else {
-				throw new InvalidValueException(String.format(Constants.INVALID_ID, mnemonic));
+				throw new InvalidValueException(String.format(Constants.INVALID_ID, key));
 			}
 		}
 		return notification;

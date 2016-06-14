@@ -36,7 +36,7 @@ public class UserPasswordRecovery extends Notificator {
 			User user = User.getById(id);
 			if(user != null) {
 				if(user.getPasswordRecoveryStatus() == 1) {
-					Notification notification = NotificationsCache.getInstance().getNotification(notificationMnemonic);
+					Notification notification = NotificationsCache.getInstance().getElement(notificationMnemonic);
 					if (notification != null) {
 						Key key = MacProvider.generateKey();
 						String secret = Base64.encodeBase64String(key.getEncoded());
@@ -45,7 +45,7 @@ public class UserPasswordRecovery extends Notificator {
 						passwordReset.validate();
 						user.setPasswordRecoveryStatus(2);
 						user.update();
-						String passwordRedirectServlet = ConfigurationsCache.getInstance().getConfiguration(PASSWORD_REDIRECT_SERVLET).getValue();
+						String passwordRedirectServlet = ConfigurationsCache.getInstance().getElement(PASSWORD_REDIRECT_SERVLET).getValue();
 						System.out.println(String.format(passwordRedirectServlet, webToken));
 						//TODO: ajustar el mensaje
 						String message = notification.getMessage().replaceAll(URL, String.format(passwordRedirectServlet, webToken));
