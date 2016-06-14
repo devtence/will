@@ -30,7 +30,6 @@ public class UserPasswordRecovery extends Notificator {
 
 	@Override
 	public void notify(Map parameters) {
-
 		try {
 			long id = Long.parseLong(((String[])parameters.get(Constants.ID))[0]);
 			String notificationMnemonic = ((String[])parameters.get(Constants.NOTIFICATION_MNEMONIC))[0];

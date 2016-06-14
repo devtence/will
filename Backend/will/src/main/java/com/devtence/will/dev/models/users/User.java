@@ -52,6 +52,13 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.password = password;
     }
 
+    public User(String email, String user, String password, List<Long> roles) {
+        this.email = email;
+        this.user = user;
+        this.password = password;
+        this.roles = roles;
+    }
+
     public User(String user, String password) {
         this.user = user;
         this.password = password;
@@ -68,6 +75,10 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.jwt = jwt;
         this.secret = secret;
         this.roles = roles;
+    }
+
+    public User(String user) {
+        this.user = user;
     }
 
     public Integer getStatus() {
@@ -272,7 +283,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         }
 
         if (mod){
-            this.validate();
+            this.update();
         }
     }
 

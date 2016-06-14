@@ -34,6 +34,14 @@ public class Notification extends BaseModel<Notification> implements Serializabl
 		this.message = message;
 	}
 
+	public Notification(String sender, String recipients, String subject, String message, String mnemonic) {
+		this.sender = sender;
+		this.recipients = recipients;
+		this.subject = subject;
+		this.message = message;
+		this.mnemonic = mnemonic;
+	}
+
 	public String getSender() {
 		return sender;
 	}
@@ -90,12 +98,41 @@ public class Notification extends BaseModel<Notification> implements Serializabl
 
 	@Override
 	public void destroy() throws Exception {
-
+		this.delete();
 	}
 
 	@Override
 	public void update(Notification data) throws Exception {
+		boolean mod = false;
 
+		if (data.getSender() != null){
+			setSender(data.getSender());
+			mod |= true;
+		}
+
+		if (data.getSubject() != null){
+			setSubject(data.getSubject());
+			mod |= true;
+		}
+
+		if (data.getRecipients() != null){
+			setRecipients(data.getRecipients());
+			mod |= true;
+		}
+
+		if (data.getMnemonic() != null){
+			setMnemonic(data.getMnemonic());
+			mod |= true;
+		}
+
+		if (data.getMessage() != null){
+			setMessage(data.getMessage());
+			mod |= true;
+		}
+
+		if (mod){
+			this.validate();
+		}
 	}
 
 	@Override
@@ -120,5 +157,16 @@ public class Notification extends BaseModel<Notification> implements Serializabl
 	 */
 	public static Notification getByMnemonic(String mnemonic) throws Exception {
 		return DbObjectify.ofy().load().type(Notification.class).filter("mnemonic", mnemonic).first().now();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("{\"id\":").append(getId())
+				.append(",\"sender\":\"").append(sender)
+				.append("\",\"recipients\":\"").append(recipients)
+				.append("\",\"subject\":\"").append(subject)
+				.append("\",\"message\":\"").append(message).append("\"}");
+		return result.toString();
 	}
 }

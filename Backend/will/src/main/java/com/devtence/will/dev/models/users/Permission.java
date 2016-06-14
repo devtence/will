@@ -16,9 +16,15 @@ public class Permission implements Serializable {
 
     public Permission(String route) {
         this.route = route;
+		this.userRequired = false;
     }
 
-    public String getRoute() {
+	public Permission(String route, Boolean userRequired) {
+		this.route = route;
+		this.userRequired = userRequired;
+	}
+
+	public String getRoute() {
         return route;
     }
 

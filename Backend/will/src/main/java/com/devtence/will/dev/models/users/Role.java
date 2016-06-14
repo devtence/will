@@ -82,4 +82,8 @@ public class Role extends BaseModel<Role> implements Serializable {
         setPermissions(me.getPermissions());
     }
 
+    public static Role getById(Long id) throws Exception {
+        return (Role) get(id, Role.class);
+    }
+
 }

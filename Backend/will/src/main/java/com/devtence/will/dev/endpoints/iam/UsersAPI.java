@@ -122,7 +122,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
 		}
-		return null;
+		return userDevtence;
 	}
 
 	@Override
@@ -214,6 +214,8 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 		if(userDevtence != null){
 			if(userDevtence.getPasswordRecoveryStatus() == 3) {
 				try {
+					BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+					data.setPassword(passwordEncryptor.encryptPassword(data.getPassword()));
 					data.setPasswordRecoveryStatus(0);
 					userDevtence.update(data);
 					return new BooleanWrapper(true);
