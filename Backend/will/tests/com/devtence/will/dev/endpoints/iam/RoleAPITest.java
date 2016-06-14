@@ -1,9 +1,12 @@
 package com.devtence.will.dev.endpoints.iam;
 
 import com.devtence.will.Constants;
+import com.devtence.will.dev.commons.caches.RolesCache;
+import com.devtence.will.dev.endpoints.commons.ConfigurationsAPITest;
 import com.devtence.will.dev.models.ListItem;
-import com.devtence.will.dev.models.users.Role;
+import com.devtence.will.dev.models.commons.Configuration;
 import com.devtence.will.dev.models.users.Permission;
+import com.devtence.will.dev.models.users.Role;
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -27,8 +30,8 @@ import static org.junit.Assert.*;
 public class RoleAPITest {
 	
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-	private final RoleAPI roleAPI = new RoleAPI();
-	private final User user = new User("ok", "email");
+	private final static RoleAPI roleAPI = new RoleAPI();
+	private final static User user = new User("ok", "email");
 	protected Closeable session;
 
 	@BeforeClass
@@ -48,6 +51,32 @@ public class RoleAPITest {
 		this.session.close();
 		this.helper.tearDown();
 	}
+
+	public static Role createRole(String name, List<Permission> permissions) throws Exception {
+		Role role = new Role(name, permissions);
+		role = roleAPI.create(role, user);
+		validateRole(role, name, permissions);
+		return role;
+	}
+
+	private static void validateRole(Role role, String name, List<Permission> permissions) throws Exception {
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
+		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
+		assertNotNull(Constants.NAME_MUST_NOT_BE_NULL, role.getName());
+		assertNotNull(Constants.PERMISSION_MUST_NOT_BE_NULL, role.getPermissions());
+		assertFalse(Constants.NAME_MUST_NOT_BE_EMPTY, role.getName().isEmpty());
+		assertFalse(Constants.PERMISSION_MUST_NOT_BE_EMPTY, role.getPermissions().isEmpty());
+		assertTrue(String.format(Constants.NAME_MUST_BE_VALUE, name), role.getName().equalsIgnoreCase(name));
+		List<Permission> result = role.getPermissions();
+		assertTrue(Constants.ARRAYS_MUST_HAVE_SAME_SIZE, permissions.size() == result.size());
+		for (int i = 0; i < permissions.size(); i++) {
+			assertTrue(String.format(Constants.PERMISSION_MUST_BE_VALUE, permissions.get(i).getRoute()), result.get(i).getRoute().equalsIgnoreCase(permissions.get(i).getRoute()));
+		}
+		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
+		role = RolesCache.getInstance().getRole(role.getId());
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
+	}
 	
 	@Test
 	public void create() throws Exception {
@@ -61,20 +90,8 @@ public class RoleAPITest {
 		permissions.add(new Permission("RolesAPI.updatePassword"));
 		permissions.add(new Permission("RolesAPI.checkUser"));
 		String name = "app";
-		Role role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
+		Role role = createRole(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-		assertNotNull(Constants.NAME_MUST_NOT_BE_NULL, role.getName());
-		assertNotNull(Constants.PERMISSION_MUST_NOT_BE_NULL, role.getPermissions());
-		assertFalse(Constants.NAME_MUST_NOT_BE_EMPTY, role.getName().isEmpty());
-		assertFalse(Constants.PERMISSION_MUST_NOT_BE_EMPTY, role.getPermissions().isEmpty());
-		assertTrue(String.format(Constants.NAME_MUST_BE_VALUE, name), role.getName().equalsIgnoreCase(name));
-		List<Permission> result = role.getPermissions();
-		assertTrue(Constants.ARRAYS_MUST_HAVE_SAME_SIZE, permissions.size() == result.size());
-		for (int i = 0; i < permissions.size(); i++) {
-			assertTrue(String.format(Constants.PERMISSION_MUST_BE_VALUE, permissions.get(i).getRoute()), result.get(i).getRoute().equalsIgnoreCase(permissions.get(i).getRoute()));
-		}
 	}
 
 	@Test
@@ -89,23 +106,10 @@ public class RoleAPITest {
 		permissions.add(new Permission("RolesAPI.updatePassword"));
 		permissions.add(new Permission("RolesAPI.checkUser"));
 		String name = "app";
-		Role role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
+		Role role = createRole(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
 		role = roleAPI.read(role.getId(), user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-		assertNotNull(Constants.NAME_MUST_NOT_BE_NULL, role.getName());
-		assertNotNull(Constants.PERMISSION_MUST_NOT_BE_NULL, role.getPermissions());
-		assertFalse(Constants.NAME_MUST_NOT_BE_EMPTY, role.getName().isEmpty());
-		assertFalse(Constants.PERMISSION_MUST_NOT_BE_EMPTY, role.getPermissions().isEmpty());
-		assertTrue(String.format(Constants.NAME_MUST_BE_VALUE, name), role.getName().equalsIgnoreCase(name));
-		List<Permission> result = role.getPermissions();
-		assertTrue(Constants.ARRAYS_MUST_HAVE_SAME_SIZE, permissions.size() == result.size());
-		for (int i = 0; i < permissions.size(); i++) {
-			assertTrue(String.format(Constants.PERMISSION_MUST_BE_VALUE, permissions.get(i).getRoute()), result.get(i).getRoute().equalsIgnoreCase(permissions.get(i).getRoute()));
-		}
+		validateRole(role, name, permissions);
 	}
 
 	@Test
@@ -120,10 +124,8 @@ public class RoleAPITest {
 		permissions.add(new Permission("RolesAPI.updatePassword"));
 		permissions.add(new Permission("RolesAPI.checkUser"));
 		String name = "app";
-		Role role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
+		Role role = createRole(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
 		Long id = role.getId();
 		permissions.clear();
 		permissions.add(new Permission("changedRolesAPI.read"));
@@ -137,12 +139,7 @@ public class RoleAPITest {
 		name = "changedapp";
 		role = new Role(name, permissions);
 		role = roleAPI.update(id, role, user);
-		assertTrue(String.format(Constants.NAME_MUST_BE_VALUE, name), role.getName().equalsIgnoreCase(name));
-		List<Permission> result = role.getPermissions();
-		assertTrue(Constants.ARRAYS_MUST_HAVE_SAME_SIZE, permissions.size() == result.size());
-		for (int i = 0; i < permissions.size(); i++) {
-			assertTrue(String.format(Constants.PERMISSION_MUST_BE_VALUE, permissions.get(i).getRoute()), result.get(i).getRoute().equalsIgnoreCase(permissions.get(i).getRoute()));
-		}
+		validateRole(role, name, permissions);
 	}
 
 	@Test
@@ -157,10 +154,8 @@ public class RoleAPITest {
 		permissions.add(new Permission("RolesAPI.updatePassword"));
 		permissions.add(new Permission("RolesAPI.checkUser"));
 		String name = "app";
-		Role role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
+		Role role = createRole(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
 		role = roleAPI.delete(role.getId(), user);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
 		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
@@ -173,7 +168,6 @@ public class RoleAPITest {
 		ListItem list = roleAPI.list(Constants.INDEX, Constants.OFFSET, Constants.NAME, Constants.ASC, null, user);
 		assertNull(Constants.LIST_MUST_BE_NULL, list.getItems());
 
-		//<editor-fold desc="Notifications creation">
 		List<Permission> permissions = new ArrayList<>(8);
 		permissions.add(new Permission("RolesAPI.read"));
 		permissions.add(new Permission("RolesAPI.create"));
@@ -183,50 +177,13 @@ public class RoleAPITest {
 		permissions.add(new Permission("RolesAPI.recoverPassword"));
 		permissions.add(new Permission("RolesAPI.updatePassword"));
 		permissions.add(new Permission("RolesAPI.checkUser"));
+		String name = "app";
+		Role role;
 
-		String name = "0app";
-		Role role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-
-		name = "1app";
-		role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-
-		name = "2app";
-		role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-
-		name = "3app";
-		role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-
-		name = "4app";
-		role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-
-		name = "5app";
-		role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-
-		name = "6app";
-		role = new Role(name, permissions);
-		role = roleAPI.create(role, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-
-		//</editor-fold>
+		for (int i = 0; i < 7; i++) {
+			role = createRole(i + "_" + name, permissions);
+			assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
+		}
 
 		list = roleAPI.list(Constants.INDEX, Constants.OFFSET, Constants.NAME, Constants.ASC, null, user);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, list);

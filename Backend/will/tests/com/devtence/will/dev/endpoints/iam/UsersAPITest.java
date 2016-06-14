@@ -2,11 +2,11 @@ package com.devtence.will.dev.endpoints.iam;
 
 import com.devtence.will.Constants;
 import com.devtence.will.dev.commons.authenticators.UserAuthenticator;
-import com.devtence.will.dev.commons.caches.NotificationsCache;
 import com.devtence.will.dev.commons.wrappers.AuthorizationWrapper;
 import com.devtence.will.dev.commons.wrappers.BooleanWrapper;
-import com.devtence.will.dev.endpoints.commons.ConfigurationsAPI;
+import com.devtence.will.dev.endpoints.commons.ConfigurationsAPITest;
 import com.devtence.will.dev.endpoints.commons.NotificationsAPI;
+import com.devtence.will.dev.endpoints.commons.NotificationsAPITest;
 import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.commons.Configuration;
 import com.devtence.will.dev.models.commons.Notification;
@@ -22,7 +22,10 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cache.AsyncCacheFilter;
 import com.googlecode.objectify.util.Closeable;
 import org.jasypt.util.password.BasicPasswordEncryptor;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,8 +42,6 @@ public class UsersAPITest {
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 	private final UsersAPI usersAPI = new UsersAPI();
 	private final RoleAPI roleAPI = new RoleAPI();
-	private final ClientsAPI clientsAPI = new ClientsAPI();
-	private final ConfigurationsAPI configurationsAPI = new ConfigurationsAPI();
 	private final NotificationsAPI notificationsAPI = new NotificationsAPI();
 	private final com.google.api.server.spi.auth.common.User userAuth = new com.google.api.server.spi.auth.common.User("ok", "email");
 	protected Closeable session;
@@ -63,55 +64,6 @@ public class UsersAPITest {
 		helper.tearDown();
 	}
 
-	public Notification createNotification(String sender, String recipients, String subject, String message, String mnemonic) throws Exception {
-		Notification notification = new Notification(sender, recipients, subject, message, mnemonic);
-		notification = notificationsAPI.create(notification, userAuth);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, notification);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, notification.getId());
-		assertNotNull(Constants.SENDER_MUST_NOT_BE_NULL, notification.getSender());
-		assertNotNull(Constants.RECIPIENTS_MUST_NOT_BE_NULL, notification.getRecipients());
-		assertNotNull(Constants.SUBJECT_MUST_NOT_BE_NULL, notification.getSubject());
-		assertNotNull(Constants.MESSAGE_MUST_NOT_BE_NULL, notification.getMessage());
-		assertNotNull(Constants.MNEMONIC_MUST_NOT_BE_NULL, notification.getMnemonic());
-		assertFalse(Constants.SENDER_MUST_NOT_BE_EMPTY, notification.getSender().isEmpty());
-		assertFalse(Constants.RECIPIENTS_MUST_NOT_BE_EMPTY, notification.getRecipients().isEmpty());
-		assertFalse(Constants.SUBJECT_MUST_NOT_BE_EMPTY, notification.getSubject().isEmpty());
-		assertFalse(Constants.MESSAGE_MUST_NOT_BE_EMPTY, notification.getMessage().isEmpty());
-		assertFalse(Constants.MNEMONIC_MUST_NOT_BE_EMPTY, notification.getMnemonic().isEmpty());
-		assertTrue(String.format(Constants.SENDER_MUST_BE_VALUE, sender), notification.getSender().equalsIgnoreCase(sender));
-		String[] result = notification.getRecipients().split(Constants.SEPARATOR);
-		String[] base = recipients.split(Constants.SEPARATOR);
-		assertTrue(Constants.ARRAYS_MUST_HAVE_SAME_SIZE, base.length == result.length);
-		for (int i = 0; i < base.length; i++) {
-			assertTrue(String.format(Constants.RECIPIENTS_MUST_BE_VALUE, base[i]), result[i].equalsIgnoreCase(base[i]));
-		}
-		assertTrue(String.format(Constants.SUBJECT_MUST_BE_VALUE, subject), notification.getSubject().equalsIgnoreCase(subject));
-		assertTrue(String.format(Constants.MESSAGE_MUST_BE_VALUE, message), notification.getMessage().equalsIgnoreCase(message));
-		assertTrue(String.format(Constants.MNEMONIC_MUST_BE_VALUE, mnemonic), notification.getMnemonic().equalsIgnoreCase(mnemonic));
-		notification = NotificationsCache.getInstance().getNotification(mnemonic);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, notification);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, notification.getId());
-		return notification;
-	}
-
-	public Role createRole(String name, List<Permission> permissions) throws Exception {
-		Role role = new Role(name, permissions);
-		role = roleAPI.create(role, userAuth);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
-		assertNotNull(Constants.NAME_MUST_NOT_BE_NULL, role.getName());
-		assertNotNull(Constants.PERMISSION_MUST_NOT_BE_NULL, role.getPermissions());
-		assertFalse(Constants.NAME_MUST_NOT_BE_EMPTY, role.getName().isEmpty());
-		assertFalse(Constants.PERMISSION_MUST_NOT_BE_EMPTY, role.getPermissions().isEmpty());
-		assertTrue(String.format(Constants.NAME_MUST_BE_VALUE, name), role.getName().equalsIgnoreCase(name));
-		List<Permission> result = role.getPermissions();
-		assertTrue(Constants.ARRAYS_MUST_HAVE_SAME_SIZE, permissions.size() == result.size());
-		for (int i = 0; i < permissions.size(); i++) {
-			assertTrue(String.format(Constants.PERMISSION_MUST_BE_VALUE, permissions.get(i).getRoute()), result.get(i).getRoute().equalsIgnoreCase(permissions.get(i).getRoute()));
-		}
-		return role;
-	}
-
 	private User createUser(String email, String userName, String password, String apiPermission) throws Exception {
 		List<Permission> permissions = new ArrayList<>(5);
 		permissions.add(new Permission(apiPermission + ".read"));
@@ -120,10 +72,8 @@ public class UsersAPITest {
 		permissions.add(new Permission(apiPermission + ".update", true));
 		permissions.add(new Permission(apiPermission + ".list"));
 		String name = apiPermission + "_" + System.currentTimeMillis();
-		Role role = createRole(name, permissions);
-		role = roleAPI.create(role, userAuth);
+		Role role = RoleAPITest.createRole(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
 		List<Long> roles = new ArrayList<>(1);
 		roles.add(role.getId());
 		User user = new User(email, userName, password, roles);
@@ -154,41 +104,6 @@ public class UsersAPITest {
 				assertTrue(String.format(Constants.ROLE_MUST_BE_VALUE, roles.get(i)), result.get(i) == roles.get(i));
 			}
 		}
-	}
-
-	public Configuration createConfiguration(String configKey, String configValue, String description) throws Exception {
-		Configuration configuration = new Configuration(configKey, configValue, description);
-		configuration = configurationsAPI.create(configuration, userAuth);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, configuration.getId());
-		assertNotNull(Constants.CONFIG_KEY_MUST_NOT_BE_NULL, configuration.getConfigKey());
-		assertNotNull(Constants.DESCRIPTION_MUST_NOT_BE_NULL, configuration.getDescription());
-		assertNotNull(Constants.VALUE_MUST_NOT_BE_NULL, configuration.getValue());
-		assertFalse(Constants.CONFIG_KEY_MUST_NOT_BE_EMPTY, configuration.getConfigKey().isEmpty());
-		assertFalse(Constants.DESCRIPTION_MUST_NOT_BE_EMPTY, configuration.getDescription().isEmpty());
-		assertFalse(Constants.VALUE_MUST_NOT_BE_EMPTY, configuration.getValue().isEmpty());
-		assertTrue(String.format(Constants.CONFIG_KEY_MUST_BE_VALUE, configKey), configuration.getConfigKey().equalsIgnoreCase(configKey));
-		assertTrue(String.format(Constants.DESCRIPTION_MUST_BE_VALUE, description), configuration.getDescription().equalsIgnoreCase(description));
-		assertTrue(String.format(Constants.VALUE_MUST_BE_VALUE, configValue), configuration.getValue().equalsIgnoreCase(configValue));
-		return configuration;
-	}
-
-	public Client createClient(String name, List<Permission> permissions) throws Exception {
-		Client client = new Client(name, permissions);
-		client = clientsAPI.create(client, userAuth);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
-		assertNotNull(Constants.NAME_MUST_NOT_BE_NULL, client.getName());
-		assertNotNull(Constants.PERMISSION_MUST_NOT_BE_NULL, client.getPermissions());
-		assertFalse(Constants.NAME_MUST_NOT_BE_EMPTY, client.getName().isEmpty());
-		assertFalse(Constants.PERMISSION_MUST_NOT_BE_EMPTY, client.getPermissions().isEmpty());
-		assertTrue(String.format(Constants.NAME_MUST_BE_VALUE, name), client.getName().equalsIgnoreCase(name));
-		List<Permission> result = client.getPermissions();
-		assertTrue(Constants.ARRAYS_MUST_HAVE_SAME_SIZE, permissions.size() == result.size());
-		for (int i = 0; i < permissions.size(); i++) {
-			assertTrue(String.format(Constants.PERMISSION_MUST_BE_VALUE, permissions.get(i).getRoute()), result.get(i).getRoute().equalsIgnoreCase(permissions.get(i).getRoute()));
-		}
-		return client;
 	}
 
 	public void validateAuthorization(AuthorizationWrapper authenticate, Client client, List<Permission> permissions, boolean success){
@@ -241,7 +156,7 @@ public class UsersAPITest {
 		permissions.add(new Permission("ClientsAPI.update", true));
 		permissions.add(new Permission("ClientsAPI.list"));
 		String name = "update";
-		Role role = createRole(name, permissions);
+		Role role = RoleAPITest.createRole(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
 		List<Long> roles = new ArrayList<>(1);
 		roles.add(role.getId());
@@ -291,16 +206,14 @@ public class UsersAPITest {
 
 	@Test
 	public void authenticateSuccess() throws Exception {
-		Configuration configuration = createConfiguration("cache-timeout", "1", "Test String");
+		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, configuration.getId());
 
 		List<Permission> permissions = new ArrayList<>(8);
 		permissions.add(new Permission("ClientsAPI.read"));
 		String name = "app";
-		Client client = createClient(name, permissions);
+		Client client = ClientsAPITest.createClient(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
 
 		String email = "user@user.com";
 		String userName = "user";
@@ -316,16 +229,14 @@ public class UsersAPITest {
 
 	@Test(expected=NotFoundException.class)
 	public void authenticateWrongUser() throws Exception {
-		Configuration configuration = createConfiguration("cache-timeout", "1", "Test String");
+		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, configuration.getId());
 
 		List<Permission> permissions = new ArrayList<>(8);
 		permissions.add(new Permission("ClientsAPI.read"));
 		String name = "app";
-		Client client = createClient(name, permissions);
+		Client client = ClientsAPITest.createClient(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
 
 		String email = "user@user.com";
 		String userName = "user";
@@ -340,16 +251,14 @@ public class UsersAPITest {
 
 	@Test(expected=UnauthorizedException.class)
 	public void authenticateWrongPassword() throws Exception {
-		Configuration configuration = createConfiguration("cache-timeout", "1", "Test String");
+		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, configuration.getId());
 
 		List<Permission> permissions = new ArrayList<>(8);
 		permissions.add(new Permission("ClientsAPI.read"));
 		String name = "app";
-		Client client = createClient(name, permissions);
+		Client client = ClientsAPITest.createClient(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
 
 		String email = "user@user.com";
 		String userName = "user";
@@ -364,15 +273,13 @@ public class UsersAPITest {
 
 	@Test
 	public void authenticateUnauthorizedOperationForClient() throws Exception {
-		Configuration configuration = createConfiguration("cache-timeout", "1", "Test String");
+		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, configuration.getId());
 		List<Permission> permissions = new ArrayList<>();
 		permissions.add(new Permission("ClientsAPI.read"));
 		String name = "app";
-		Client client = createClient(name, permissions);
+		Client client = ClientsAPITest.createClient(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
 
 		permissions.clear();
 		permissions = new ArrayList<>();
@@ -381,7 +288,6 @@ public class UsersAPITest {
 		Role role = new Role(name, permissions);
 		role = roleAPI.create(role, userAuth);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, role.getId());
 		List<Long> roles = new ArrayList<>(1);
 		roles.add(role.getId());
 		String email = "user@user.com";
@@ -399,15 +305,14 @@ public class UsersAPITest {
 
 	@Test
 	public void authenticateUnauthorizedOperationForRole() throws Exception {
-		Configuration configuration = createConfiguration("cache-timeout", "1", "Test String");
+		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, configuration.getId());
 		List<Permission> permissions = new ArrayList<>();
 		permissions.add(new Permission("ClientsAPI.read"));
 		String name = "app";
-		Client client = createClient(name, permissions);
+		Client client = ClientsAPITest.createClient(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
+
 		permissions.clear();
 		permissions = new ArrayList<>();
 		permissions.add(new Permission("ClientsAPI.create"));
@@ -432,10 +337,10 @@ public class UsersAPITest {
 
 	@Test
 	public void recoverPassword() throws Exception {
-		Configuration configuration = createConfiguration("cache-timeout", "1", "Test String");
+		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
 
-		configuration = createConfiguration("password_redirect_servlet", "http://localhost:8080/pwd?token=%s", "Test String");
+		configuration = ConfigurationsAPITest.createConfiguration("password_redirect_servlet", "http://localhost:8080/pwd?token=%s", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
 
 		String sender = "test@test.test";
@@ -443,7 +348,7 @@ public class UsersAPITest {
 		String subject = "URL recovery";
 		String message = "Visite %URL% para seguir el proceso";
 
-		Notification notification = createNotification(sender, recipients, subject, message, Constants.PASSWORD_RECOVERY_NOTIFICATION);
+		Notification notification = NotificationsAPITest.createNotification(sender, recipients, subject, message, Constants.PASSWORD_RECOVERY_NOTIFICATION);
 		notification = notificationsAPI.create(notification, userAuth);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, notification);
 
@@ -469,7 +374,7 @@ public class UsersAPITest {
 		recoveryParams.put(Constants.NOTIFICATION_MNEMONIC, notificationArray);
 		userPasswordRecovery.notify(recoveryParams);
 
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 
 		user = User.getById(id);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, user);
@@ -497,27 +402,28 @@ public class UsersAPITest {
 		PasswordRedirect passwordRedirect = new PasswordRedirect();
 		boolean processRequest = passwordRedirect.processRequest(userPasswordReset.getWebToken());
 
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, processRequest);
 		assertFalse(Constants.RESULT_MUST_BE_FALSE, processRequest);
 		userPasswordReset = UserPasswordReset.getUser(user.getId());
 		assertNull(Constants.RESULT_MUST_BE_NULL, userPasswordReset);
 
-
-//		usersAPI.updatePassword();
-		
-
-	}
-
-	@Test
-	public void updatePassword() throws Exception {
-
+		user = new User(userName, password);
+		booleanWrapper = usersAPI.updatePassword(user, userAuth);
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, booleanWrapper);
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, booleanWrapper.getResult());
+		assertTrue(Constants.RESULT_MUST_BE_TRUE, booleanWrapper.getResult());
+		user = User.getById(id);
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, user);
+		assertTrue("Password staus must be 0", user.getPasswordRecoveryStatus() == 0);
+		BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+		assertTrue(String.format(Constants.PASSWORD_MUST_BE_VALUE, password), passwordEncryptor.checkPassword(password, user.getPassword()));
 	}
 
 	@Test
 	public void checkUser() throws Exception {
-		Configuration configuration = createConfiguration("cache-timeout", "1", "Test String");
+		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
 
 		List<Permission> permissions = new ArrayList<>();

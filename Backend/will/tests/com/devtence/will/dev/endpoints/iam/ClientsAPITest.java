@@ -1,13 +1,15 @@
 package com.devtence.will.dev.endpoints.iam;
 
 import com.devtence.will.Constants;
+import com.devtence.will.dev.commons.caches.ClientsCache;
+import com.devtence.will.dev.endpoints.commons.ConfigurationsAPITest;
 import com.devtence.will.dev.models.ListItem;
+import com.devtence.will.dev.models.commons.Configuration;
 import com.devtence.will.dev.models.users.Client;
 import com.devtence.will.dev.models.users.Permission;
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.google.cloud.sql.jdbc.internal.ClientSideClob;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cache.AsyncCacheFilter;
@@ -27,8 +29,8 @@ import static org.junit.Assert.*;
  */
 public class ClientsAPITest {
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-	private final ClientsAPI clientsAPI = new ClientsAPI();
-	private final User user = new User("ok", "email");
+	private final static ClientsAPI clientsAPI = new ClientsAPI();
+	private final static User user = new User("ok", "email");
 	protected Closeable session;
 
 	@BeforeClass
@@ -49,20 +51,14 @@ public class ClientsAPITest {
 		this.helper.tearDown();
 	}
 
-	@Test
-	public void create() throws Exception {
-		List<Permission> permissions = new ArrayList<>(8);
-		permissions.add(new Permission("ClientsAPI.read"));
-		permissions.add(new Permission("ClientsAPI.create"));
-		permissions.add(new Permission("ClientsAPI.read", true));
-		permissions.add(new Permission("ClientsAPI.update", true));
-		permissions.add(new Permission("ClientsAPI.authenticate"));
-		permissions.add(new Permission("ClientsAPI.recoverPassword"));
-		permissions.add(new Permission("ClientsAPI.updatePassword"));
-		permissions.add(new Permission("ClientsAPI.checkUser"));
-		String name = "app";
+	public static Client createClient(String name, List<Permission> permissions) throws Exception {
 		Client client = new Client(name, permissions);
 		client = clientsAPI.create(client, user);
+		validateClient(client, name, permissions);
+		return client;
+	}
+
+	private static void validateClient(Client client, String name, List<Permission> permissions) throws Exception {
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
 		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
 		assertNotNull(Constants.NAME_MUST_NOT_BE_NULL, client.getName());
@@ -75,7 +71,26 @@ public class ClientsAPITest {
 		for (int i = 0; i < permissions.size(); i++) {
 			assertTrue(String.format(Constants.PERMISSION_MUST_BE_VALUE, permissions.get(i).getRoute()), result.get(i).getRoute().equalsIgnoreCase(permissions.get(i).getRoute()));
 		}
+		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
+		client = ClientsCache.getInstance().getClient(client.getId());
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
+	}
 
+	@Test
+	public void create() throws Exception {
+		List<Permission> permissions = new ArrayList<>(8);
+		permissions.add(new Permission("ClientsAPI.read"));
+		permissions.add(new Permission("ClientsAPI.create"));
+		permissions.add(new Permission("ClientsAPI.read", true));
+		permissions.add(new Permission("ClientsAPI.update", true));
+		permissions.add(new Permission("ClientsAPI.authenticate"));
+		permissions.add(new Permission("ClientsAPI.recoverPassword"));
+		permissions.add(new Permission("ClientsAPI.updatePassword"));
+		permissions.add(new Permission("ClientsAPI.checkUser"));
+		String name = "app";
+		Client client = createClient(name, permissions);
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
 	}
 
 	@Test
@@ -90,23 +105,10 @@ public class ClientsAPITest {
 		permissions.add(new Permission("ClientsAPI.updatePassword"));
 		permissions.add(new Permission("ClientsAPI.checkUser"));
 		String name = "app";
-		Client client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
+		Client client = createClient(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
 		client = clientsAPI.read(client.getId(), user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
-		assertNotNull(Constants.NAME_MUST_NOT_BE_NULL, client.getName());
-		assertNotNull(Constants.PERMISSION_MUST_NOT_BE_NULL, client.getPermissions());
-		assertFalse(Constants.NAME_MUST_NOT_BE_EMPTY, client.getName().isEmpty());
-		assertFalse(Constants.PERMISSION_MUST_NOT_BE_EMPTY, client.getPermissions().isEmpty());
-		assertTrue(String.format(Constants.NAME_MUST_BE_VALUE, name), client.getName().equalsIgnoreCase(name));
-		List<Permission> result = client.getPermissions();
-		assertTrue(Constants.ARRAYS_MUST_HAVE_SAME_SIZE, permissions.size() == result.size());
-		for (int i = 0; i < permissions.size(); i++) {
-			assertTrue(String.format(Constants.PERMISSION_MUST_BE_VALUE, permissions.get(i).getRoute()), result.get(i).getRoute().equalsIgnoreCase(permissions.get(i).getRoute()));
-		}
+		validateClient(client, name, permissions);
 	}
 
 	@Test
@@ -121,10 +123,8 @@ public class ClientsAPITest {
 		permissions.add(new Permission("ClientsAPI.updatePassword"));
 		permissions.add(new Permission("ClientsAPI.checkUser"));
 		String name = "app";
-		Client client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
+		Client client = createClient(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
 		Long id = client.getId();
 		permissions.clear();
 		permissions.add(new Permission("changedClientsAPI.read"));
@@ -138,12 +138,7 @@ public class ClientsAPITest {
 		name = "changedapp";
 		client = new Client(name, permissions);
 		client = clientsAPI.update(id, client, user);
-		assertTrue(String.format(Constants.NAME_MUST_BE_VALUE, name), client.getName().equalsIgnoreCase(name));
-		List<Permission> result = client.getPermissions();
-		assertTrue(Constants.ARRAYS_MUST_HAVE_SAME_SIZE, permissions.size() == result.size());
-		for (int i = 0; i < permissions.size(); i++) {
-			assertTrue(String.format(Constants.PERMISSION_MUST_BE_VALUE, permissions.get(i).getRoute()), result.get(i).getRoute().equalsIgnoreCase(permissions.get(i).getRoute()));
-		}
+		validateClient(client, name, permissions);
 	}
 
 	@Test
@@ -158,10 +153,8 @@ public class ClientsAPITest {
 		permissions.add(new Permission("ClientsAPI.updatePassword"));
 		permissions.add(new Permission("ClientsAPI.checkUser"));
 		String name = "app";
-		Client client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
+		Client client = createClient(name, permissions);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
 		client = clientsAPI.delete(client.getId(), user);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
 		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
@@ -174,7 +167,6 @@ public class ClientsAPITest {
 		ListItem list = clientsAPI.list(Constants.INDEX, Constants.OFFSET, Constants.NAME, Constants.ASC, null, user);
 		assertNull(Constants.LIST_MUST_BE_NULL, list.getItems());
 
-		//<editor-fold desc="Notifications creation">
 		List<Permission> permissions = new ArrayList<>(8);
 		permissions.add(new Permission("ClientsAPI.read"));
 		permissions.add(new Permission("ClientsAPI.create"));
@@ -184,50 +176,13 @@ public class ClientsAPITest {
 		permissions.add(new Permission("ClientsAPI.recoverPassword"));
 		permissions.add(new Permission("ClientsAPI.updatePassword"));
 		permissions.add(new Permission("ClientsAPI.checkUser"));
+		String name = "app";
+		Client client;
 
-		String name = "0app";
-		Client client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
-
-		name = "1app";
-		client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
-
-		name = "2app";
-		client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
-
-		name = "3app";
-		client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
-
-		name = "4app";
-		client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
-
-		name = "5app";
-		client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
-
-		name = "6app";
-		client = new Client(name, permissions);
-		client = clientsAPI.create(client, user);
-		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
-		assertNotNull(Constants.ID_MUST_NOT_BE_NULL, client.getId());
-
-		//</editor-fold>
+		for (int i = 0; i < 7; i++) {
+			client = createClient(i + "_" + name, permissions);
+			assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
+		}
 
 		list = clientsAPI.list(0, 100, Constants.NAME, Constants.ASC, null, user);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, list);

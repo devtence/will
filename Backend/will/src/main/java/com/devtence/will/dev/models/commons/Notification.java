@@ -158,4 +158,15 @@ public class Notification extends BaseModel<Notification> implements Serializabl
 	public static Notification getByMnemonic(String mnemonic) throws Exception {
 		return DbObjectify.ofy().load().type(Notification.class).filter("mnemonic", mnemonic).first().now();
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("{\"id\":").append(getId())
+				.append(",\"sender\":\"").append(sender)
+				.append("\",\"recipients\":\"").append(recipients)
+				.append("\",\"subject\":\"").append(subject)
+				.append("\",\"message\":\"").append(message).append("\"}");
+		return result.toString();
+	}
 }

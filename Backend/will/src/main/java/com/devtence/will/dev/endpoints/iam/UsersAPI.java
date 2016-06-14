@@ -218,6 +218,8 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 		if(userDevtence != null){
 			if(userDevtence.getPasswordRecoveryStatus() == 3) {
 				try {
+					BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+					data.setPassword(passwordEncryptor.encryptPassword(data.getPassword()));
 					data.setPasswordRecoveryStatus(0);
 					userDevtence.update(data);
 					return new BooleanWrapper(true);

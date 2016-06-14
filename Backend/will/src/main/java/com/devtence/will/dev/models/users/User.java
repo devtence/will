@@ -283,7 +283,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         }
 
         if (mod){
-            this.validate();
+            this.update();
         }
     }
 
