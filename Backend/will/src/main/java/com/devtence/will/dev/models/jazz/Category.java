@@ -1,12 +1,13 @@
 package com.devtence.will.dev.models.jazz;
 
 import com.devtence.will.dev.models.BaseModel;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 /**
  * Created by sorcerer on 6/9/16.
  */
-@Index
+@Entity
 public class Category extends BaseModel<Category>{
 
     @Index

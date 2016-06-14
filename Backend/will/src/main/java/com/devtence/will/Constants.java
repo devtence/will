@@ -19,6 +19,7 @@ public class Constants {
 	public static final String INVALID_ID = "Invalid id = %d";
 
 	public static final String IAM_API_NAME = "iam";
+	public static final String JAZZ_API_NAME = "jazz";
 	public static final String COMMON_API_NAME = "commons";
 	public static final String FILES_API_NAME = "files";
 	public static final String API_MASTER_VERSION = "v1";

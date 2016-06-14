@@ -7,10 +7,7 @@ import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.jazz.Category;
 import com.devtence.will.dev.models.jazz.Content;
 import com.google.api.server.spi.auth.common.User;
-import com.google.api.server.spi.config.ApiMethod;
-import com.google.api.server.spi.config.DefaultValue;
-import com.google.api.server.spi.config.Named;
-import com.google.api.server.spi.config.Nullable;
+import com.google.api.server.spi.config.*;
 import com.google.api.server.spi.response.*;
 
 import java.util.logging.Level;
@@ -19,6 +16,10 @@ import java.util.logging.Logger;
 /**
  * Created by sorcerer on 6/9/16.
  */
+@Api(
+    name = Constants.JAZZ_API_NAME,
+    version = Constants.API_MASTER_VERSION
+)
 public class CategoryAPI extends BaseController<Category>{
 
     private static final Logger log = Logger.getLogger(AuthorAPI.class.getName());
