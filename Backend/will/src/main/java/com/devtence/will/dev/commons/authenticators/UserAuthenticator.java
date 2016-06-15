@@ -53,7 +53,7 @@ public class UserAuthenticator implements Authenticator {
 		User user = null;
 		if (idClient != null && !idClient.isEmpty()) {
 			try {
-				Client client = ClientsCache.getInstance().getClient(Long.parseLong(idClient));
+				Client client = ClientsCache.getInstance().getElement(Long.parseLong(idClient));
 				if (client != null) {
 					Permission permission = new Permission(pathTranslated);
 					if (client.getPermissions().contains(permission)) {
@@ -62,11 +62,11 @@ public class UserAuthenticator implements Authenticator {
 						if(permission.getUserRequired()) {
 							if (token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
 								try {
-									CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Long.parseLong(key));
+									CacheAuthWrapper value = AuthorizationCache.getInstance().getElement(Long.parseLong(key));
 									boolean valid = false;
 									Role role = null;
 									for (Long roleKey : value.getRoles()) {
-										role = RolesCache.getInstance().getRole(roleKey);
+										role = RolesCache.getInstance().getElement(roleKey);
 										if (role.getPermissions().contains(permission)) {
 											valid = true;
 											break;

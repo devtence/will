@@ -179,7 +179,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
     public AuthorizationWrapper authorize() throws Exception{
         int authTimeout = 60 * 60000;
         try {
-            authTimeout = Integer.parseInt(ConfigurationsCache.getInstance().getConfiguration("auth-timeout").getValue());
+            authTimeout = Integer.parseInt(ConfigurationsCache.getInstance().getElement("auth-timeout").getValue());
         } catch (Exception e) {}
         Key key = MacProvider.generateKey();
         jwt = Jwts.builder().setSubject(user).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + authTimeout)).signWith(SignatureAlgorithm.HS512, key).compact();

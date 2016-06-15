@@ -74,7 +74,9 @@ public class RoleAPITest {
 		}
 		Configuration configuration = ConfigurationsAPITest.createConfiguration("cache-timeout", "1", "Test String");
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
-		role = RolesCache.getInstance().getRole(role.getId());
+		configuration = ConfigurationsAPITest.createConfiguration("use-cache", "1", "Test String");
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
+		role = RolesCache.getInstance().getElement(role.getId());
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
 	}
 	

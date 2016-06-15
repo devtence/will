@@ -2,7 +2,6 @@ package com.devtence.will.dev.servlets;
 
 import com.devtence.will.Constants;
 import com.devtence.will.dev.commons.caches.ConfigurationsCache;
-import com.devtence.will.dev.models.commons.Configuration;
 import com.devtence.will.dev.models.users.User;
 import com.devtence.will.dev.models.users.UserPasswordReset;
 import io.jsonwebtoken.*;
@@ -31,7 +30,7 @@ public class PasswordRedirect extends HttpServlet {
 		try {
 			String token = request.getParameter(Constants.TOKEN);
 			boolean error = processRequest(token);
-			response.sendRedirect(error ? ConfigurationsCache.getInstance().getConfiguration(PASSWORD_ERROR).getValue() : ConfigurationsCache.getInstance().getConfiguration(PASSWORD_VALID).getValue());
+			response.sendRedirect(error ? ConfigurationsCache.getInstance().getElement(PASSWORD_ERROR).getValue() : ConfigurationsCache.getInstance().getElement(PASSWORD_VALID).getValue());
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 		}

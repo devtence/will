@@ -23,22 +23,49 @@ public class RolesCache {
 	/**
 	 * The protected instance
 	 */
-	private static RolesCache me = null;
+	protected static RolesCache me = null;
 
 	/**
 	 * The Member Cache element using the JCache library
 	 */
-	private Cache rolesCache;
+	private Cache cache;
 
-	/**
-	 * Contructor for the instance in which the cache timeout is defined
-	 * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
-	 */
+	private boolean useCache;
+
 	public RolesCache() throws Exception {
+		useCache = Configuration.getBoolean("use-cache");
+		if(useCache) {
+			initCache();
+		}
+	}
+
+	protected void initCache() throws Exception {
 		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
 		Map properties = new HashMap<>();
 		properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
-		rolesCache = cacheFactory.createCache(properties);
+		cache = cacheFactory.createCache(properties);
+	}
+
+	protected Role getCacheElement(Long key) throws Exception {
+		Role element = null;
+		useCache = Configuration.getBoolean("use-cache");
+		if(useCache) {
+			if(cache == null) {
+				initCache();
+			}
+			element = (Role) cache.get(key);
+		}
+		return element;
+	}
+
+	protected void putCacheElement(Long key, Role value) throws Exception{
+		useCache = Configuration.getBoolean("use-cache");
+		if(useCache) {
+			if(cache == null) {
+				initCache();
+			}
+			cache.put(key, value);
+		}
 	}
 
 	/**
@@ -53,25 +80,18 @@ public class RolesCache {
 		return me;
 	}
 
-	/**
-	 * Access to the cache element
-	 * @return cache to be used to manage the authorization
-	 */
-	public Cache getRolesCache() {
-		return rolesCache;
-	}
-
-	public Role getRole(long id) throws Exception {
-		Role role = (Role) rolesCache.get(id);
+	public Role getElement(Long key) throws Exception {
+		Role role = getCacheElement(key);
 		if(role == null) {
-			role = Role.get(id);
+			role = Role.getById(key);
 			if (role != null) {
-				rolesCache.put(id, role);
+				putCacheElement(key, role);
 			} else {
-				throw new InvalidValueException(String.format(Constants.INVALID_ID, id));
+				throw new InvalidValueException(String.format(Constants.INVALID_ID, key));
 			}
 		}
 		return role;
 	}
+
 
 }
