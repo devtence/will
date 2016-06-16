@@ -42,6 +42,16 @@ public class Category extends BaseModel<Category>{
         this.idLanguage = idLanguage;
     }
 
+    public Category() {
+    }
+
+    public Category(Long id, String name, String description, Long idLanguage) {
+        setId(id);
+        this.name = name;
+        this.description = description;
+        this.idLanguage = idLanguage;
+    }
+
     @Override
     public void validate() throws Exception {
         this.save();

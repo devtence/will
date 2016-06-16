@@ -32,6 +32,15 @@ public class Language extends BaseModel<Language>{
         this.shortName = shortName;
     }
 
+    public Language() {
+    }
+
+    public Language(Long id, String language, String shortName) {
+        setId(id);
+        this.language = language;
+        this.shortName = shortName;
+    }
+
     @Override
     public void validate() throws Exception {
         this.save();
