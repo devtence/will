@@ -59,7 +59,7 @@ public class Category extends BaseModel<Category>{
 
     @Override
     public void destroy() throws Exception {
-        this.destroy();
+        this.delete();
     }
 
     @Override

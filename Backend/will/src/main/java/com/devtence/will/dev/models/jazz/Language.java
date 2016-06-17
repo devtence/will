@@ -48,7 +48,7 @@ public class Language extends BaseModel<Language>{
 
     @Override
     public void destroy() throws Exception {
-        this.destroy();
+        this.delete();
     }
 
     @Override
