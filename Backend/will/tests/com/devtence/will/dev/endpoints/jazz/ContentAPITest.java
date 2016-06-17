@@ -1,10 +1,7 @@
 package com.devtence.will.dev.endpoints.jazz;
 
 import com.devtence.will.Constants;
-import com.devtence.will.dev.models.jazz.Author;
-import com.devtence.will.dev.models.jazz.Content;
-import com.devtence.will.dev.models.jazz.JazzFile;
-import com.devtence.will.dev.models.jazz.Label;
+import com.devtence.will.dev.models.jazz.*;
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -36,6 +33,10 @@ public class ContentAPITest {
     @BeforeClass
     public static void setUpBeforeClass() {
         ObjectifyService.setFactory(new ObjectifyFactory());
+        ObjectifyService.register(Author.class);
+        ObjectifyService.register(Category.class);
+        ObjectifyService.register(Content.class);
+        ObjectifyService.register(Language.class);
     }
 
     @Before

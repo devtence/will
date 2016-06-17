@@ -2,6 +2,8 @@ package com.devtence.will.dev.endpoints.jazz;
 
 import com.devtence.will.Constants;
 import com.devtence.will.dev.models.jazz.Author;
+import com.devtence.will.dev.models.jazz.Category;
+import com.devtence.will.dev.models.jazz.Content;
 import com.devtence.will.dev.models.jazz.Language;
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -33,6 +35,7 @@ public class AuthorAPITest {
     @BeforeClass
     public static void setUpBeforeClass() {
         ObjectifyService.setFactory(new ObjectifyFactory());
+        ObjectifyService.register(Author.class);
     }
 
     @Before
