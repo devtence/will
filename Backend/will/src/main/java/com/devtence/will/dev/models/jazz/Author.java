@@ -55,6 +55,17 @@ public class Author extends BaseModel<Author> {
         this.languages = languages;
     }
 
+    public Author() {
+    }
+
+    public Author(Long id, String name, String bio, Integer status, List<Language> languages) {
+        this.setId(id);
+        this.name = name;
+        this.bio = bio;
+        this.status = status;
+        this.languages = languages;
+    }
+
     @Override
     public void validate() throws Exception {
         this.save();
