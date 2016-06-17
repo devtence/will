@@ -5,6 +5,7 @@ import com.devtence.will.dev.commons.caches.ClientsCache;
 import com.devtence.will.dev.endpoints.commons.ConfigurationsAPITest;
 import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.commons.Configuration;
+import com.devtence.will.dev.models.commons.Notification;
 import com.devtence.will.dev.models.users.Client;
 import com.devtence.will.dev.models.users.Permission;
 import com.google.api.server.spi.auth.common.User;
@@ -36,6 +37,9 @@ public class ClientsAPITest {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		ObjectifyService.setFactory(new ObjectifyFactory());
+		ObjectifyService.register(Configuration.class);
+		ObjectifyService.register(Notification.class);
+		ObjectifyService.register(Client.class);
 	}
 
 	@Before
@@ -166,7 +170,11 @@ public class ClientsAPITest {
 
 	@Test
 	public void list() throws Exception {
-		ListItem list = clientsAPI.list(Constants.INDEX, Constants.OFFSET, Constants.NAME, Constants.ASC, null, user);
+		List<String> sortFields = new ArrayList<>();
+		sortFields.add(Constants.NAME);
+		List<Boolean> sortDirections = new ArrayList<>();
+		sortDirections.add(true);
+		ListItem list = clientsAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
 		assertNull(Constants.LIST_MUST_BE_NULL, list.getItems());
 
 		List<Permission> permissions = new ArrayList<>(8);
@@ -186,7 +194,7 @@ public class ClientsAPITest {
 			assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, client);
 		}
 
-		list = clientsAPI.list(0, 100, Constants.NAME, Constants.ASC, null, user);
+		list = clientsAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, list);
 		assertNotNull(Constants.LIST_MUST_NOT_BE_NULL, list.getItems());
 		assertFalse(Constants.LIST_MUST_NOT_BE_EMPTY, list.getItems().isEmpty());

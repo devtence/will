@@ -49,6 +49,12 @@ public class UsersAPITest {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		ObjectifyService.setFactory(new ObjectifyFactory());
+		ObjectifyService.register(Configuration.class);
+		ObjectifyService.register(Notification.class);
+		ObjectifyService.register(Client.class);
+		ObjectifyService.register(Role.class);
+		ObjectifyService.register(User.class);
+		ObjectifyService.register(UserPasswordReset.class);
 	}
 
 	@Before
@@ -186,7 +192,12 @@ public class UsersAPITest {
 
 	@Test
 	public void list() throws Exception {
-		ListItem list = usersAPI.list(Constants.INDEX, Constants.OFFSET, Constants.USERNAME, Constants.ASC, null, userAuth);
+		List<String> sortFields = new ArrayList<>();
+		sortFields.add(Constants.USERNAME);
+		List<Boolean> sortDirections = new ArrayList<>();
+		sortDirections.add(true);
+
+		ListItem list = usersAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, userAuth);
 		assertNull(Constants.LIST_MUST_BE_NULL, list.getItems());
 		String email = "user@user.com";
 		String userName = "user";
@@ -197,7 +208,7 @@ public class UsersAPITest {
 			assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, user);
 			assertNotNull(Constants.ID_MUST_NOT_BE_NULL, user.getId());
 		}
-		list = usersAPI.list(Constants.INDEX, Constants.OFFSET, Constants.USERNAME, Constants.ASC, null, userAuth);
+		list = usersAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, userAuth);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, list);
 		assertNotNull(Constants.LIST_MUST_NOT_BE_NULL, list.getItems());
 		assertFalse(Constants.LIST_MUST_NOT_BE_EMPTY, list.getItems().isEmpty());
