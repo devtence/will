@@ -15,6 +15,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import static org.junit.Assert.*;
 
 /**
@@ -30,6 +34,7 @@ public class ConfigurationsAPITest {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		ObjectifyService.setFactory(new ObjectifyFactory());
+		ObjectifyService.register(Configuration.class);
 	}
 
 	@Before
@@ -165,21 +170,61 @@ public class ConfigurationsAPITest {
 
 	@Test
 	public void list() throws Exception {
-		ListItem list = configurationsAPI.list(Constants.INDEX, Constants.OFFSET, Constants.CONFIG_KEY, Constants.ASC, null, user);
+		List<String> sortFields = new ArrayList<>();
+		sortFields.add(Constants.VALUE);
+		sortFields.add(Constants.CONFIG_KEY);
+		List<Boolean> sortDirections = new ArrayList<>();
+		sortDirections.add(false);
+		sortDirections.add(false);
+
+		ListItem list = configurationsAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
 		assertNull(Constants.LIST_MUST_BE_NULL, list.getItems());
-		String configKey = "test-config-String";
-		String configValue = "String";
 		String description = "Test String";
 		Configuration configuration;
+		Random r = new Random();
 		for (int i = 0; i < 7; i++) {
-			configuration = createConfiguration(i + "_" + configKey, i + "_" + configValue, i + "_" + description);
+			configuration = createConfiguration(String.valueOf(i), String.valueOf(r.nextInt(10)), description);
 			assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, configuration);
 		}
-		list = configurationsAPI.list(0, 100, Constants.CONFIG_KEY, Constants.ASC, null, user);
+		list = configurationsAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, list);
 		assertNotNull(Constants.LIST_MUST_NOT_BE_NULL, list.getItems());
 		assertFalse(Constants.LIST_MUST_NOT_BE_EMPTY, list.getItems().isEmpty());
 		assertTrue(Constants.LIST_SIZE_MUST_BE_SEVEN, list.getItems().size() == 7);
+		int pivotVal = Integer.parseInt(((Configuration) list.getItems().get(0)).getValue());
+		int pivotKey = Integer.parseInt(((Configuration) list.getItems().get(0)).getConfigKey());
+		int key = 0, val = 0;
+		for (int i = 0; i < list.getItems().size(); i++) {
+			val = Integer.parseInt(((Configuration) list.getItems().get(i)).getValue());
+			key = Integer.parseInt(((Configuration) list.getItems().get(i)).getConfigKey());
+			assertTrue(Constants.VALUE_MUST_BE_MAJOR_OR_EQUAL, val >= pivotVal);
+			if (val == pivotVal) {
+				assertTrue(Constants.VALUE_MUST_BE_MAJOR_OR_EQUAL, key >= pivotKey);
+			}
+			pivotKey = key;
+			pivotVal = val;
+		}
+
+		sortDirections.clear();
+		sortDirections.add(true);
+		sortDirections.add(false);
+		list = configurationsAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
+		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, list);
+		assertNotNull(Constants.LIST_MUST_NOT_BE_NULL, list.getItems());
+		assertFalse(Constants.LIST_MUST_NOT_BE_EMPTY, list.getItems().isEmpty());
+		assertTrue(Constants.LIST_SIZE_MUST_BE_SEVEN, list.getItems().size() == 7);
+		pivotVal = Integer.parseInt(((Configuration) list.getItems().get(0)).getValue());
+		pivotKey = Integer.parseInt(((Configuration) list.getItems().get(0)).getConfigKey());
+		for (int i = 0; i < list.getItems().size(); i++) {
+			val = Integer.parseInt(((Configuration) list.getItems().get(i)).getValue());
+			key = Integer.parseInt(((Configuration) list.getItems().get(i)).getConfigKey());
+			assertTrue(Constants.VALUE_MUST_BE_MINOR_OR_EQUAL, val <= pivotVal);
+			if (val == pivotVal) {
+				assertTrue(Constants.VALUE_MUST_BE_MAJOR_OR_EQUAL, key >= pivotKey);
+			}
+			pivotKey = key;
+			pivotVal = val;
+		}
 	}
 
 }

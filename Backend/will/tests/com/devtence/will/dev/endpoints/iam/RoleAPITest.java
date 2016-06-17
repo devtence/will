@@ -37,6 +37,8 @@ public class RoleAPITest {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		ObjectifyService.setFactory(new ObjectifyFactory());
+		ObjectifyService.register(Configuration.class);
+		ObjectifyService.register(Role.class);
 	}
 
 	@Before
@@ -167,7 +169,11 @@ public class RoleAPITest {
 
 	@Test
 	public void list() throws Exception {
-		ListItem list = roleAPI.list(Constants.INDEX, Constants.OFFSET, Constants.NAME, Constants.ASC, null, user);
+		List<String> sortFields = new ArrayList<>();
+		sortFields.add(Constants.NAME);
+		List<Boolean> sortDirections = new ArrayList<>();
+		sortDirections.add(true);
+		ListItem list = roleAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
 		assertNull(Constants.LIST_MUST_BE_NULL, list.getItems());
 
 		List<Permission> permissions = new ArrayList<>(8);
@@ -187,7 +193,7 @@ public class RoleAPITest {
 			assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, role);
 		}
 
-		list = roleAPI.list(Constants.INDEX, Constants.OFFSET, Constants.NAME, Constants.ASC, null, user);
+		list = roleAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, list);
 		assertNotNull(Constants.LIST_MUST_NOT_BE_NULL, list.getItems());
 		assertFalse(Constants.LIST_MUST_NOT_BE_EMPTY, list.getItems().isEmpty());

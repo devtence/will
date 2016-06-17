@@ -17,6 +17,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -32,6 +35,8 @@ public class NotificationsAPITest {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		ObjectifyService.setFactory(new ObjectifyFactory());
+		ObjectifyService.register(Configuration.class);
+		ObjectifyService.register(Notification.class);
 	}
 
 	@Before
@@ -148,7 +153,12 @@ public class NotificationsAPITest {
 
 	@Test
 	public void list() throws Exception {
-		ListItem list = notificationsAPI.list(Constants.INDEX, Constants.OFFSET, Constants.MNEMONIC, Constants.ASC, null, user);
+		List<String> sortFields = new ArrayList<>();
+		sortFields.add(Constants.MNEMONIC);
+		List<Boolean> sortDirections = new ArrayList<>();
+		sortDirections.add(true);
+
+		ListItem list = notificationsAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
 		assertNull(Constants.LIST_MUST_BE_NULL, list.getItems());
 
 		String sender = "test@test.test";
@@ -162,7 +172,7 @@ public class NotificationsAPITest {
 			assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, notification);
 		}
 
-		list = notificationsAPI.list(0, 100, Constants.MNEMONIC, Constants.ASC, null, user);
+		list = notificationsAPI.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
 		assertNotNull(Constants.RESULT_MUST_NOT_BE_NULL, list);
 		assertNotNull(Constants.LIST_MUST_NOT_BE_NULL, list.getItems());
 		assertFalse(Constants.LIST_MUST_NOT_BE_EMPTY, list.getItems().isEmpty());

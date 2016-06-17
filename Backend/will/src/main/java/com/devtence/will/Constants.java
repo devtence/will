@@ -85,6 +85,8 @@ public class Constants {
 	public static final String LIST_MUST_NOT_BE_NULL = "List must not be null";
 	public static final String LIST_MUST_NOT_BE_EMPTY = "List must not be empty";
 	public static final String CONFIG_KEY = "configKey";
+	public static final String DESCRIPTION = "description";
+	public static final String VALUE = "value";
 	public static final String ASC = "ASC";
 	public static final int INDEX = 0;
 	public static final int OFFSET = 100;
@@ -139,5 +141,8 @@ public class Constants {
 	public static final String SECRET_MUST_NOT_BE_NULL = "Secret must not be null";
 	public static final String WEB_TOKEN_MUST_NOT_BE_EMPTY = "Web token must not be empty";
 	public static final String SECRET_MUST_NOT_BE_EMPTY = "Secret must not be empty";
+	public static final String DESC_SORTER = "-";
 
+	public static final String VALUE_MUST_BE_MAJOR_OR_EQUAL = "Value must be major or equal";
+	public static final String VALUE_MUST_BE_MINOR_OR_EQUAL = "Value must be minor or equal";
 }

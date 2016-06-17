@@ -11,6 +11,7 @@ import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.*;
 import com.google.api.server.spi.response.*;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -116,17 +117,11 @@ public class ContentAPI extends BaseController<Content>{
     }
 
     @Override
-    @ApiMethod(name = "content.list",
-            path = "contents")
-    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index,
-                         @Named("limit") @Nullable @DefaultValue("100") Integer limit,
-                         @Named("sortField") @Nullable String sortField,
-                         @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection,
-                         @Named("cursor") @Nullable String cursor, User user)
-            throws InternalServerErrorException, UnauthorizedException {
+    @ApiMethod(name = "content.list", path = "contents")
+    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("limit") @Nullable @DefaultValue("100") Integer limit, @Named("sortFields") @Nullable List<String> sortFields, @Named("sortDirection") @Nullable List<Boolean> sortDirections, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
         ListItem list = null;
         try {
-            list = Content.getList(cursor, limit, Content.class, sortField, sortDirection);
+            list = Content.getList(cursor, limit, Content.class, sortFields, sortDirections);
         }catch (Exception ex){
             log.log(Level.WARNING, Constants.ERROR, ex);
             throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);

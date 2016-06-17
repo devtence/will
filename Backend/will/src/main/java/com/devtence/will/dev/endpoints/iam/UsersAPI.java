@@ -15,6 +15,7 @@ import com.google.api.server.spi.response.*;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -127,11 +128,11 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 
 	@Override
 	@ApiMethod(name = "user.list", path = "users")
-	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("limit") @Nullable @DefaultValue("100") Integer limit, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, com.google.api.server.spi.auth.common.User user) throws InternalServerErrorException, UnauthorizedException {
-		validateUser(user);
+	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("limit") @Nullable @DefaultValue("100") Integer limit, @Named("sortFields") @Nullable List<String> sortFields, @Named("sortDirection") @Nullable List<Boolean> sortDirections, @Named("cursor") @Nullable String cursor, com.google.api.server.spi.auth.common.User user) throws InternalServerErrorException, UnauthorizedException {
+			validateUser(user);
 		ListItem list = null;
 		try {
-			list = User.getList(cursor, limit, User.class, sortField, sortDirection);
+			list = User.getList(cursor, limit, User.class, sortFields, sortDirections);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);
