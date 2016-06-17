@@ -5,7 +5,6 @@ import com.devtence.will.dev.endpoints.BaseController;
 import com.devtence.will.dev.exceptions.MissingFieldException;
 import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.jazz.Category;
-import com.devtence.will.dev.models.jazz.Content;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.*;
 import com.google.api.server.spi.response.*;

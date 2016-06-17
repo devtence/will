@@ -84,6 +84,21 @@ public class Content extends BaseModel<Content>{
         this.idLanguage = idLanguage;
     }
 
+    public Content() {
+    }
+
+    public Content(Long id, String title, String description, List<Author> authors, List<Long> categories,
+                   List<Label> labels, List<JazzFile> files, Long idLanguage) {
+        setId(id);
+        this.title = title;
+        this.description = description;
+        this.authors = authors;
+        this.categories = categories;
+        this.labels = labels;
+        this.files = files;
+        this.idLanguage = idLanguage;
+    }
+
     @Override
     public void validate() throws Exception {
         this.save();
