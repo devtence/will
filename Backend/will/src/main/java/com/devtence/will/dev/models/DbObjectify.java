@@ -6,6 +6,7 @@ import com.devtence.will.dev.models.jazz.Author;
 import com.devtence.will.dev.models.jazz.Category;
 import com.devtence.will.dev.models.jazz.Content;
 import com.devtence.will.dev.models.jazz.Language;
+import com.devtence.will.dev.models.jazz.Search;
 import com.devtence.will.dev.models.users.Client;
 import com.devtence.will.dev.models.users.Role;
 import com.devtence.will.dev.models.users.User;
@@ -32,6 +33,7 @@ public class DbObjectify {
         ObjectifyService.register(Category.class);
         ObjectifyService.register(Content.class);
         ObjectifyService.register(Language.class);
+        ObjectifyService.register(Search.class);
     }
 
     public static Objectify ofy() {
