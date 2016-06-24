@@ -1,6 +1,7 @@
 package com.devtence.will.dev.endpoints.jazz;
 
 import com.devtence.will.Constants;
+import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.jazz.Author;
 import com.devtence.will.dev.models.jazz.Category;
 import com.devtence.will.dev.models.jazz.Content;
@@ -151,6 +152,25 @@ public class CategoryAPITest {
 
     @Test
     public void testList() throws Exception {
+        List<String> sortFields = new ArrayList<>();
+        sortFields.add("name");
+        List<Boolean> sortDirections = new ArrayList<>();
+        sortDirections.add(true);
 
+        ListItem list = actual.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
+        assertNull(Constants.LIST_MUST_BE_NULL, list.getItems());
+
+        //add one
+        Long id = 1l;
+        String name = "test-name";
+        String description = "test description";
+        Long idLanguage = 0l;
+
+        Category toCreate = new Category(id, name, description, idLanguage);
+        toCreate.validate();
+
+        //search again not null
+        list = actual.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
+        assertNotNull(Constants.LIST_MUST_BE_NULL, list.getItems());
     }
 }

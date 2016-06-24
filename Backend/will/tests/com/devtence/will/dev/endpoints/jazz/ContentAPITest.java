@@ -1,6 +1,7 @@
 package com.devtence.will.dev.endpoints.jazz;
 
 import com.devtence.will.Constants;
+import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.jazz.*;
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -161,6 +162,35 @@ public class ContentAPITest {
 
     @Test
     public void testList() throws Exception {
+        List<String> sortFields = new ArrayList<>();
+        sortFields.add("title");
+        List<Boolean> sortDirections = new ArrayList<>();
+        sortDirections.add(true);
+
+        ListItem list = actual.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
+        assertNull(Constants.LIST_MUST_BE_NULL, list.getItems());
+
+        Long id = 1l;
+        String title = "test-title";
+        String description = "test description";
+        Integer status = 0;
+
+        List<Author> authors = null;
+        List<Long> categories = null;
+        List<Label> labels = null;
+        List<JazzFile> files = null;
+        Long idLanguage = null;
+
+        assertNotNull(id);
+        assertFalse(id == 0);
+
+        Content toCreate = new Content(id, title, description, authors, categories, labels, files, idLanguage);
+        toCreate.validate();
+
+        //search again not null
+        ListItem list1 = actual.list(Constants.INDEX, Constants.OFFSET, sortFields, sortDirections, null, user);
+        assertNotNull(list1.getItems());
+        System.out.println(list1.getItems().get(0));
 
     }
 }
