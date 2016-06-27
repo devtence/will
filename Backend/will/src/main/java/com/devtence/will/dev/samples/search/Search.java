@@ -1,4 +1,4 @@
-package com.devtence.will.dev.models.jazz;
+package com.devtence.will.dev.samples.search;
 
 import com.devtence.will.dev.models.BaseModel;
 import com.google.appengine.api.search.*;

@@ -1,12 +1,13 @@
 package com.devtence.will.dev.notificators;
 
 import com.devtence.will.Constants;
-import com.devtence.will.dev.commons.Mail;
 import com.devtence.will.dev.commons.caches.ConfigurationsCache;
 import com.devtence.will.dev.commons.caches.NotificationsCache;
+import com.devtence.will.dev.commons.mail.StandardMail;
 import com.devtence.will.dev.models.commons.Notification;
 import com.devtence.will.dev.models.users.User;
 import com.devtence.will.dev.models.users.UserPasswordReset;
+import com.google.appengine.api.utils.SystemProperty;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
@@ -46,10 +47,12 @@ public class UserPasswordRecovery extends Notificator {
 						user.setPasswordRecoveryStatus(2);
 						user.update();
 						String passwordRedirectServlet = ConfigurationsCache.getInstance().getElement(PASSWORD_REDIRECT_SERVLET).getValue();
-						System.out.println(String.format(passwordRedirectServlet, webToken));
+						if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
+							System.out.println(String.format(passwordRedirectServlet, webToken));
+						}
 						//TODO: ajustar el mensaje
 						String message = notification.getMessage().replaceAll(URL, String.format(passwordRedirectServlet, webToken));
-						Mail.sendMail(notification.getSender(), user.getEmail(), notification.getSubject(), message);
+						StandardMail.getInstance().sendMail(notification.getSender(), user.getEmail(), notification.getSubject(), message);
 					}
 				}
 			}

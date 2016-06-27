@@ -1,8 +1,8 @@
-package com.devtence.will.dev.endpoints.jazz;
+package com.devtence.will.dev.samples.search;
 
 import com.devtence.will.Constants;
 import com.devtence.will.dev.commons.authenticators.UserAuthenticator;
-import com.devtence.will.dev.models.jazz.Search;
+import com.devtence.will.dev.samples.search.Search;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;

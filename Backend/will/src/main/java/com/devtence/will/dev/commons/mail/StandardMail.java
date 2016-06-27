@@ -1,5 +1,4 @@
-package com.devtence.will.dev.commons;
-
+package com.devtence.will.dev.commons.mail;
 
 import com.devtence.will.Constants;
 
@@ -17,12 +16,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Util class for sending mails
- * Created by plessmann on 11/03/16.
+ * Created by plessmann on 27/06/16.
  */
-public class Mail {
+public class StandardMail extends Mail {
 
-	private static final Logger log = Logger.getLogger(Mail.class.getName());
+	private static final Logger log = Logger.getLogger(StandardMail.class.getName());
+
+	protected static StandardMail me = null;
+
+	public StandardMail() {
+	}
+
+	public static synchronized StandardMail getInstance() throws Exception {
+		if(me == null){
+			me = new StandardMail();
+		}
+		return me;
+	}
 
 	/**
 	 * Sends an email
@@ -31,7 +41,7 @@ public class Mail {
 	 * @param subject	subject of the mail
 	 * @param message	the body of the mail
 	 */
-	public static void sendMail(String sender, String recipients[], String subject, String message) {
+	public void sendMail(String sender, String recipients[], String subject, String message) {
 		sendMail(sender, Arrays.asList(recipients), subject, message);
 	}
 
@@ -42,7 +52,7 @@ public class Mail {
 	 * @param subject	subject of the mail
 	 * @param message	the body of the mail
 	 */
-	public static void sendMail(String sender, List<String> recipients, String subject, String message) {
+	public void sendMail(String sender, List<String> recipients, String subject, String message) {
 		log.warning("Enviando " + subject + " a " + (recipients == null ? 0 : recipients.size()) + " desde " + sender);
 		Properties props = new Properties();
 		Session session = Session.getDefaultInstance(props, null);
@@ -69,7 +79,7 @@ public class Mail {
 	 * @param subject	subject of the mail
 	 * @param message	the body of the mail
 	 */
-	public static void sendMail(String sender, String recipient, String subject, String message) {
+	public void sendMail(String sender, String recipient, String subject, String message) {
 		log.warning("Enviando " + subject + " a " + recipient + " desde " + sender);
 		Properties props = new Properties();
 		Session session = Session.getDefaultInstance(props, null);

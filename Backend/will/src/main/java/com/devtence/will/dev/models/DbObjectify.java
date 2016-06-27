@@ -6,7 +6,7 @@ import com.devtence.will.dev.models.jazz.Author;
 import com.devtence.will.dev.models.jazz.Category;
 import com.devtence.will.dev.models.jazz.Content;
 import com.devtence.will.dev.models.jazz.Language;
-import com.devtence.will.dev.models.jazz.Search;
+import com.devtence.will.dev.samples.search.Search;
 import com.devtence.will.dev.models.users.Client;
 import com.devtence.will.dev.models.users.Role;
 import com.devtence.will.dev.models.users.User;
