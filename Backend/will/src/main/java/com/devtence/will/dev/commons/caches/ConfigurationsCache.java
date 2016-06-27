@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
  *
  * Created by plessmann on 10/03/16.
  */
+@SuppressWarnings("unchecked")
 public class ConfigurationsCache {
 
 	/**
@@ -29,26 +30,22 @@ public class ConfigurationsCache {
 	 */
 	private Cache cache;
 
-	private boolean useCache;
-
-	public ConfigurationsCache() throws Exception {
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private ConfigurationsCache() throws Exception {
+		if(Constants.USE_CACHE) {
 			initCache();
 		}
 	}
 
-	protected void initCache() throws Exception {
+	private void initCache() throws Exception {
 		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
 		Map properties = new HashMap<>();
 		properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
 		cache = cacheFactory.createCache(properties);
 	}
 
-	protected Configuration getCacheElement(String key) throws Exception {
-		Configuration element = null;
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private Configuration getCacheElement(String key) throws Exception {
+		Configuration element;
+		if(Constants.USE_CACHE) {
 			if(cache == null) {
 				initCache();
 			}
@@ -57,9 +54,8 @@ public class ConfigurationsCache {
 		return element;
 	}
 
-	protected void putCacheElement(String key, Configuration value) throws Exception{
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private void putCacheElement(String key, Configuration value) throws Exception{
+		if(Constants.USE_CACHE) {
 			if(cache == null) {
 				initCache();
 			}
@@ -86,7 +82,7 @@ public class ConfigurationsCache {
 			if (configuration != null) {
 				putCacheElement(key, configuration);
 			} else {
-				throw new InvalidValueException(String.format(Constants.INVALID_ID, key));
+				throw new InvalidValueException(String.format(Constants.INVALID_KEY, key));
 			}
 		}
 		return configuration;
