@@ -14,10 +14,11 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Singleton to manage the usage of memcache to store the access to the endpoints using JWT.
+ * Singleton to manage the usage of memcache to store the clients created in the platform.
  *
  * Created by plessmann on 10/03/16.
  */
+@SuppressWarnings("unchecked")
 public class ClientsCache {
 
 	/**
@@ -30,26 +31,22 @@ public class ClientsCache {
 	 */
 	private Cache cache;
 
-	private boolean useCache;
-
-	public ClientsCache() throws Exception {
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private ClientsCache() throws Exception {
+		if(Constants.USE_CACHE) {
 			initCache();
 		}
 	}
 
-	protected void initCache() throws Exception {
+	private void initCache() throws Exception {
 		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
 		Map properties = new HashMap<>();
 		properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
 		cache = cacheFactory.createCache(properties);
 	}
 
-	protected Client getCacheElement(Long key) throws Exception {
-		Client element = null;
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private Client getCacheElement(Long key) throws Exception {
+		Client element;
+		if(Constants.USE_CACHE) {
 			if(cache == null) {
 				initCache();
 			}
@@ -58,9 +55,8 @@ public class ClientsCache {
 		return element;
 	}
 
-	protected void putCacheElement(Long key, Client value) throws Exception{
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private void putCacheElement(Long key, Client value) throws Exception{
+		if(Constants.USE_CACHE) {
 			if(cache == null) {
 				initCache();
 			}

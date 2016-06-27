@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  *
  * Created by plessmann on 10/03/16.
  */
+@SuppressWarnings("unchecked")
 public class RolesCache {
 
 	/**
@@ -30,26 +31,22 @@ public class RolesCache {
 	 */
 	private Cache cache;
 
-	private boolean useCache;
-
-	public RolesCache() throws Exception {
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private RolesCache() throws Exception {
+		if(Constants.USE_CACHE) {
 			initCache();
 		}
 	}
 
-	protected void initCache() throws Exception {
+	private void initCache() throws Exception {
 		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
 		Map properties = new HashMap<>();
 		properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
 		cache = cacheFactory.createCache(properties);
 	}
 
-	protected Role getCacheElement(Long key) throws Exception {
-		Role element = null;
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private Role getCacheElement(Long key) throws Exception {
+		Role element;
+		if(Constants.USE_CACHE) {
 			if(cache == null) {
 				initCache();
 			}
@@ -58,9 +55,8 @@ public class RolesCache {
 		return element;
 	}
 
-	protected void putCacheElement(Long key, Role value) throws Exception{
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private void putCacheElement(Long key, Role value) throws Exception{
+		if(Constants.USE_CACHE) {
 			if(cache == null) {
 				initCache();
 			}

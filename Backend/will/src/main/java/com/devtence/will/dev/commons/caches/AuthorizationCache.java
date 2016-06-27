@@ -11,7 +11,6 @@ import javax.cache.Cache;
 import javax.cache.CacheFactory;
 import javax.cache.CacheManager;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  *
  * Created by plessmann on 10/03/16.
  */
+@SuppressWarnings("unchecked")
 public class AuthorizationCache {
 
 	/**
@@ -32,26 +32,22 @@ public class AuthorizationCache {
 	 */
 	private Cache cache;
 
-	private boolean useCache;
-
-	public AuthorizationCache() throws Exception {
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private AuthorizationCache() throws Exception {
+		if(Constants.USE_CACHE) {
 			initCache();
 		}
 	}
 
-	protected void initCache() throws Exception {
+	private void initCache() throws Exception {
 		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
 		Map properties = new HashMap<>();
 		properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
 		cache = cacheFactory.createCache(properties);
 	}
 
-	protected CacheAuthWrapper getCacheElement(Long key) throws Exception {
-		CacheAuthWrapper element = null;
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private CacheAuthWrapper getCacheElement(Long key) throws Exception {
+		CacheAuthWrapper element;
+		if(Constants.USE_CACHE) {
 			if(cache == null) {
 				initCache();
 			}
@@ -60,9 +56,8 @@ public class AuthorizationCache {
 		return element;
 	}
 
-	protected void putCacheElement(Long key, CacheAuthWrapper value) throws Exception{
-		useCache = Configuration.getBoolean("use-cache");
-		if(useCache) {
+	private void putCacheElement(Long key, CacheAuthWrapper value) throws Exception{
+		if(Constants.USE_CACHE) {
 			if(cache == null) {
 				initCache();
 			}
@@ -97,10 +92,6 @@ public class AuthorizationCache {
 			}
 		}
 		return auth;
-	}
-
-	public void setAuth(long id, String jwt, String secret, List<Long> roles) throws Exception {
-		setAuth(new CacheAuthWrapper(id, jwt, secret, roles));
 	}
 
 	public void setAuth(CacheAuthWrapper cacheAuthWrapper) throws Exception {

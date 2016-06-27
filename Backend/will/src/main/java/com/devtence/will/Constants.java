@@ -17,6 +17,7 @@ public class Constants {
 	public static final String ERROR = "Error";
 	public static final String INVALID_JWT_OR_SECRET = "Invalid jwt or secret";
 	public static final String INVALID_ID = "Invalid id = %d";
+	public static final String INVALID_KEY = "Invalid key = %s";
 
 	public static final String IAM_API_NAME = "iam";
 	public static final String JAZZ_API_NAME = "jazz";
@@ -145,4 +146,7 @@ public class Constants {
 
 	public static final String VALUE_MUST_BE_MAJOR_OR_EQUAL = "Value must be major or equal";
 	public static final String VALUE_MUST_BE_MINOR_OR_EQUAL = "Value must be minor or equal";
+
+
+	public static final boolean USE_CACHE = true;
 }
