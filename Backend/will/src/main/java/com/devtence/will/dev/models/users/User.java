@@ -52,6 +52,13 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.password = password;
     }
 
+    public User(String email, String user, String password, List<Long> roles) {
+        this.email = email;
+        this.user = user;
+        this.password = password;
+        this.roles = roles;
+    }
+
     public User(String user, String password) {
         this.user = user;
         this.password = password;
@@ -68,6 +75,10 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.jwt = jwt;
         this.secret = secret;
         this.roles = roles;
+    }
+
+    public User(String user) {
+        this.user = user;
     }
 
     public Integer getStatus() {
@@ -168,7 +179,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
     public AuthorizationWrapper authorize() throws Exception{
         int authTimeout = 60 * 60000;
         try {
-            authTimeout = Integer.parseInt(ConfigurationsCache.getInstance().getConfiguration("auth-timeout").getValue());
+            authTimeout = Integer.parseInt(ConfigurationsCache.getInstance().getElement("auth-timeout").getValue());
         } catch (Exception e) {}
         Key key = MacProvider.generateKey();
         jwt = Jwts.builder().setSubject(user).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + authTimeout)).signWith(SignatureAlgorithm.HS512, key).compact();
@@ -272,7 +283,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         }
 
         if (mod){
-            this.validate();
+            this.update();
         }
     }
 

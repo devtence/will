@@ -11,7 +11,6 @@ import com.devtence.will.dev.models.users.Role;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Authenticator;
 import com.google.appengine.api.utils.SystemProperty;
-import com.googlecode.objectify.Key;
 import io.jsonwebtoken.Jwts;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,51 +35,69 @@ public class UserAuthenticator implements Authenticator {
 	 */
 	@Override
     public User authenticate(HttpServletRequest request) {
-		User user = null;
+		User user;
 		if(SystemProperty.environment.value() == SystemProperty.Environment.Value.Development){
 			user = new User(Constants.GENERIC_KEY, Constants.GENERIC_USER);
 		} else {
 			String idClient = request.getHeader(Constants.AUTHORIZATION_CLIENT);
-			if (idClient != null && !idClient.isEmpty()) {
-				try {
-					Client client = ClientsCache.getInstance().getClient(Long.parseLong(idClient));
-					if (client != null) {
-						String pathTranslated = request.getPathTranslated();
-						Permission permission = new Permission(pathTranslated);
-						if (client.getPermissions().contains(permission)) {
-							int permissionIndex = client.getPermissions().indexOf(permission);
-							permission = client.getPermissions().get(permissionIndex);
-							if(permission.getUserRequired()) {
-								String token = request.getHeader(Constants.AUTHORIZATION);
-								String key = request.getHeader(Constants.AUTHORIZATION_KEY);
-								if (token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
-									try {
-										CacheAuthWrapper value = AuthorizationCache.getInstance().getAuth(Long.parseLong(key));
-										boolean valid = false;
-										Role role = null;
-										for (Long roleKey : value.getRoles()) {
-											role = RolesCache.getInstance().getRole(roleKey);
-											if (role.getPermissions().contains(permission)) {
-												valid = true;
-												break;
-											}
+			String pathTranslated = request.getPathTranslated();
+			String token = request.getHeader(Constants.AUTHORIZATION);
+			String key = request.getHeader(Constants.AUTHORIZATION_KEY);
+			user = authProduction(idClient, pathTranslated, token, key);
+		}
+		return user;
+	}
+
+	/**
+	 * This method checks that the client and the user has the correct permission to access the route that is being
+	 * called. for this it checks that the clienet has the permissiona nd it check if that permission requires a user,
+	 * if it does requires it it check that th user role has said permission. after thos tests are passed it checks
+	 * for the validity of th JWT to grant a user to be checked.
+	 *
+	 * @param idClient          id of the client that generates the call
+	 * @param pathTranslated    the route being accesed by the web call
+	 * @param token             the JWT that allows access to the platform
+	 * @param key               the user id to get the roles of the user and the secret to decrypt the JWT
+	 * @return                  if the tests passes, an instatianted user. null if the call is illegal or out of time.
+	 */
+	public User authProduction(String idClient, String pathTranslated, String token, String key){
+		User user = null;
+		if (idClient != null && !idClient.isEmpty()) {
+			try {
+				Client client = ClientsCache.getInstance().getElement(Long.parseLong(idClient));
+				if (client != null) {
+					Permission permission = new Permission(pathTranslated);
+					if (client.getPermissions().contains(permission)) {
+						int permissionIndex = client.getPermissions().indexOf(permission);
+						permission = client.getPermissions().get(permissionIndex);
+						if(permission.getUserRequired()) {
+							if (token != null && !token.isEmpty() && key != null && !key.isEmpty()) {
+								try {
+									CacheAuthWrapper value = AuthorizationCache.getInstance().getElement(Long.parseLong(key));
+									boolean valid = false;
+									Role role ;
+									for (Long roleKey : value.getRoles()) {
+										role = RolesCache.getInstance().getElement(roleKey);
+										if (role.getPermissions().contains(permission)) {
+											valid = true;
+											break;
 										}
-										if (valid) {
-											Jwts.parser().setSigningKey(value.getSecret()).parseClaimsJws(token);
-											user =  new User(key, Constants.GENERIC_USER);
-										}
-									} catch (Exception e) {
-										log.log(Level.WARNING, Constants.ERROR, e);
 									}
+									if (valid) {
+										Jwts.parser().setSigningKey(value.getSecret()).parseClaimsJws(token);
+										user =  new User(key, Constants.GENERIC_USER);
+									}
+								} catch (Exception e) {
+									log.log(Level.WARNING, Constants.ERROR, e);
 								}
-							} else {
-								user = new User(Constants.GENERIC_KEY, Constants.GENERIC_USER);
 							}
+						} else {
+							user = new User(Constants.GENERIC_KEY, Constants.GENERIC_USER);
 						}
 					}
-				} catch (Exception e) {
-					log.log(Level.WARNING, Constants.ERROR, e);
 				}
+			} catch (Exception e) {
+				log.log(Level.WARNING, Constants.ERROR, e);
 			}
 		}
 		return user;

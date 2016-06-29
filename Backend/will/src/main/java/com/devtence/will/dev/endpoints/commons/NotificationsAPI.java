@@ -6,16 +6,13 @@ import com.devtence.will.dev.exceptions.MissingFieldException;
 import com.devtence.will.dev.models.ListItem;
 import com.devtence.will.dev.models.commons.Notification;
 import com.google.api.server.spi.auth.common.User;
-import com.google.api.server.spi.config.Api;
-import com.google.api.server.spi.config.ApiMethod;
-import com.google.api.server.spi.config.DefaultValue;
-import com.google.api.server.spi.config.Nullable;
+import com.google.api.server.spi.config.*;
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.InternalServerErrorException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
 
-import javax.inject.Named;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -111,11 +108,11 @@ public class NotificationsAPI extends BaseController<Notification> {
 
 	@Override
 	@ApiMethod(name = "notification.list", path = "notifications")
-	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("offset") @Nullable @DefaultValue("100") Integer offset, @Named("sortField") @Nullable String sortField, @Named("sortDirection") @Nullable @DefaultValue("ASC") String sortDirection, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
+	public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("limit") @Nullable @DefaultValue("100") Integer limit, @Named("sortFields") @Nullable List<String> sortFields, @Named("sortDirection") @Nullable List<Boolean> sortDirections, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
 		validateUser(user);
 		ListItem list = null;
 		try {
-			list = Notification.getList(cursor, offset, Notification.class, sortField, sortDirection);
+			list = Notification.getList(cursor, limit, Notification.class, sortFields, sortDirections);
 		} catch (Exception e) {
 			log.log(Level.WARNING, Constants.ERROR, e);
 			throw new InternalServerErrorException(Constants.INTERNAL_SERVER_ERROR_DEFAULT_MESSAGE);

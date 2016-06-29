@@ -1,6 +1,7 @@
 package com.devtence.will.dev.models;
 
 
+import com.devtence.will.Constants;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.annotation.Id;
@@ -15,7 +16,9 @@ import java.util.List;
  */
 public abstract class BaseModel<T extends BaseModel> {
 
-    @Id
+
+
+	@Id
     private Long id;
 
     public Long getId() {
@@ -44,15 +47,21 @@ public abstract class BaseModel<T extends BaseModel> {
         DbObjectify.ofy().delete().entity(this).now();
     }
 
-    public static ListItem getList(String startAt, int limit, Class fromDb, String sortField, String sortDir) {
+    public static ListItem getList(String startAt, int limit, Class fromDb, List<String> sortFields, List<Boolean> sortDirs) {
         ListItem toReturn = new ListItem();
 
         Query query = null;
-        if (sortField != null) {
-            if (sortDir.equalsIgnoreCase("DESC")){
-                sortField = "-" + sortField;
+        if (sortFields != null && !sortFields.isEmpty()) {
+            query = DbObjectify.ofy().load().type(fromDb);
+            StringBuilder sort = new StringBuilder();
+			for (int i = 0; i < sortFields.size(); i++) {
+                if(sortDirs != null && !sortDirs.isEmpty() && i < sortDirs.size() && sortDirs.get(i)) {
+                    sort.append(Constants.DESC_SORTER);
+                }
+                sort.append(sortFields.get(i));
+                query = query.order(sort.toString());
+                sort.delete(0, sort.length());
             }
-            query = DbObjectify.ofy().load().type(fromDb).order(sortField);
         } else {
             query = DbObjectify.ofy().load().type(fromDb);
         }

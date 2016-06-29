@@ -2,6 +2,11 @@ package com.devtence.will.dev.models;
 
 import com.devtence.will.dev.models.commons.Configuration;
 import com.devtence.will.dev.models.commons.Notification;
+import com.devtence.will.dev.models.jazz.Author;
+import com.devtence.will.dev.models.jazz.Category;
+import com.devtence.will.dev.models.jazz.Content;
+import com.devtence.will.dev.models.jazz.Language;
+import com.devtence.will.dev.samples.search.Search;
 import com.devtence.will.dev.models.users.Client;
 import com.devtence.will.dev.models.users.Role;
 import com.devtence.will.dev.models.users.User;
@@ -23,6 +28,12 @@ public class DbObjectify {
         ObjectifyService.register(Role.class);
         ObjectifyService.register(User.class);
         ObjectifyService.register(UserPasswordReset.class);
+        //jazz classes
+        ObjectifyService.register(Author.class);
+        ObjectifyService.register(Category.class);
+        ObjectifyService.register(Content.class);
+        ObjectifyService.register(Language.class);
+        ObjectifyService.register(Search.class);
     }
 
     public static Objectify ofy() {

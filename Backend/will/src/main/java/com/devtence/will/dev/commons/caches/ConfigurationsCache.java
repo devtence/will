@@ -17,27 +17,50 @@ import java.util.concurrent.TimeUnit;
  *
  * Created by plessmann on 10/03/16.
  */
+@SuppressWarnings("unchecked")
 public class ConfigurationsCache {
 
 	/**
 	 * The protected instance
 	 */
-	private static ConfigurationsCache me = null;
+	protected static ConfigurationsCache me = null;
 
 	/**
 	 * The Member Cache element using the JCache library
 	 */
-	private Cache configurationsCache;
+	private Cache cache;
 
-	/**
-	 * Contructor for the instance in which the cache timeout is defined
-	 * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
-	 */
-	public ConfigurationsCache() throws Exception {
+	private ConfigurationsCache() throws Exception {
+		if(Constants.USE_CACHE) {
+			initCache();
+		}
+	}
+
+	private void initCache() throws Exception {
 		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
 		Map properties = new HashMap<>();
 		properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
-		configurationsCache = cacheFactory.createCache(properties);
+		cache = cacheFactory.createCache(properties);
+	}
+
+	private Configuration getCacheElement(String key) throws Exception {
+		Configuration element;
+		if(Constants.USE_CACHE) {
+			if(cache == null) {
+				initCache();
+			}
+			element = (Configuration) cache.get(key);
+		}
+		return element;
+	}
+
+	private void putCacheElement(String key, Configuration value) throws Exception{
+		if(Constants.USE_CACHE) {
+			if(cache == null) {
+				initCache();
+			}
+			cache.put(key, value);
+		}
 	}
 
 	/**
@@ -52,25 +75,16 @@ public class ConfigurationsCache {
 		return me;
 	}
 
-	/**
-	 * Access to the cache element
-	 * @return cache to be used to manage the authorization
-	 */
-	public Cache getConfigurationsCache() {
-		return configurationsCache;
-	}
-
-	public Configuration getConfiguration(String id) throws Exception {
-		Configuration configuration = (Configuration) configurationsCache.get(id);
+	public Configuration getElement(String key) throws Exception {
+		Configuration configuration = getCacheElement(key);
 		if(configuration == null) {
-			configuration = Configuration.getConfigByKey(id);
+			configuration = Configuration.getConfigByKey(key);
 			if (configuration != null) {
-				configurationsCache.put(id, configuration);
+				putCacheElement(key, configuration);
 			} else {
-				throw new InvalidValueException(String.format(Constants.INVALID_ID, id));
+				throw new InvalidValueException(String.format(Constants.INVALID_KEY, key));
 			}
 		}
 		return configuration;
 	}
-
 }

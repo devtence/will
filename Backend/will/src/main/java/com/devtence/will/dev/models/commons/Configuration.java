@@ -4,8 +4,8 @@ package com.devtence.will.dev.models.commons;
 import com.devtence.will.dev.exceptions.MissingFieldException;
 import com.devtence.will.dev.models.BaseModel;
 import com.devtence.will.dev.models.DbObjectify;
+import com.google.appengine.repackaged.org.codehaus.jackson.annotate.JsonIgnore;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 import java.io.Serializable;
@@ -19,8 +19,18 @@ public class Configuration extends BaseModel<Configuration> implements Serializa
 
 	@Index
 	private String configKey;
+	@Index
 	private String value;
 	private String description;
+
+	public Configuration() {
+	}
+
+	public Configuration(String configKey, String value, String description) {
+		this.configKey = configKey;
+		this.value = value;
+		this.description = description;
+	}
 
 	public String getConfigKey() {
 		return configKey;
@@ -148,6 +158,36 @@ public class Configuration extends BaseModel<Configuration> implements Serializa
 		return DbObjectify.ofy().load().type(Configuration.class).id(id).now();
 	}
 
+	@JsonIgnore
+	public Long getLong() throws Exception {
+		return Long.parseLong(value);
+	}
+
+	@JsonIgnore
+	public String[] getStringArray(String separator) throws Exception {
+		return value.split(separator);
+	}
+
+	@JsonIgnore
+	public int getInt() throws Exception {
+		return Integer.parseInt(value);
+	}
+
+	@JsonIgnore
+	public float getFloat() throws Exception {
+		return Float.parseFloat(value);
+	}
+
+	@JsonIgnore
+	public double getDouble() throws Exception {
+		return Double.parseDouble(value);
+	}
+
+	@JsonIgnore
+	public boolean getBoolean() throws Exception {
+		return Integer.parseInt(value) != 0;
+	}
+
 	@Override
 	public void validate() throws Exception {
 		if(configKey == null || configKey.isEmpty()){
@@ -169,7 +209,26 @@ public class Configuration extends BaseModel<Configuration> implements Serializa
 
 	@Override
 	public void update(Configuration data) throws Exception {
-		this.save();
+		boolean mod = false;
+
+		if (data.getConfigKey() != null){
+			setConfigKey(data.getConfigKey());
+			mod |= true;
+		}
+
+		if (data.getDescription() != null){
+			setDescription(data.getDescription());
+			mod |= true;
+		}
+
+		if (data.getValue() != null){
+			setValue(data.getValue());
+			mod |= true;
+		}
+
+		if (mod){
+			this.validate();
+		}
 	}
 
 	@Override
