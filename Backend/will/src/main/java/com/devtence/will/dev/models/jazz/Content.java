@@ -7,10 +7,13 @@ import com.googlecode.objectify.annotation.Index;
 import java.util.List;
 
 /**
+ * base model for the central component of jazz (CMS)
+ * this class implements the minimal funcionality for creating and managing contents
+ *
  * Created by sorcerer on 6/9/16.
  */
 @Entity
-public class Content extends BaseModel<Content>{
+public class Content extends BaseModel<Content> {
 
     @Index
     private String title;
@@ -27,6 +30,8 @@ public class Content extends BaseModel<Content>{
 
     @Index
     private Long idLanguage;
+
+    /*getter and setters*/
 
     public String getTitle() {
         return title;
@@ -84,6 +89,8 @@ public class Content extends BaseModel<Content>{
         this.idLanguage = idLanguage;
     }
 
+    /*constructors*/
+
     public Content() {
     }
 
@@ -99,8 +106,11 @@ public class Content extends BaseModel<Content>{
         this.idLanguage = idLanguage;
     }
 
+    /*implementing basic models*/
+
     @Override
     public void validate() throws Exception {
+        //validate fields
         this.save();
     }
 

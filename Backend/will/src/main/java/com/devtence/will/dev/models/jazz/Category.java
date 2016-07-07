@@ -18,6 +18,8 @@ public class Category extends BaseModel<Category>{
     @Index
     private Long idLanguage;
 
+    /*setters and getterts*/
+
     public String getName() {
         return name;
     }

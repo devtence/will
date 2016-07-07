@@ -5,16 +5,19 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 /**
+ * model to create languages
  * Created by sorcerer on 6/9/16.
  */
 @Entity
-public class Language extends BaseModel<Language>{
+public class Language extends BaseModel<Language> {
 
     @Index
     private String language;
 
     @Index
     private String shortName;
+
+    /*getters and setters*/
 
     public String getLanguage() {
         return language;
@@ -32,6 +35,8 @@ public class Language extends BaseModel<Language>{
         this.shortName = shortName;
     }
 
+    /*Constructors*/
+
     public Language() {
     }
 
@@ -40,6 +45,8 @@ public class Language extends BaseModel<Language>{
         this.language = language;
         this.shortName = shortName;
     }
+
+    /*basic methods*/
 
     @Override
     public void validate() throws Exception {
