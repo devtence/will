@@ -1,6 +1,7 @@
 package com.devtence.will.dev.models.jazz;
 
 /**
+ * model to map basic files to the google data store and google cloud storage
  * Created by sorcerer on 6/9/16.
  */
 public class JazzFile {
@@ -12,6 +13,21 @@ public class JazzFile {
     private String contentType;
 
     private String url;
+
+    /*CONSTRUCTORS*/
+
+    public JazzFile() {
+
+    }
+
+    public JazzFile(String name, String originalName, String contentType, String url) {
+        this.name = name;
+        this.originalName = originalName;
+        this.contentType = contentType;
+        this.url = url;
+    }
+
+    /*GETTERS AND SETTERS*/
 
     public String getName() {
         return name;

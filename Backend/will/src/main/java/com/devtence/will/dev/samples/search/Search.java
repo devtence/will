@@ -5,15 +5,17 @@ import com.google.appengine.api.search.*;
 import com.googlecode.objectify.annotation.Entity;
 
 /**
+ * basic model sample model that uses the google SearchAPI
  * Created by sorcerer on 6/22/16.
  */
 @Entity
 public class Search extends BaseModel<Search>{
 
+    private static final String INDEX = "TEST-INDEX";
+
     private String content;
 
     private Integer value;
-
 
     public String getContent() {
         return content;
@@ -43,14 +45,13 @@ public class Search extends BaseModel<Search>{
 
     @Override
     public void update(Search data) throws Exception {
-
+        //not needed
     }
 
     @Override
     public void load(long id) {
-        //no need
+        //not needed
     }
-
 
     public void addIndex(){
         Document doc = Document.newBuilder()
@@ -59,7 +60,7 @@ public class Search extends BaseModel<Search>{
                 .addField(Field.newBuilder().setName("value").setNumber(this.getValue()))
                 .build();
         try {
-            indexADocument("sorcerer",doc);
+            indexADocument(INDEX, doc);
         }catch (Exception ex){
 
         }

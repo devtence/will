@@ -16,12 +16,18 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 
 /**
- * base class to create conections to google data storage
+ * basic class to create connections to google data storage (GDS).
+ * every new model defined by must be manually registered in this class.
+ *
+ * this class also publishes the ofy() method that is used to call on the GDS
+ *
  * Created by sorcerer on 7/25/15.
  */
 public class DbObjectify {
+
     //must add every model here to guaranty that is registered to use
     static {
+        //iam classes
         ObjectifyService.register(Configuration.class);
         ObjectifyService.register(Notification.class);
         ObjectifyService.register(Client.class);
@@ -33,7 +39,10 @@ public class DbObjectify {
         ObjectifyService.register(Category.class);
         ObjectifyService.register(Content.class);
         ObjectifyService.register(Language.class);
+        //sample classes
         ObjectifyService.register(Search.class);
+        //new classes
+        //add new classes here
     }
 
     public static Objectify ofy() {

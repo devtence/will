@@ -49,7 +49,7 @@ public class AuthorizationWrapper {
 	}
 
 	/**
-	 * Get the user id int the database, used as a key used in @see com.devtence.mundohablado.dev.commons.caches.AuthorizationCache#getCache
+	 * Get the user id int the database, used as a key used in @see com.devtence.will.dev.commons.caches.AuthorizationCache#getCache
 	 */
 	public Long getAuthorizationKey() {
 		return authorizationKey;

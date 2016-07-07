@@ -17,7 +17,7 @@ public class GcsAppIdentityServiceUrlSigner {
 
 	private static final int EXPIRATION_TIME = 5;
 	private static final String BASE_URL = "https://storage.googleapis.com/%s/%s?GoogleAccessId=%s&Expires=%s&Signature=%s";
-	private static final String BUCKET = "mundo-hablado.appspot.com";
+	private static final String BUCKET = "test-bucket";
 	private static final String UTF_8 = "UTF-8";
 	private static final long unitMil = 1000L;
 

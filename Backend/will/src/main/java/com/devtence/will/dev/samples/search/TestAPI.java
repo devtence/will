@@ -14,6 +14,7 @@ import java.util.List;
 
 
 /**
+ * sample API that uses Google SearchAPI
  * Created by sorcerer on 6/22/16.
  */
 @Api(
@@ -27,13 +28,20 @@ import java.util.List;
 public class TestAPI {
 
 
+    /**
+     * this api method adds documents to the data store and the search api
+     * @param toAdd object to add
+     * @return object added
+     */
     @ApiMethod(
             httpMethod = ApiMethod.HttpMethod.POST,
             name = "search.add",
             path = "search")
     public Search testAdd(Search toAdd){
         try {
+            //saving
             toAdd.validate();
+            //adding data to the SearchAPI
             toAdd.addIndex();
         }catch (Exception ex){
             ex.printStackTrace();
@@ -41,6 +49,12 @@ public class TestAPI {
         return toAdd;
     }
 
+    /**
+     * this api method searches the SearchAPI Index and only returns documents with value < 100 and
+     * finds the document in the GDS
+     * @param id index to search
+     * @return list of objects that matches the index and are no bigger than 100
+     */
     @ApiMethod(
             httpMethod = ApiMethod.HttpMethod.GET,
             name = "search.search",
