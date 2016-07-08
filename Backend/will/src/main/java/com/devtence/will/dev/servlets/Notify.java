@@ -13,13 +13,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This servlet is used by GAE Push Queue to process all the notifications that are to be processed by the service.
- * The request must contain the notificator to be used and the parameters the notificator requires
- * Created by plessmann on 11/03/16.
+ * This Class is used by the Google AppEngine Push Queue to process the notifications to be sent to the client applications or users.
+ *
+ * @author plessmann
+ * @since 2016-03-11
  */
 public class Notify extends HttpServlet {
 
 	private static final Logger log = Logger.getLogger(Notify.class.getName());
+
+	/**
+	 * Instantiates the notificator Class to process the notification to be sent.
+     */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
 		try {

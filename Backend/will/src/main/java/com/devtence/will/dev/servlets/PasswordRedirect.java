@@ -15,9 +15,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is used as a filter for Reset password requests, it simply receives a JWT that was generated when te Password Reset Process began
- * and when this is called it checks for the validity of the JWT to decide where to redirect the user
- * Created by plessmann on 23/03/16.
+ * This Class implements the validation process for the Reset password requests, it simply receives a JWT that was
+ * generated when the Password Reset Process began and implements the necessary methods to decide where to redirect the user.
+ *
+ * @author  plessmann
+ * @since 2016-03-23
+ *
+ * @see com.devtence.will.dev.commons.wrappers.AuthorizationWrapper
+ * @see UserPasswordReset
+ * @see com.devtence.will.dev.notificators.UserPasswordRecovery
  */
 public class PasswordRedirect extends HttpServlet {
 
@@ -25,6 +31,10 @@ public class PasswordRedirect extends HttpServlet {
 	public static final String PASSWORD_ERROR = "password_error";
 	public static final String PASSWORD_VALID = "password_valid";
 
+	/**
+	 * Receives a request and get the JWT token from the HTTP Request parameters and validates if it's valid.
+	 * Returns a String message.
+     */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
 		try {
@@ -36,12 +46,21 @@ public class PasswordRedirect extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Receives a token and validates if the JWT token belongs to the same user.
+	 *
+	 * @param token JWT token received by the Servlet
+	 * @return true if the token is not valid and false if it passed the validity test
+     */
 	public boolean processRequest(String token) {
 		boolean error = true;
 		UserPasswordReset passwordReset = null;
 		User user;
 		try {
+			// Search the DB for the user authentication data
 			passwordReset = UserPasswordReset.getByToken(token);
+
+			// Verify the validity of the token
 			if (passwordReset != null) {
 				Jws<Claims> claimsJws = Jwts.parser().setSigningKey(passwordReset.getSecret()).parseClaimsJws(token);
 				Claims body = claimsJws.getBody();

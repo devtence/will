@@ -20,7 +20,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by plessmann on 22/03/16.
+ *
+ *
+ * @author plessmann
+ * @since 2016-03-22
  */
 public class UserPasswordRecovery extends Notificator {
 
@@ -50,7 +53,7 @@ public class UserPasswordRecovery extends Notificator {
 						if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development) {
 							System.out.println(String.format(passwordRedirectServlet, webToken));
 						}
-						//TODO: ajustar el mensaje
+						//TODO: adjust message
 						String message = notification.getMessage().replaceAll(URL, String.format(passwordRedirectServlet, webToken));
 						StandardMail.getInstance().sendMail(notification.getSender(), user.getEmail(), notification.getSubject(), message);
 					}
