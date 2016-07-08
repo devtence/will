@@ -5,7 +5,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 /**
- * model to create languages
+ * basic model for languages
  * Created by sorcerer on 6/9/16.
  */
 @Entity
@@ -48,16 +48,30 @@ public class Language extends BaseModel<Language> {
 
     /*basic methods*/
 
+    /**
+     * this method validate fields and save the object into the GDS
+     * in this case no validation is made
+     * @throws Exception
+     */
     @Override
     public void validate() throws Exception {
         this.save();
     }
 
+    /**
+     * this method to delete and object from the GDS
+     * @throws Exception
+     */
     @Override
     public void destroy() throws Exception {
         this.delete();
     }
 
+    /**
+     * this method checks the new object with the old, and if its different does the update.
+     * @param data new data to insert
+     * @throws Exception
+     */
     @Override
     public void update(Language data) throws Exception {
         boolean mod = false;
@@ -84,6 +98,11 @@ public class Language extends BaseModel<Language> {
         this.setShortName(me.getShortName());
     }
 
+    /**
+     * custom method that returns a language object using the basic get function from parent
+     * @param id of the object to get
+     * @return
+     */
     public static Language get(long id){
         return (Language) get(id, Language.class);
     }

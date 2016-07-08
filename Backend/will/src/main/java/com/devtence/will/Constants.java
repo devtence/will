@@ -1,7 +1,7 @@
 package com.devtence.will;
 
 /**
- * Contains the client IDs and scopes for allowed clients consuming your API.
+ * Contains the client IDs and scopes for allowed clients consuming your API and other aplications constants.
  */
 public class Constants {
 	public static final String WEB_CLIENT_ID = "replace this with your web client ID";

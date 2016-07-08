@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * user role class that contains the permitions that an user has
+ *
  * Created by plessmann on 02/06/16.
  */
 @Entity

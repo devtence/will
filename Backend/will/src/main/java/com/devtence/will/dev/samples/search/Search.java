@@ -53,6 +53,9 @@ public class Search extends BaseModel<Search>{
         //not needed
     }
 
+    /**
+     * this method adds a document to the index example
+     */
     public void addIndex(){
         Document doc = Document.newBuilder()
                 .setId("" + this.getId())

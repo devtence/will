@@ -16,7 +16,7 @@ import java.util.List;
  * this base also defines the basic functions every model must have, and implements basic functions, like saving,
  * deleting, and basic search.
  *
- * every model must be registrered on the DbObjectify class so it can be used, otherwise it will fail executing.
+ * every model must be registered on the DbObjectify class so it can be used, otherwise it will fail executing.
  *
  * Created by sorcerer on 7/18/15.
  */
