@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * base model for clients (apps that are allowed to call the APIs)
  * Created by plessmann on 02/06/16.
  */
 @Entity
@@ -48,20 +49,39 @@ public class Client extends BaseModel<Client> implements Serializable {
         this.permissions = permissions;
     }
 
+    /**
+     * this method validate fields and save the object into the GDS
+     * in this case no validation is made
+     * @throws Exception
+     */
     @Override
     public void validate() throws Exception {
         this.save();
     }
 
+    /**
+     * this method to delete and object from the GDS
+     * @throws Exception
+     */
     @Override
     public void destroy() throws Exception {
         this.delete();
     }
 
+    /**
+     * custom method that returns a language object using the basic get function from parent
+     * @param id of the object to get
+     * @return
+     */
     public static Client getById(Long id) throws Exception {
         return (Client) get(id, Client.class);
     }
 
+    /**
+     * this method checks the new object with the old, and if its different does the update.
+     * @param data new data to insert
+     * @throws Exception
+     */
     @Override
     public void update(Client data) throws Exception {
         boolean mod = false;

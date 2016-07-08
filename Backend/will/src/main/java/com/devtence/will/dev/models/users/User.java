@@ -43,6 +43,8 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
 	@Index
     private List<Long> roles;
 
+    /*constructors*/
+
     public User() {
     }
 
@@ -76,6 +78,8 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.secret = secret;
         this.roles = roles;
     }
+
+    /*getters and setters*/
 
     public User(String user) {
         this.user = user;
@@ -161,6 +165,13 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.roles = roles;
     }
 
+    /***
+     * this method implements the password validation for users, it receives the
+     * password in plain text and does the comparsion
+     * @param inputPassword password in plain text and does the encrypted compararison
+     * @return
+     * @throws Exception
+     */
 	@Override
     public boolean goodLogin(String inputPassword) throws Exception {
 		BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
@@ -189,6 +200,11 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         return new AuthorizationWrapper(jwt, getId(), 0);
     }
 
+    /**
+     * this method validate fields and save the object into the GDS
+     *
+     * @throws Exception
+     */
     @Override
     public void validate() throws Exception {
         if(email == null || email.isEmpty()){
@@ -209,7 +225,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
     }
 
     /**
-     * Method to find an Partner in the databse
+     * Method to find an Partner in the database
      * @param id	id of the Partner to find
      * @return	An Partner
      * @throws Exception an error ocurred
@@ -228,6 +244,11 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         return DbObjectify.ofy().load().type(User.class).filter("user", user).first().now();
     }
 
+    /**
+     * this method checks the new object with the old, and if its different does the update.
+     * @param data new data to insert
+     * @throws Exception
+     */
     @Override
     public void update(User data) throws Exception {
         boolean mod = false;
@@ -302,6 +323,10 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         setRoles(me.getRoles());
     }
 
+    /**
+     * this method to delete and object from the GDS
+     * @throws Exception
+     */
     @Override
     public void destroy() throws Exception {
         this.delete();

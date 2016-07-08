@@ -42,9 +42,13 @@ public class DbObjectify {
         //sample classes
         ObjectifyService.register(Search.class);
         //new classes
-        //add new classes here
+        //add your new classes here
     }
 
+    /**
+     * this method gives you access to the service that allows you to operate on the GDS
+     * @return service to operate on the GDS
+     */
     public static Objectify ofy() {
         return ObjectifyService.ofy();
     }

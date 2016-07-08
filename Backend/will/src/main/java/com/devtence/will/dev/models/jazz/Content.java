@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * base model for the central component of jazz (CMS)
- * this class implements the minimal funcionality for creating and managing contents
+ * this class implements the minimal functionality for creating and managing contents
  *
  * Created by sorcerer on 6/9/16.
  */
@@ -108,17 +108,31 @@ public class Content extends BaseModel<Content> {
 
     /*implementing basic models*/
 
+    /**
+     * this method validate fields and save the object into the GDS
+     * in this case no validation is made
+     * @throws Exception
+     */
     @Override
     public void validate() throws Exception {
         //validate fields
         this.save();
     }
 
+    /**
+     * this method to delete and object from the GDS
+     * @throws Exception
+     */
     @Override
     public void destroy() throws Exception {
         this.delete();
     }
 
+    /**
+     * this method checks the new object with the old, and if its different does the update.
+     * @param data new data to insert
+     * @throws Exception
+     */
     @Override
     public void update(Content data) throws Exception {
         boolean mod = false;
@@ -177,6 +191,11 @@ public class Content extends BaseModel<Content> {
         setIdLanguage(me.getIdLanguage());
     }
 
+    /**
+     * custom method that returns a language object using the basic get function from parent
+     * @param id of the object to get
+     * @return
+     */
     public static Content get(long id){
         return (Content) get(id, Content.class);
     }

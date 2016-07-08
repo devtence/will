@@ -23,6 +23,8 @@ public class Author extends BaseModel<Author> {
 
     private List<Language> languages;
 
+    /*getters and setters*/
+
     public String getName() {
         return name;
     }
@@ -55,6 +57,8 @@ public class Author extends BaseModel<Author> {
         this.languages = languages;
     }
 
+    /*constructors*/
+
     public Author() {
     }
 
@@ -66,16 +70,30 @@ public class Author extends BaseModel<Author> {
         this.languages = languages;
     }
 
+    /**
+     * this method validate fields and save the object into the GDS
+     * in this case no validation is made
+     * @throws Exception
+     */
     @Override
     public void validate() throws Exception {
         this.save();
     }
 
+    /**
+     * this method to delete and object from the GDS
+     * @throws Exception
+     */
     @Override
     public void destroy() throws Exception {
         this.delete();
     }
 
+    /**
+     * this method checks the new object with the old, and if its different does the update.
+     * @param data new data to insert
+     * @throws Exception
+     */
     @Override
     public void update(Author data) throws Exception {
         boolean mod = false;
@@ -111,6 +129,11 @@ public class Author extends BaseModel<Author> {
 
     }
 
+    /**
+     * custom method that returns a language object using the basic get function from parent
+     * @param id of the object to get
+     * @return
+     */
     public static Author get(long id){
         return (Author) get(id, Author.class);
     }

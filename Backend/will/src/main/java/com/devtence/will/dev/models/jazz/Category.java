@@ -44,6 +44,8 @@ public class Category extends BaseModel<Category>{
         this.idLanguage = idLanguage;
     }
 
+    /*constructors*/
+
     public Category() {
     }
 
@@ -54,16 +56,30 @@ public class Category extends BaseModel<Category>{
         this.idLanguage = idLanguage;
     }
 
+    /**
+     * this method validate fields and save the object into the GDS
+     * in this case no validation is made
+     * @throws Exception
+     */
     @Override
     public void validate() throws Exception {
         this.save();
     }
 
+    /**
+     * this method to delete and object from the GDS
+     * @throws Exception
+     */
     @Override
     public void destroy() throws Exception {
         this.delete();
     }
 
+    /**
+     * this method checks the new object with the old, and if its different does the update.
+     * @param data new data to insert
+     * @throws Exception
+     */
     @Override
     public void update(Category data) throws Exception {
         boolean mod = false;
@@ -96,6 +112,11 @@ public class Category extends BaseModel<Category>{
         setIdLanguage(me.getIdLanguage());
     }
 
+    /**
+     * custom method that returns a language object using the basic get function from parent
+     * @param id of the object to get
+     * @return
+     */
     public static Category get(long id){
         return (Category) get(id, Category.class);
     }
