@@ -1,20 +1,24 @@
 package com.devtence.will.dev.commons.wrappers;
 
 /**
- * Created by plessmann on 17/03/16.
+ * Wrapper Class to return a boolean value over the Google AppEngine Endpoints
+ *
+ * @author plessmann
+ * @since 2016-03-17
+ *
  */
 public class BooleanWrapper {
-	private boolean result;
+    private boolean result;
 
-	public BooleanWrapper(boolean result) {
-		this.result = result;
-	}
+    public BooleanWrapper(boolean result) {
+        this.result = result;
+    }
 
-	public boolean getResult() {
-		return result;
-	}
+    public boolean getResult() {
+        return result;
+    }
 
-	public void setResult(boolean result) {
-		this.result = result;
-	}
+    public void setResult(boolean result) {
+        this.result = result;
+    }
 }

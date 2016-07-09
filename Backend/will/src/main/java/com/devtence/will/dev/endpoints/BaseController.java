@@ -33,8 +33,8 @@ public abstract class BaseController<T extends BaseModel> {
     /**
      * Base method to create elements of type T which must be extensions of BaseModel
      *
-     * @param data  BaseModel child containing the data of sais Model
-     * @param user  user provided by authentication to restrict acces to this operation
+     * @param data  BaseModel child containing the data to insert
+     * @param user  user provided by authentication to restrict access to this operation
      * @return      the instance that was created in the persistence unit
      * @throws BadRequestException  the data parameter is missing data needed to create it
      * @throws ConflictException    the instance to be created already exists
@@ -45,11 +45,11 @@ public abstract class BaseController<T extends BaseModel> {
     public abstract T create(T data, User user) throws BadRequestException, ConflictException,InternalServerErrorException, UnauthorizedException;
 
     /**
-     * Base method to obtain an entity that exists in the persistance unit
+     * Base method to obtain an entity that exists in the persistence unit
      * @param id    id of the required instance of type T
      * @param user  user provided by authentication to restrict acces to this operation
      * @return      insntace of type T that holds the id
-     * @throws NotFoundException    the instance rrealted to the id doesnt exists in the persistance unit
+     * @throws NotFoundException    the instance related to the id doesnt exists in the persistance unit
      * @throws InternalServerErrorException a generic error ocurred that is not related to the input
      * @throws UnauthorizedException    the user parameter did not pass the authentication test
      */
@@ -60,7 +60,7 @@ public abstract class BaseController<T extends BaseModel> {
      * Base method to update an entity of type T that exists in the persistance unit
      * @param id    id of the instance of type T to e updated
      * @param data  instance of the same type that holds the new values
-     * @param user  user provided by authentication to restrict acces to this operation
+     * @param user  user provided by authentication to restrict access to this operation
      * @return      insntace of type T updated
      * @throws BadRequestException  the data parameter is missing data needed to update it
      * @throws NotFoundException    the instance related to the id doesnt exists in the persistance unit
@@ -76,7 +76,7 @@ public abstract class BaseController<T extends BaseModel> {
      * @param user  user provided by authentication to restrict acces to this operation
      * @return      insntace of type T that holds the id and was deleted
      * @throws NotFoundException    the instance related to the id doesnt exists in the persistance unit
-     * @throws InternalServerErrorException a generic error ocurred that is not related to the input
+     * @throws InternalServerErrorException a generic error occurred that is not related to the input
      * @throws UnauthorizedException    the user parameter did not pass the authentication test
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.DELETE)
@@ -87,11 +87,11 @@ public abstract class BaseController<T extends BaseModel> {
      * @param index initial point of the segment
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
-     * @param sortDirections    array of booleans that define wether the sortins is DEC or not
+     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
      * @param cursor        index of the previous segmente required using this method
      * @param user  user provided by authentication to restrict acces to this operation
      * @return  object containign the total elemnts of type T in the persistence unit, the cursor for the current segment and the list of the elements in the segemnt
-     * @throws InternalServerErrorException a generic error ocurred that is not related to the input
+     * @throws InternalServerErrorException a generic error occurred that is not related to the input
      * @throws UnauthorizedException    the user parameter did not pass the authentication test
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.GET)

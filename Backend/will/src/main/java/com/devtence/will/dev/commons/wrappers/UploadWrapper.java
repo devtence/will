@@ -1,7 +1,10 @@
 package com.devtence.will.dev.commons.wrappers;
 
 /**
- * Created by sorcerer on 3/11/16.
+ * Wrapper Class used to return the resumable upload session data in the FileAPI
+ *
+ * @author plessmann
+ * @since 2016-03-11
  */
 public class UploadWrapper {
 
