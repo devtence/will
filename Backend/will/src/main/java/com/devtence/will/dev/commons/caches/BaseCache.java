@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * TODO: review this class usage and mark possible for refactor.
- * Abstract Class created to serve as the base for the Caches that use memcache.
+ * Abstract Class created to serve as the base for the Caches that use Memcached.
  * Defines basic methods every cache must have
  *
  * @author plessmann

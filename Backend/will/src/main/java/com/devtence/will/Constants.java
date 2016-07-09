@@ -148,5 +148,6 @@ public class Constants {
 	public static final String VALUE_MUST_BE_MINOR_OR_EQUAL = "Value must be minor or equal";
 
 
+	// If set to true, the app will use Memcached. If set to false it'll consult the DB all the time
 	public static final boolean USE_CACHE = true;
 }

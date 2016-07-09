@@ -15,13 +15,11 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Cache class that stores the users permissions access and roles. it is used by the UserAuthenticator
+ * Singleton Cache class that stores the users permissions access and roles. It's used by the UserAuthenticator
  * to validate the permissions.
  *
- * if the USE_CACHE flag is set to TRUE the class uses Memcache, otherwise its go directly to the
- * Google Could Datastore
- *
- * important note: this class uses the Singleton design pattern.
+ * if the USE_CACHE flag is set to TRUE in the Constants class, Memcached will be used, otherwise goes directly to the
+ * Google Cloud Datastore.
  *
  * @author plessmann
  * @since 2016-03-10
@@ -34,17 +32,17 @@ import java.util.concurrent.TimeUnit;
 public class AuthorizationCache {
 
     /**
-     * The protected instance
+     * The protected instance.
      */
     protected static AuthorizationCache me = null;
 
     /**
-     * The Member Cache element using the JCache library
+     * The Member Cache element using the JCache library.
      */
     private Cache cache;
 
     /**
-     * private constructor used to only allow one instance of the object.
+     * Private constructor used to ensure there's only one instance of the object.
      * @throws Exception
      */
     private AuthorizationCache() throws Exception {
@@ -54,7 +52,7 @@ public class AuthorizationCache {
     }
 
     /**
-     * initializes the cache.
+     * Initializes the cache.
      * @throws Exception if there was an error initialising the cache.
      */
     private void initCache() throws Exception {
@@ -65,7 +63,7 @@ public class AuthorizationCache {
     }
 
     /**
-     * gets a CacheAuthWrapper element by its key
+     * Gets a CacheAuthWrapper element by its key.
      * @param key id of the element
      * @return the cache object
      * @throws Exception in case an error occurs
@@ -82,10 +80,10 @@ public class AuthorizationCache {
     }
 
     /**
-     * sets a CacheAuthWrapper on the cache
+     * Sets a CacheAuthWrapper on the cache.
      * @param key to find the object
-     * @param value CacheAuthWrapper that contains user infomation
-     * @throws Exception in case it cant set access the cache.
+     * @param value CacheAuthWrapper that contains user information
+     * @throws Exception in case it cant set access the cache
      */
     private void putCacheElement(Long key, CacheAuthWrapper value) throws Exception{
         if(Constants.USE_CACHE) {
@@ -97,8 +95,8 @@ public class AuthorizationCache {
     }
 
     /**
-     * Access control for the singleton
-     * @return the created instance
+     * Public access for the singleton.
+     * @return The created/instantiated instance
      * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
      */
     public static synchronized AuthorizationCache getInstance() throws Exception {
@@ -109,9 +107,9 @@ public class AuthorizationCache {
     }
 
     /**
-     * checks the cache for the value that its being search, if it doesnt exists it access the
-     * Google cloud datastore to try and find it, if it exists the elemet its added to the cache.
-     * @param key to find
+     * Checks the cache for the value that its being searched, if it doesn't exist it queries the
+     * Google Cloud Datastore to try and find it, if it's found on the DB it'll be stored in the cache..
+     * @param key to be found
      * @return
      * @throws Exception
      */

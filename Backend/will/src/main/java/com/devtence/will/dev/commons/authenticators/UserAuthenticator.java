@@ -18,13 +18,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Authenticator class that implements the logic and methods to authenticate and validate Authorization keys and Permissions
- * that are received via http headers. this Auth keys use Json Web Tokens(JWT) that are generated via
- * the Authentication Web service.
+ * Authenticator class that implements the logic and methods to authenticate and validate Authorization keys and
+ * Permissions that are received via http headers. Json Web Tokens (JWT) are used for the Auth keys and are generated
+ * via the Authentication Web Service.
+ *
  * All the classes that extends from BaseController will use this Authenticator as default unless is explicitly
  * changed.
  *
- * this class uses AuthorizationCache and ClientsCache to check the permissions and roles, of the user or client
+ * This class uses AuthorizationCache and ClientsCache to check the permissions and roles of the user or client
  * making the call.
  *
  * @author plessmann
@@ -43,7 +44,7 @@ public class UserAuthenticator implements Authenticator {
     /**
      * The JWT must be set as header using the AUTHORIZATION key and the user id must be set as a header using the
      * AUTHORIZATION_KEY. The AUTHORIZATION_KEY will be used to check the AuthorizationCache and the stored value is
-     * then compared to the received JWT
+     * then compared to the received JWT.
      *
      * @param request	the full received request
      * @return	null for an invalid access, an instanced user for allowed access
@@ -68,12 +69,12 @@ public class UserAuthenticator implements Authenticator {
 
     /**
      * This method checks that the client and the user has the correct permission to access the route that is being
-     * called. for this it checks that the client has the right permission and it checks if that permission requires a user,
-     * if it does it check that th user role has said permission. after those tests are passed it checks
-     * for the validity of th JWT to grant a user to be checked.
+     * called. It checks that the client has the right permission and it checks if that permission requires a user,
+     * if it does, it check that the user role has the permission. After those tests are passed it checks
+     * for the validity of the JWT.
      *
      * @param idClient          id of the client that generates the call
-     * @param pathTranslated    the route being accesed by the web call
+     * @param pathTranslated    the route being accessed by the web call
      * @param token             the JWT that allows access to the platform
      * @param key               the user id to get the roles of the user and the secret to decrypt the JWT
      * @return                  if the tests passes, an instatianted user. null if the call is illegal or out of time.
@@ -120,6 +121,5 @@ public class UserAuthenticator implements Authenticator {
         }
         return user;
     }
-
 }
 
