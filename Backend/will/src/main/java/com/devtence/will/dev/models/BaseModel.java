@@ -11,14 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * base class for the Will Models that use Google Cloud Data Store as DB(GDS).
+ * Abstract Class created to serve as the base for the models that use Google Cloud Datastore for persistence.
+ * Defines basic methods every model must have, and implements basic functions like paginated listings.
  *
- * this base also defines the basic functions every model must have, and implements basic functions, like saving,
- * deleting, and basic search.
+ * It's very important that every Model must be registered on the DbObjectify Class otherwise it'll fail on execution.
  *
- * every model must be registered on the DbObjectify class so it can be used, otherwise it will fail executing.
+ * @author sorcerer
+ * @since 2015-07-18
  *
- * Created by sorcerer on 7/18/15.
+ * @see DbObjectify
  */
 public abstract class BaseModel<T extends BaseModel> {
 
@@ -35,17 +36,32 @@ public abstract class BaseModel<T extends BaseModel> {
 
     /**basic abstract methods that every model must implement**/
 
+    /**
+     * Needs to be implemented to validate the data that wants to be persisted.
+     */
     public abstract void validate() throws Exception;
 
+    /**
+     * Needs to be implemented to delete a record persisted.
+     */
     public abstract void destroy() throws Exception;
 
+    /**
+     * Needs to implement the update functionality
+     * @param data data to be updated on the persistence layer.
+     */
     public abstract void update(T data) throws Exception;
 
+
+    /**
+     * Needs to implement the loading functionality from the persistence layer.
+     * @param id
+     */
     public abstract void load(long id);
 
     /**
-     * this method updates the current object in the GDS
-     * TODO check this method and possible delete
+     * this method updates the current object in the Google Cloud Datastore.
+     * TODO: Recheck method, we might be able to deprecate it.
      * @deprecated
      */
     public void update() {
@@ -53,27 +69,31 @@ public abstract class BaseModel<T extends BaseModel> {
     }
 
     /***
-     * this method saves the current object to GDS, the object is saved in the collection defined by the class object
+     *
+     * Persists the current object to Google Cloud Datastore, the object is saved in the collection defined
+     * by the class object
      */
     protected void save(){
         DbObjectify.ofy().save().entity(this).now();
     }
 
     /**
-     * this method deteles the current object from GDS
+     * Deletes the current object from Google Cloud Datastore.
      */
     protected void delete(){
         DbObjectify.ofy().delete().entity(this).now();
     }
 
     /**
-     * this method returns a basic list using cursors and pagination
-     * @param startAt string that defines the position of the cursor to use if exist
-     * @param limit integer for the max amount
+     * Method that returns a basic list using cursors and pagination. Also implements multiple field sort.
+     *
+     * @param startAt Defines the position of the cursor to use if it exists
+     * @param limit Maximum number of items to be returned
      * @param className class name for the elements to search
-     * @param sortFields list of fields to sort
-     * @param sortDirs list of directions for the sorting the directions must match sortFields
-     * @return list of items
+     * @param sortFields List of fields for sorting the result list
+     * @param sortDirs List sort direction for each of the sorting fields specified in sortFields. Must match the
+     *                 items on the sortFields argument.
+     * @return List of items sorted and paginated
      */
     public static ListItem getList(String startAt, int limit, Class className,
                                    List<String> sortFields,List<Boolean> sortDirs) {
@@ -124,10 +144,10 @@ public abstract class BaseModel<T extends BaseModel> {
     }
 
     /**
-     * this method returns a list with all the elements of the collection.
+     * Returns a list that contains all the elements in the collection from the Google Cloud Datastore.
      *
-     * important note: this method is not recommended for collections with big amounts of data it doesnt use pagination
-     * or cursors so its really expensive.     *
+     * Important note: this method is not recommended for very large collections, it doesn't use pagination
+     * or cursors so it'll be very expensive to use.
      * @param className Class of the collection to return
      * @return List of objects
      */
@@ -136,7 +156,8 @@ public abstract class BaseModel<T extends BaseModel> {
     }
 
     /**
-     * this method returns an object from the collection that uses the id provided
+     * Returns an object from the Google Cloud Datastore collection specified by it's ID.
+     *
      * @param id unique identifier on the collection
      * @param className class of the model to search
      * @return object that matches the class defined and the id
