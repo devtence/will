@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 /**
  * Google Endpoint Class that implements the API methods to operate on the User model.
  * It also provides the services to authenticate, recover and update the password.
- * All the methods of this class are secured by the default Authenticator
+ * All the methods on this class are secured by the default Authenticator
  *
  * @author plessmann
  * @since 2016-06-02
@@ -187,7 +187,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
      * @param index initial point of the segment
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
-     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
+     * @param sortDirections    array of booleans that define the direction of each sortField. true if DEC.
      * @param cursor        index of the previous segment
      * @param user  user provided by authentication to restrict access to this operation
      * @return list of User objects, sorted and paginated

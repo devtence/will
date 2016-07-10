@@ -1,7 +1,7 @@
 package com.devtence.will.dev.models.jazz;
 
 /**
- * Class that model Content Files structure, this files will be stored on the Google Cloud Storage, not
+ * Class that models Content Files structure, this files will be stored on the Google Cloud Storage, not
  * in the persistence layer defined by the Google Cloud Datastore.
  *
  * @author sorcerer

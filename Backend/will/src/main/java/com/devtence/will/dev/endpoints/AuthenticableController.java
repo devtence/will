@@ -11,7 +11,7 @@ import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
 
 /**
- * Interface for a BaseController Class that handles authentication and must implement the following methods
+ * Interface for a BaseController Class that handles authentication and must implement the following methods.
 
  * @author plessmann
  * @since 2016-06-03
@@ -21,7 +21,8 @@ import com.google.api.server.spi.response.UnauthorizedException;
 public interface AuthenticableController<T extends BaseModel> {
 
     /**
-     * This method should validate the user and generate a JWT to be used for authenticated operations
+     * This method should validate the user and generate a JWT to be used for authenticated operations.
+     *
      * @param data  user and password of the AuthenticableEntity
      * @param user  user that accepts the client being used to for the authentication operation
      * @return  an object containing the JWT to be uesed in subsequent operations
@@ -34,7 +35,8 @@ public interface AuthenticableController<T extends BaseModel> {
     AuthorizationWrapper authenticate(T data, User user) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException;
 
     /**
-     * Method to start the password recovery process, this mechanic should be defined in a porpper way
+     * Method to start the password recovery process, this mechanic should be defined in a proper way.
+     *
      * @param data  data to identify the user starting the process
      * @param user  user that accepts the client being used to for the authentication operation
      * @return  a simple flag defining the success of the start of the process
@@ -47,9 +49,9 @@ public interface AuthenticableController<T extends BaseModel> {
     BooleanWrapper recoverPassword (T data, User user) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException;
 
     /**
-     * Method to finish the password recovery process, this mechanic should be defined in a porpper way
+     * Method to finish the password recovery process, this mechanic should be defined in a proper way.
      * @param data  data to identify the user starting the process
-     * @param user  user that accpets the client being used to for the authentication operation
+     * @param user  user that accepts the client being used to for the authentication operation
      * @return  a simple flag defining the succes of the finish of the process
      * @throws BadRequestException  the data parameter is missing data needed to complet e the process
      * @throws InternalServerErrorException a generic error ocurred that is not related to the input
@@ -60,10 +62,11 @@ public interface AuthenticableController<T extends BaseModel> {
     BooleanWrapper updatePassword(T data, User user) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException;
 
     /**
-     * Method to check for the existence of a field to be used as a unique identifier for the entity. for example the username
+     * Method to check for the existence of a field to be used as a unique identifier for the entity. for example the username.
+     *
      * @param data  element of T containing the field to check
      * @param user  user that accepts the client being used to for the authentication operation
-     * @return  flag defining the existence of the filed in the persistance unit
+     * @return  flag defining the existence of the filed in the persistence unit
      * @throws BadRequestException  the data parameter is missing data to check the uniqueness
      * @throws InternalServerErrorException a generic error occurred that is not related to the input
      * @throws UnauthorizedException    the user parameter did not pass the authentication test

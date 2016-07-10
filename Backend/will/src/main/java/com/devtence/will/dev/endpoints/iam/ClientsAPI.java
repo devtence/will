@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  * Google Endpoint Class that implements the API methods to operate on the Clients model.
- * All the methods of this class are secured by the default Authenticator.
+ * All the methods on this class are secured by the default Authenticator.
  *
  * @author plessmann
  * @since 2016-06-02

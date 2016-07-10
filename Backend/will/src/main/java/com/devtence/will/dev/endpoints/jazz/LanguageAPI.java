@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  * Google Endpoint Class that implements the API methods to operate on the Language model.
- * all the methods of this class are secured by the default Authenticator
+ * All the methods on this class are secured by the default Authenticator.
  *
  * @author sorcerer
  * @since 2016-06-09
@@ -31,9 +31,10 @@ public class LanguageAPI extends BaseController<Language>{
 
     /**
      * Adds a new Language to the Google Cloud Datastore.
+     *
      * @param data  BaseModel child containing the data to insert
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return created object
      * @throws BadRequestException
      * @throws ConflictException
      * @throws InternalServerErrorException
@@ -58,10 +59,11 @@ public class LanguageAPI extends BaseController<Language>{
     }
 
     /**
-     * Returns the queried Language
+     * Returns the queried Language.
+     *
      * @param id    id of the required instance of type T
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return object found
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -88,11 +90,12 @@ public class LanguageAPI extends BaseController<Language>{
     }
 
     /**
-     * Updates the current Language with the new Data
+     * Updates the current Language with the new Data.
+     *
      * @param id    id of the instance of type T to e updated
      * @param data  instance of the same type that holds the new values
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return updated object
      * @throws BadRequestException
      * @throws NotFoundException
      * @throws InternalServerErrorException
@@ -127,9 +130,10 @@ public class LanguageAPI extends BaseController<Language>{
 
     /**
      * Removes the queried Language from the Google Cloud Datastore.
+     *
      * @param id    id of the required instance of type T
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return deleted object
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -163,14 +167,15 @@ public class LanguageAPI extends BaseController<Language>{
     }
 
     /**
-     * Returns a sorted List of Languages
+     * Returns a paginated and sorted list of Languages.
+     *
      * @param index initial point of the segment
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
-     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
+     * @param sortDirections    array of booleans that define the direction of each sortField. true if DEC.
      * @param cursor        index of the previous segment
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return list of notification objects, sorted and paginated
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
      */

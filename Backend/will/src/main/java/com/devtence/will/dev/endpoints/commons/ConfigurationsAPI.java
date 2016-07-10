@@ -154,7 +154,7 @@ public class ConfigurationsAPI extends BaseController<Configuration> {
     }
 
     /**
-     * Returns a sorted list of all the configurations stored in the Google Cloud Datastore.
+     * Returns a paginated and sorted list of all the configurations stored in the Google Cloud Datastore.
      *
      * @param index initial point of the segment
      * @param limit max elements for the segment

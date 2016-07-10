@@ -152,7 +152,7 @@ public class NotificationsAPI extends BaseController<Notification> {
     }
 
     /**
-     * Returns a sorted list of the notifications stored in the Google Cloud Datastore.
+     * Returns a paginated and sorted list of the notifications stored in the Google Cloud Datastore.
      *
      * @param index initial point of the segment
      * @param limit max elements for the segment

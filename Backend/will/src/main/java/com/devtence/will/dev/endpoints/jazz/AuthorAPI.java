@@ -14,9 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * Google Endpoint Class that implements the API methods to operate on the Author model.
- * all the methods of this class are secured by the default Authenticator
+ * All the methods on this class are secured by the default Authenticator.
  *
  * @author sorcerer
  * @since 2016-06-09
@@ -34,7 +33,7 @@ public class AuthorAPI extends BaseController<Author> {
      * Adds a new Author to the Google Cloud Storage.
      * @param data  BaseModel child containing the data to insert
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return object created
      * @throws BadRequestException
      * @throws ConflictException
      * @throws InternalServerErrorException
@@ -59,10 +58,11 @@ public class AuthorAPI extends BaseController<Author> {
     }
 
     /**
-     * Returns the Author queried with the id.
+     * Queries the Author collection and retrieves the object with the specified id.
+     *
      * @param id    id of the required instance of type T
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return the object found
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -89,11 +89,12 @@ public class AuthorAPI extends BaseController<Author> {
     }
 
     /**
-     * Updates the current Author with the new Data
+     * Updates the current Author with the new Data.
+     *
      * @param id    id of the instance of type T to e updated
      * @param data  instance of the same type that holds the new values
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return the updated object
      * @throws BadRequestException
      * @throws NotFoundException
      * @throws InternalServerErrorException
@@ -128,10 +129,11 @@ public class AuthorAPI extends BaseController<Author> {
     }
 
     /**
-     * Removes the Author from the Google Cloud Datastore
+     * Removes the specified Author from the Google Cloud Datastore.
+     *
      * @param id    id of the required instance of type T
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return object deleted
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -165,14 +167,15 @@ public class AuthorAPI extends BaseController<Author> {
     }
 
     /**
-     * Returns a sorted list of Authors
+     * Returns a paginated and sorted list of Authors.
+     *
      * @param index initial point of the segment
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
-     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
+     * @param sortDirections    array of booleans that define the direction of each sortField. true if DEC.
      * @param cursor        index of the previous segment
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return list of notification objects, sorted and paginated
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
      */

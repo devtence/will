@@ -101,7 +101,7 @@ public class NotificationsCache {
     }
 
     /**
-     * returns the element thats being searched, if its not on the cache it searches for it on the persistance layer
+     * returns the element thats being searched, if its not on the cache it searches for it on the persistence layer
      * if its not found an Exception is thrown
      * @param key
      * @return
