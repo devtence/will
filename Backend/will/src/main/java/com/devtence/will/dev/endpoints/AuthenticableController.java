@@ -26,8 +26,8 @@ public interface AuthenticableController<T extends BaseModel> {
      * @param user  user that accepts the client being used to for the authentication operation
      * @return  an object containing the JWT to be uesed in subsequent operations
      * @throws BadRequestException  the data parameter is missing data needed to authenticate
-     * @throws InternalServerErrorException a generic error ocurred that is not related to the input
-     * @throws NotFoundException    the username trying to authenticate doesnt exists
+     * @throws InternalServerErrorException a generic error occurred that is not related to the input
+     * @throws NotFoundException    the username trying to authenticate doesn't exists
      * @throws UnauthorizedException    the user parameter did not pass the authentication test
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.POST)
@@ -36,8 +36,8 @@ public interface AuthenticableController<T extends BaseModel> {
     /**
      * Method to start the password recovery process, this mechanic should be defined in a porpper way
      * @param data  data to identify the user starting the process
-     * @param user  user that accpets the client being used to for the authentication operation
-     * @return  a simple flag defining the succes of the start of the process
+     * @param user  user that accepts the client being used to for the authentication operation
+     * @return  a simple flag defining the success of the start of the process
      * @throws BadRequestException  the data parameter is missing data needed to init the process
      * @throws InternalServerErrorException a generic error ocurred that is not related to the input
      * @throws NotFoundException    the username trying to authenticate doesnt exists
@@ -47,7 +47,7 @@ public interface AuthenticableController<T extends BaseModel> {
     BooleanWrapper recoverPassword (T data, User user) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException;
 
     /**
-     * Method to finsih the password recovery process, this mechanic should be defined in a porpper way
+     * Method to finish the password recovery process, this mechanic should be defined in a porpper way
      * @param data  data to identify the user starting the process
      * @param user  user that accpets the client being used to for the authentication operation
      * @return  a simple flag defining the succes of the finish of the process
@@ -60,12 +60,12 @@ public interface AuthenticableController<T extends BaseModel> {
     BooleanWrapper updatePassword(T data, User user) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException;
 
     /**
-     * Mehod to check for the existance of a field to be used as a unique identifier for the entitty. for example the username
+     * Method to check for the existence of a field to be used as a unique identifier for the entity. for example the username
      * @param data  element of T containing the field to check
-     * @param user  user that accpets the client being used to for the authentication operation
-     * @return  flag defining the existance of the filed in the persistacne unit
+     * @param user  user that accepts the client being used to for the authentication operation
+     * @return  flag defining the existence of the filed in the persistance unit
      * @throws BadRequestException  the data parameter is missing data to check the uniqueness
-     * @throws InternalServerErrorException a generic error ocurred that is not related to the input
+     * @throws InternalServerErrorException a generic error occurred that is not related to the input
      * @throws UnauthorizedException    the user parameter did not pass the authentication test
      */
     @ApiMethod(httpMethod = ApiMethod.HttpMethod.POST)

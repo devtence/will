@@ -1,7 +1,7 @@
 package com.devtence.will.dev.commons.wrappers;
 
 /**
- * Wrapper Class to return a boolean value over the Google AppEngine Endpoints
+ * Wrapper Class for the Google AppEngine Endpoints
  *
  * @author plessmann
  * @since 2016-03-17

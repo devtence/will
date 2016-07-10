@@ -34,6 +34,15 @@ public class RoleAPI extends BaseController<Role> {
 
     private static final Logger log = Logger.getLogger(RoleAPI.class.getName());
 
+    /**
+     * Adds a new Role to the Google Cloud Datastore
+     * @param data  BaseModel child containing the data to insert
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return
+     * @throws BadRequestException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "role.create", path = "role")
     public Role create(Role data, User user) throws BadRequestException, InternalServerErrorException, UnauthorizedException {
@@ -50,6 +59,15 @@ public class RoleAPI extends BaseController<Role> {
         return data;
     }
 
+    /**
+     * Returns the role queried with the id
+     * @param id    id of the required instance of type T
+     * @param user  user provided by authentication to restrict acces to this operation
+     * @return
+     * @throws NotFoundException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "role.read", path = "role/{id}")
     public Role read(@Named("id") Long id, User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
@@ -67,9 +85,20 @@ public class RoleAPI extends BaseController<Role> {
         return role;
     }
 
+    /**
+     * Updates an Existing Role with the new Data
+     * @param id    id of the instance of type T to e updated
+     * @param data  instance of the same type that holds the new values
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return
+     * @throws NotFoundException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "role.update", path = "role/{id}")
-    public Role update(@Named("id") Long id, Role data, User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
+    public Role update(@Named("id") Long id, Role data, User user)
+            throws NotFoundException, InternalServerErrorException, UnauthorizedException {
         validateUser(user);
         Role role = null;
         try {
@@ -90,9 +119,19 @@ public class RoleAPI extends BaseController<Role> {
         return role;
     }
 
+    /**
+     * Removes a Role from the Google Cloud Datastore
+     * @param id    id of the required instance of type T
+     * @param user  user provided by authentication to restrict acces to this operation
+     * @return
+     * @throws NotFoundException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "role.delete", path = "role/{id}")
-    public Role delete(@Named("id") Long id, User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
+    public Role delete(@Named("id") Long id, User user)
+            throws NotFoundException, InternalServerErrorException, UnauthorizedException {
         validateUser(user);
         Role role = null;
         try {
@@ -113,9 +152,26 @@ public class RoleAPI extends BaseController<Role> {
         return role;
     }
 
+    /**
+     * Returns a sorted list of Roles with their permissions
+     * @param index initial point of the segment
+     * @param limit max elements for the segment
+     * @param sortFields    array of strings with the names of the fields to be used to sort the data
+     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
+     * @param cursor        index of the previous segmente required using this method
+     * @param user  user provided by authentication to restrict acces to this operation
+     * @return
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "role.list", path = "roles")
-    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("limit") @Nullable @DefaultValue("100") Integer limit, @Named("sortFields") @Nullable List<String> sortFields, @Named("sortDirection") @Nullable List<Boolean> sortDirections, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
+    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index,
+                         @Named("limit") @Nullable @DefaultValue("100") Integer limit,
+                         @Named("sortFields") @Nullable List<String> sortFields,
+                         @Named("sortDirection") @Nullable List<Boolean> sortDirections,
+                         @Named("cursor") @Nullable String cursor, User user)
+            throws InternalServerErrorException, UnauthorizedException {
         validateUser(user);
         ListItem list = null;
         try {

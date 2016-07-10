@@ -14,14 +14,32 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by sorcerer on 6/9/16.
+ *
+ * Google Endpoint Class that implements the API methods to operate on the Author model.
+ * all the methods of this class are secured by the default Authenticator
+ *
+ * @author sorcerer
+ * @since 2016-06-09
+ * @see Author
+ * @see ListItem
+ *
  */
 @Api(name = Constants.JAZZ_API_NAME,
         version = Constants.API_MASTER_VERSION)
-public class AuthorAPI extends BaseController<Author>{
+public class AuthorAPI extends BaseController<Author> {
 
     private static final Logger log = Logger.getLogger(AuthorAPI.class.getName());
 
+    /**
+     * Adds a new Author to the Google Cloud Storage.
+     * @param data  BaseModel child containing the data to insert
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return
+     * @throws BadRequestException
+     * @throws ConflictException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "author.create",
             path = "author")
@@ -40,6 +58,15 @@ public class AuthorAPI extends BaseController<Author>{
         return data;
     }
 
+    /**
+     * Returns the Author queried with the id.
+     * @param id    id of the required instance of type T
+     * @param user  user provided by authentication to restrict acces to this operation
+     * @return
+     * @throws NotFoundException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "author.read",
             path = "author/{id}")
@@ -61,6 +88,17 @@ public class AuthorAPI extends BaseController<Author>{
         return tr;
     }
 
+    /**
+     * Updates the current Author with the new Data
+     * @param id    id of the instance of type T to e updated
+     * @param data  instance of the same type that holds the new values
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return
+     * @throws BadRequestException
+     * @throws NotFoundException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "author.update",
             path = "author/{id}")
@@ -89,6 +127,15 @@ public class AuthorAPI extends BaseController<Author>{
         return exist;
     }
 
+    /**
+     * Removes the Author from the Google Cloud Datastore
+     * @param id    id of the required instance of type T
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return
+     * @throws NotFoundException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "author.delete",
             path = "author/{id}")
@@ -117,9 +164,26 @@ public class AuthorAPI extends BaseController<Author>{
         return exist;
     }
 
+    /**
+     * Returns a sorted list of Authors
+     * @param index initial point of the segment
+     * @param limit max elements for the segment
+     * @param sortFields    array of strings with the names of the fields to be used to sort the data
+     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
+     * @param cursor        index of the previous segmente required using this method
+     * @param user  user provided by authentication to restrict acces to this operation
+     * @return
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "author.list", path = "authors")
-    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("limit") @Nullable @DefaultValue("100") Integer limit, @Named("sortFields") @Nullable List<String> sortFields, @Named("sortDirection") @Nullable List<Boolean> sortDirections, @Named("cursor") @Nullable String cursor, User user) throws InternalServerErrorException, UnauthorizedException {
+    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index,
+                         @Named("limit") @Nullable @DefaultValue("100") Integer limit,
+                         @Named("sortFields") @Nullable List<String> sortFields,
+                         @Named("sortDirection") @Nullable List<Boolean> sortDirections,
+                         @Named("cursor") @Nullable String cursor, User user)
+            throws InternalServerErrorException, UnauthorizedException {
         ListItem list = null;
         try {
             list = Author.getList(cursor, limit, Author.class, sortFields, sortDirections);

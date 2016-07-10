@@ -5,7 +5,7 @@ package com.devtence.will.dev.exceptions;
  *
  * @author sorcerer
  * @since 2016-06-03
- * Created by sorcerer on 6/3/16.
+ *
  */
 public class UserExistException extends Exception {
 

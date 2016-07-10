@@ -37,9 +37,22 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 
     private static final Logger log = Logger.getLogger(UsersAPI.class.getName());
 
+    /**
+     * Adds a new User to the Google Cloud Datastore
+     * @param data  BaseModel child containing the data to insert
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return
+     * @throws BadRequestException
+     * @throws ConflictException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     *
+     * TODO: check hardcoded values and change them to constants or configs.
+     */
     @Override
     @ApiMethod(name = "user.create", path = "user")
-    public User create(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException {
+    public User create(User data, com.google.api.server.spi.auth.common.User user)
+            throws BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException {
         validateUser(user);
         try {
             BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
@@ -62,9 +75,19 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
         return data;
     }
 
+    /**
+     * Returns the queried user by id
+     * @param id    id of the required instance of type T
+     * @param user  user provided by authentication to restrict acces to this operation
+     * @return
+     * @throws NotFoundException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "user.read", path = "user/{id}")
-    public User read(@Named("id") Long id, com.google.api.server.spi.auth.common.User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
+    public User read(@Named("id") Long id, com.google.api.server.spi.auth.common.User user)
+            throws NotFoundException, InternalServerErrorException, UnauthorizedException {
         validateUser(user);
         User userDevtence = null;
         try {
@@ -79,6 +102,17 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
         return userDevtence;
     }
 
+    /**
+     * Updates the current User with the new data
+     * @param id    id of the instance of type T to e updated
+     * @param data  instance of the same type that holds the new values
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return
+     * @throws BadRequestException
+     * @throws NotFoundException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "user.update", path = "user/{id}")
     public User update(@Named("id") Long id,
@@ -110,9 +144,19 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
         return userDevtence;
     }
 
+    /**
+     * Removes an User from the Google Cloud Datastore
+     * @param id    id of the required instance of type T
+     * @param user  user provided by authentication to restrict acces to this operation
+     * @return
+     * @throws NotFoundException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "user.delete", path = "user/{id}")
-    public User delete(@Named("id") Long id, com.google.api.server.spi.auth.common.User user) throws NotFoundException, InternalServerErrorException, UnauthorizedException {
+    public User delete(@Named("id") Long id, com.google.api.server.spi.auth.common.User user)
+            throws NotFoundException, InternalServerErrorException, UnauthorizedException {
         validateUser(user);
         User userDevtence = null;
         try {
@@ -133,9 +177,26 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
         return userDevtence;
     }
 
+    /**
+     * returns a sorted list of Users
+     * @param index initial point of the segment
+     * @param limit max elements for the segment
+     * @param sortFields    array of strings with the names of the fields to be used to sort the data
+     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
+     * @param cursor        index of the previous segment required using this method
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "user.list", path = "users")
-    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index, @Named("limit") @Nullable @DefaultValue("100") Integer limit, @Named("sortFields") @Nullable List<String> sortFields, @Named("sortDirection") @Nullable List<Boolean> sortDirections, @Named("cursor") @Nullable String cursor, com.google.api.server.spi.auth.common.User user) throws InternalServerErrorException, UnauthorizedException {
+    public ListItem list(@Named("index") @Nullable @DefaultValue("0") Integer index,
+                         @Named("limit") @Nullable @DefaultValue("100") Integer limit,
+                         @Named("sortFields") @Nullable List<String> sortFields,
+                         @Named("sortDirection") @Nullable List<Boolean> sortDirections,
+                         @Named("cursor") @Nullable String cursor, com.google.api.server.spi.auth.common.User user)
+            throws InternalServerErrorException, UnauthorizedException {
             validateUser(user);
         ListItem list = null;
         try {
@@ -147,9 +208,20 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
         return list;
     }
 
+    /**
+     * Checks the received user credentials and the grants access to the user.
+     * @param data  user and password of the AuthenticableEntity
+     * @param user  user that accepts the client being used to for the authentication operation
+     * @return
+     * @throws BadRequestException
+     * @throws InternalServerErrorException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
+     */
     @Override
     @ApiMethod(name = "user.authenticate", path = "user/authenticate")
-    public AuthorizationWrapper authenticate(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException {
+    public AuthorizationWrapper authenticate(User data, com.google.api.server.spi.auth.common.User user)
+            throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException {
         validateUser(user);
         User userDevtence;
         try {
@@ -181,9 +253,22 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
         }
     }
 
+    /**
+     * Starts the process for password recovery, and creates the event that will send the user the password recovery email.
+     * @param data  data to identify the user starting the process
+     * @param user  user that accpets the client being used to for the authentication operation
+     * @return
+     * @throws BadRequestException
+     * @throws InternalServerErrorException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
+     *
+     * TODO: Check endpoint route and implementation
+     */
     @Override
     @ApiMethod(name = "user.password.recover", path = "user/password/recover")
-    public BooleanWrapper recoverPassword(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException {
+    public BooleanWrapper recoverPassword(User data, com.google.api.server.spi.auth.common.User user)
+            throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException {
         validateUser(user);
         User userDevtence;
         try {
@@ -208,9 +293,22 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
         }
     }
 
+    /**
+     * Checks if the user has initiated the password recovery process and changes the user password.
+     * @param data  data to identify the user starting the process
+     * @param user  user that accepts the client being used to for the authentication operation
+     * @return
+     * @throws BadRequestException
+     * @throws InternalServerErrorException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
+     *
+     * TODO: Check the endpoint route and implementation
+     */
     @Override
     @ApiMethod(name = "user.password.update", path = "user/password/update")
-    public BooleanWrapper updatePassword(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException {
+    public BooleanWrapper updatePassword(User data, com.google.api.server.spi.auth.common.User user)
+            throws BadRequestException, InternalServerErrorException, NotFoundException, UnauthorizedException {
         validateUser(user);
         User userDevtence;
         try {
@@ -239,9 +337,21 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
         }
     }
 
+    /**
+     * Checks if the queried username exists on the user Collection.
+     * @param data  element of T containing the field to check
+     * @param user  user that accepts the client being used to for the authentication operation
+     * @return
+     * @throws BadRequestException
+     * @throws InternalServerErrorException
+     * @throws UnauthorizedException
+     *
+     * TODO: check this endpoint implementation
+     */
     @Override
     @ApiMethod(name = "user.username", path = "user/username")
-    public BooleanWrapper checkUser(User data, com.google.api.server.spi.auth.common.User user) throws BadRequestException, InternalServerErrorException, UnauthorizedException {
+    public BooleanWrapper checkUser(User data, com.google.api.server.spi.auth.common.User user)
+            throws BadRequestException, InternalServerErrorException, UnauthorizedException {
         validateUser(user);
         User userDevtence = null;
         if(data.getUser() != null){
