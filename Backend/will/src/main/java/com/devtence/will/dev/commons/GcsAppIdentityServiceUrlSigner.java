@@ -9,10 +9,10 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 
 /**
- * Class that implements the functions that creates temporary URLs, that give access to the elements that exists in
- * a Google cloud Storage Bucket this URLs expire after a configured time defined by the constants in the class.
- *
- * this security layer needs to work with the default permissions set for the bucket in the google cloud storage
+ * This class exposes objects stored on the Google Cloud Storage to the public by creating temporary URLs. The URL
+ * will expire after a configured time defined by the constants in the class.
+ * <p>
+ * This security layer needs to work with the default permissions set for the bucket in the google cloud storage
  * console.
  *
  * @author plessmann
@@ -21,20 +21,36 @@ import java.util.Calendar;
  */
 public class GcsAppIdentityServiceUrlSigner {
 
+    /**
+     * Expiration time in minutes.
+     */
     private static final int EXPIRATION_TIME = 5;
+
+    /**
+     * Base URL for the Storage API.
+     */
     private static final String BASE_URL = "https://storage.googleapis.com/%s/%s?GoogleAccessId=%s&Expires=%s&Signature=%s";
+
+    /**
+     * Bucket name.
+     */
     private static final String BUCKET = "test-bucket";
+
     private static final String UTF_8 = "UTF-8";
+
+    /**
+     * Number of milliseconds in a second.
+     */
     private static final long unitMil = 1000L;
 
     private final AppIdentityService identityService = AppIdentityServiceFactory.getAppIdentityService();
 
     /**
-     * creates a signed temporal url
+     * Creates a signed temporary URL.
      * @param httpVerb
      * @param fileName
      * @param bucket
-     * @return
+     * @return signed URL
      * @throws Exception
      */
     public String getSignedUrl(final String httpVerb, final String fileName, String bucket) throws Exception {
@@ -45,8 +61,9 @@ public class GcsAppIdentityServiceUrlSigner {
     }
 
     /**
-     * generates and returns the expiration time of the url
-     * @return
+     * Generates the Epoch date when the URL is going to be expired, represented in seconds.
+     *
+     * @return Epoch date in seconds
      */
     private long expiration() {
         final Calendar calendar = Calendar.getInstance();

@@ -9,7 +9,6 @@ import java.util.List;
  * Wrapper Class used to store user data on the AuthorizationCache it contains the user id a Json Web Token,
  * its secret to decode and the permission roles it has.
  *
- *
  * @author plessmann
  * @since 2016-05-16
  *
