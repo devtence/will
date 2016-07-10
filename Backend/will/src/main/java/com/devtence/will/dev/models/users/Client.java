@@ -9,11 +9,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Class that models the Clients  data and map it's structure to the persistence layer,
+ * Class that models the Clients  data and maps it's structure to the persistence layer,
  * it also defines and implements the functions that can be performed with the Clients.
  * <p>
- *     According to our implementation a Client is an application that is allowed to call on the APIs
- * </p>
+ * According to our implementation a Client is an application that is allowed to call on the APIs
  *
  * @author plessmann
  * @since 2015-06-16

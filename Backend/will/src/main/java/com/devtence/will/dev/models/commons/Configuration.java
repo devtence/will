@@ -13,8 +13,8 @@ import java.io.Serializable;
 /**
  * Class that models the Configuration data and map it's structure to the persistence layer,
  * it also defines and implements the functions that can be performed with the Configurations.
- *
- * <p> This objects are used on the ConfigurationCache </p>
+ * <p>
+ * This objects are used on the ConfigurationCache
  *
  * @author plessmann
  * @since 2015-03-16

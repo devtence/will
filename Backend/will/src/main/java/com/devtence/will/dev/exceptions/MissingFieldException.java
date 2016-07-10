@@ -1,7 +1,7 @@
 package com.devtence.will.dev.exceptions;
 
 /**
- * Exception created  to manage missing entity fields on BaseModels.
+ * Exception created  to manage missing entity fields on all base models BaseModels.
  *
  * @author plessmann
  * @since 2016-03-16

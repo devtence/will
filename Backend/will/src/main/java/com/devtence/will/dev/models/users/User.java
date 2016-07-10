@@ -22,11 +22,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Class that models the User data and map it's structure to the persistence layer,
+ * Class that models the User data and maps it's structure to the persistence layer,
  * it also defines and implements the functions that can be performed with the Users.
- * <p>
- *     
- * </p>
  *
  * @author plessmann
  * @since 2015-06-02
@@ -44,7 +41,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
     private Boolean lastLoginStatus;
 
     /**
-     * Counter with the ammount of consecutive failed logins for the user
+     * Counter with the amount of consecutive failed login attempts
      */
     private Integer failedLoginCounter;
 
@@ -222,7 +219,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
     /***
      * Compares the inputPassword to the stored password using jasypt libraries, the password must be passed to this
      * method in plain text
-     * @param inputPassword password in plain text and does the encrypted compararison
+     * @param inputPassword password in plain text and does the encrypted comparison
      * @return
      * @throws Exception
      */
@@ -261,7 +258,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
     }
 
     /**
-     * Validates the required fieds, and stores the object to the database
+     * Validates the required fields, and stores the object to the database.
      *
      * @throws Exception
      */
@@ -288,7 +285,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
      * Method to find an Partner in the database
      * @param id	id of the Partner to find
      * @return	An Partner
-     * @throws Exception an error ocurred
+     * @throws Exception an error occurred
      */
     public static User getById(Long id) throws Exception {
         return DbObjectify.ofy().load().type(User.class).id(id).now();
@@ -298,7 +295,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
      * Return the user with a Query the database using the user as parameter
      * @param user	username to search
      * @return	the associated Partner data
-     * @throws Exception	an error ocurred
+     * @throws Exception	an error occurred
      */
     public static User getByUser(String user) throws Exception {
         return DbObjectify.ofy().load().type(User.class).filter("user", user).first().now();

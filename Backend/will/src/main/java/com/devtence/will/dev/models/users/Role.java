@@ -8,10 +8,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Class that models the Role data and map it's structure to the persistence layer,
+ * Class that models the Role data and maps it's structure to the persistence layer,
  * it also defines and implements the functions that can be performed with the Roles.
- *
- * <p> It contains the permission that a User Object is allow to execute on the platform </p>
+ * <p>
+ * It contains the permission that a User Object is allow to execute on the platform
  *
  * @author plessmann
  * @since 2015-06-02
