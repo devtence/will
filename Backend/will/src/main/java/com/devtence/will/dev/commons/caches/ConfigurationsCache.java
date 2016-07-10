@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * Cache class that stores the configurations created in the platform. it is used by the different classes
  * to access global configurations values that can change in real time
  *
- * if the USE_CACHE flag is set to TRUE the class uses Memcache, otherwise its go directly to the
+ * if the USE_CACHE flag is set to TRUE the class uses Memcached, otherwise its go directly to the
  * Google Could Datastore
  *
  * important note: this class uses the Singleton design pattern.
@@ -30,12 +30,12 @@ import java.util.concurrent.TimeUnit;
 public class ConfigurationsCache {
 
     /**
-     * The protected instance
+     * The protected instance for the singleton.
      */
     protected static ConfigurationsCache me = null;
 
     /**
-     * The Member Cache element using the JCache library
+     * The Member Cache element using the JCache library.
      */
     private Cache cache;
 
@@ -46,8 +46,9 @@ public class ConfigurationsCache {
     }
 
     /**
-     * initializes the cache
-     * @throws Exception CacheException if its not able to create the cache
+     * Cache initialization.
+     *
+     * @throws Exception if its not able to create the new cache
      */
     private void initCache() throws Exception {
         CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
@@ -57,9 +58,10 @@ public class ConfigurationsCache {
     }
 
     /**
-     * returns configuration from cache if it doesnt exist return null value
-     * @param key
-     * @return
+     * Returns the Configuration object of the key queried.
+     *
+     * @param key key queried
+     * @return Configuration object
      * @throws Exception
      */
     private Configuration getCacheElement(String key) throws Exception {
@@ -74,9 +76,10 @@ public class ConfigurationsCache {
     }
 
     /**
-     * sets the confing in the cache using the key
-     * @param key search parameter to find the configuration
-     * @param value
+     * Creates/Updates the Configuration data for the key specified.
+     *
+     * @param key key to be created or updated
+     * @param value value to be placed on the key position
      * @throws Exception
      */
     private void putCacheElement(String key, Configuration value) throws Exception{
@@ -89,8 +92,8 @@ public class ConfigurationsCache {
     }
 
     /**
-     * Access control for the singleton
-     * @return the created instance
+     * Access control for the singleton.
+     * @return the singleton instance object
      * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
      */
     public static synchronized ConfigurationsCache getInstance() throws Exception {
@@ -101,10 +104,12 @@ public class ConfigurationsCache {
     }
 
     /**
-     * returns the config, if it doesnt exist on the cache, it search for it on the Google Cloud Datastore
-     * @param key
-     * @return
-     * @throws Exception InvalidValueException if the key doesnt exist on the persistance layer.
+     * Queries the Configuration that belongs to the key provided, if the client is not in the cache,
+     * it searches the Google Cloud Datastore.
+     *
+     * @param key key queried
+     * @return the Configuration object in the key position
+     * @throws Exception InvalidValueException if the Config doesn't exist in the persistence layer
      */
     public Configuration getElement(String key) throws Exception {
         Configuration configuration = getCacheElement(key);

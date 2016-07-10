@@ -15,13 +15,11 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Cache class that stores the Clients created in the platform. it is used by the UserAuthenticator
+ * Singleton Class that caches the Client's data. It's used by the UserAuthenticator
  * to validate the permissions.
- *
- * if the USE_CACHE flag is set to TRUE the class uses Memcache, otherwise its go directly to the
- * Google Could Datastore
- *
- * important note: this class uses the Singleton design pattern.
+ * <p>
+ * If the USE_CACHE flag is set to TRUE in the Constants Class, Memcached will be used, otherwise its go directly to the
+ * Google Could Datastore.
  *
  * @author plessmann
  * @since 2016-03-10
@@ -33,12 +31,12 @@ import java.util.concurrent.TimeUnit;
 public class ClientsCache {
 
     /**
-     * The protected instance
+     * The protected instance for the singleton.
      */
     protected static ClientsCache me = null;
 
     /**
-     * The Member Cache element using the JCache library
+     * The Member Cache element using the JCache library.
      */
     private Cache cache;
 
@@ -49,7 +47,8 @@ public class ClientsCache {
     }
 
     /**
-     * initializes the cache.
+     * Cache initialization.
+     *
      * @throws Exception if its not able to create the new cache
      */
     private void initCache() throws Exception {
@@ -60,9 +59,10 @@ public class ClientsCache {
     }
 
     /**
-     * returns cache element with the key that is being search
-     * @param key
-     * @return
+     * Returns the value of the key queried.
+     *
+     * @param key key queried
+     * @return Client object
      * @throws Exception
      */
     private Client getCacheElement(Long key) throws Exception {
@@ -77,9 +77,10 @@ public class ClientsCache {
     }
 
     /**
-     * sets the client with the key in the cache
-     * @param key
-     * @param value
+     * Creates/Updates the Client data for the key specified.
+     *
+     * @param key key to be created or updated
+     * @param value value to be placed on the key position
      * @throws Exception
      */
     private void putCacheElement(Long key, Client value) throws Exception{
@@ -92,8 +93,8 @@ public class ClientsCache {
     }
 
     /**
-     * Access control for the singleton
-     * @return the created instance
+     * Access control for the singleton.
+     * @return the singleton instance object
      * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
      */
     public static synchronized ClientsCache getInstance() throws Exception {
@@ -104,10 +105,12 @@ public class ClientsCache {
     }
 
     /**
-     * returns the client that is being search, if the client is not in the cache, it searches the Google Cloud Datastore
-     * @param key
-     * @return
-     * @throws Exception InvalidValueException if the client doesnt exist in the persistance layer
+     * Queries the Client that belongs to the key provided, if the client is not in the cache,
+     * it searches the Google Cloud Datastore.
+     *
+     * @param key key queried
+     * @return the Client object in the key position
+     * @throws Exception InvalidValueException if the client doesnt exist in the persistence layer
      */
     public Client getElement(Long key) throws Exception {
         Client client = getCacheElement(key);

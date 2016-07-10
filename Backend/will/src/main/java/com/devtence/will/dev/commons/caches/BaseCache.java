@@ -13,22 +13,23 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * TODO: review this class usage and mark possible for refactor.
- * Abstract Class created to serve as the base for the Caches that use Memcached.
- * Defines basic methods every cache must have
+ * Abstract Class created to serve as the base for specific Cache implementations that use Memcached.
+ * Defines basic methods that every cache must implement.
  *
  * @author plessmann
  * @since 2016-06-14
+ * @see ConfigurationsCache
  */
 @SuppressWarnings("unchecked")
 public abstract class BaseCache<K, V> {
 
     /**
-     * The protected instance
+     * Protected instance for the singleton.
      */
     protected static BaseCache me = null;
 
     /**
-     * The Member Cache element using the JCache library
+     * The Member Cache element using the JCache library.
      */
     private Cache cache;
 
@@ -39,7 +40,7 @@ public abstract class BaseCache<K, V> {
     }
 
     /**
-     * initializes the cache. sets the expiration time using the Configuration cache
+     * Cache initialization, sets the expiration time specified in the Configuration file.
      * @throws Exception
      */
     private void initCache() throws Exception {
@@ -50,9 +51,9 @@ public abstract class BaseCache<K, V> {
     }
 
     /**
-     * return the element with the key searched
-     * @param key
-     * @return
+     * Returns the value of the element with the key searched
+     * @param key item to search
+     * @return the value that matches the key provided
      * @throws Exception
      */
     private V getCacheElement(K key) throws Exception {
@@ -67,9 +68,9 @@ public abstract class BaseCache<K, V> {
     }
 
     /**
-     * sets the element at the key position
-     * @param key
-     * @param value
+     * Sets or updates the value at the key position.
+     * @param key key to be added or updated
+     * @param value value to be added or updated at the key position
      * @throws Exception
      */
     private void putCacheElement(K key, V value) throws Exception{
@@ -82,7 +83,7 @@ public abstract class BaseCache<K, V> {
     }
 
     /**
-     * must be implemented to return the element to be searched
+     * Needs to be implemented to return the value of an object.
      * @param key
      * @return
      * @throws Exception
