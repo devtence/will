@@ -9,24 +9,51 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * base model for clients (apps that are allowed to call the APIs)
- * Created by plessmann on 02/06/16.
+ * Class that models the Clients  data and map it's structure to the persistence layer,
+ * it also defines and implements the functions that can be performed with the Clients.
+ * <p>
+ *     According to our implementation a Client is an application that is allowed to call on the APIs
+ * </p>
+ *
+ * @author plessmann
+ * @since 2015-06-16
+ * @see Permission
+ *
  */
 @Entity
 public class Client extends BaseModel<Client> implements Serializable {
 
+    /**
+     * Client name
+     */
     @Index
     private String name;
+
+    /**
+     * list of permissions
+     */
     private List<Permission> permissions;
 
+    /**
+     * Default constructor
+     */
     public Client() {
     }
 
+    /**
+     * Recommended constructor
+     * @param name
+     * @param permissions
+     */
     public Client(String name, List<Permission> permissions) {
         this.name = name;
         this.permissions = permissions;
     }
 
+    /**
+     * Constructor to copy object
+     * @param me
+     */
     public Client(Client me){
         this.setId(me.getId());
         this.name = me.name;
@@ -50,8 +77,7 @@ public class Client extends BaseModel<Client> implements Serializable {
     }
 
     /**
-     * this method validate fields and save the object into the GDS
-     * in this case no validation is made
+     * Stores the object to the database
      * @throws Exception
      */
     @Override
@@ -60,7 +86,7 @@ public class Client extends BaseModel<Client> implements Serializable {
     }
 
     /**
-     * this method to delete and object from the GDS
+     * Removes the object from the database
      * @throws Exception
      */
     @Override
@@ -69,7 +95,7 @@ public class Client extends BaseModel<Client> implements Serializable {
     }
 
     /**
-     * custom method that returns a language object using the basic get function from parent
+     * Returns a Client object using the get function from parent
      * @param id of the object to get
      * @return
      */
@@ -78,7 +104,7 @@ public class Client extends BaseModel<Client> implements Serializable {
     }
 
     /**
-     * this method checks the new object with the old, and if its different does the update.
+     * Compares the object with the new data and executes the update if necessary
      * @param data new data to insert
      * @throws Exception
      */
@@ -101,6 +127,10 @@ public class Client extends BaseModel<Client> implements Serializable {
         }
     }
 
+    /**
+     * Loads the Object with the data from the database
+     * @param id
+     */
     @Override
     public void load(long id){
         Client me = DbObjectify.ofy().load().type(Client.class).id(id).now();
