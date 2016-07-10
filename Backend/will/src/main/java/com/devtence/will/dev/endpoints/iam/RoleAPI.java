@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  * Google Endpoint Class that implements the API methods to operate on the Role model.
- * all the methods of this class are secured by the default Authenticator
+ * All the methods of this class are secured by the default Authenticator.
  *
  * @author plessmann
  * @since 2016-06-02
@@ -35,10 +35,11 @@ public class RoleAPI extends BaseController<Role> {
     private static final Logger log = Logger.getLogger(RoleAPI.class.getName());
 
     /**
-     * Adds a new Role to the Google Cloud Datastore
+     * Adds a new Role to the Google Cloud Datastore.
+     *
      * @param data  BaseModel child containing the data to insert
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return object created
      * @throws BadRequestException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -60,10 +61,11 @@ public class RoleAPI extends BaseController<Role> {
     }
 
     /**
-     * Returns the role queried with the id
+     * Search the Roles database using the id specified.
+     *
      * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return tho object found
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -86,11 +88,12 @@ public class RoleAPI extends BaseController<Role> {
     }
 
     /**
-     * Updates an Existing Role with the new Data
+     * Updates an Existing Role with the new Data.
+     *
      * @param id    id of the instance of type T to e updated
      * @param data  instance of the same type that holds the new values
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return the updated object
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -120,10 +123,11 @@ public class RoleAPI extends BaseController<Role> {
     }
 
     /**
-     * Removes a Role from the Google Cloud Datastore
+     * Removes a Role from the Google Cloud Datastore.
+     *
      * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return object deleted
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -153,14 +157,15 @@ public class RoleAPI extends BaseController<Role> {
     }
 
     /**
-     * Returns a sorted list of Roles with their permissions
+     * Returns a paginated and sorted list of Roles with their permissions.
+     *
      * @param index initial point of the segment
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
-     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
-     * @param cursor        index of the previous segmente required using this method
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param sortDirections    array of booleans that define the direction of each sortFields. true if DEC.
+     * @param cursor        index of the previous segment
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return list of Role objects, sorted and paginated
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
      */

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  * Google Endpoint Class that implements the API methods to operate on the Notifications model.
- * all the methods of this class are secured by the default Authenticator
+ * All the methods on this class are secured by the default Authenticator.
  *
  * @author plessmann
  * @since 2016-06-06
@@ -34,10 +34,10 @@ public class NotificationsAPI extends BaseController<Notification> {
     private static final Logger log = Logger.getLogger(NotificationsAPI.class.getName());
 
 	/**
-	 * adds a new configuration value to the google cloud datastore
+	 * Creates a Notification object on the Google Cloud Datastore
 	 * @param data  BaseModel child containing the data to insert
 	 * @param user  user provided by authentication to restrict access to this operation
-	 * @return
+	 * @return the object created
 	 * @throws BadRequestException
 	 * @throws InternalServerErrorException
 	 * @throws UnauthorizedException
@@ -59,11 +59,11 @@ public class NotificationsAPI extends BaseController<Notification> {
     }
 
     /**
-     * returns the notification with the searched id
+     * Queries the notification database using the id specified.
      * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
-     * @throws NotFoundException in case the id doesnt exists
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return found object
+     * @throws NotFoundException in case the id doesn't exist
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
      */
@@ -85,11 +85,12 @@ public class NotificationsAPI extends BaseController<Notification> {
     }
 
     /**
-     * updates the current notification with the new data
+     * Updates the current notification with the new data.
+     *
      * @param id    id of the instance of type T to e updated
      * @param data  instance of the same type that holds the new values
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return updated object
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -118,10 +119,11 @@ public class NotificationsAPI extends BaseController<Notification> {
     }
 
     /**
-     * removes a notification from the google cloud datastore
-     * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * Removes a notification from the Google Cloud Datastore.
+     *
+     * @param id    id of the object to be deleted
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return object deleted
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -150,14 +152,15 @@ public class NotificationsAPI extends BaseController<Notification> {
     }
 
     /**
-     * returns a sorted list of the notifications in the Google Cloud Datastore
+     * Returns a sorted list of the notifications stored in the Google Cloud Datastore.
+     *
      * @param index initial point of the segment
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
-     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
-     * @param cursor        index of the previous segmente required using this method
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param sortDirections    array of booleans that define the direction of each sortFields. true if DEC.
+     * @param cursor        index of the previous segments
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return list of notification objects, sorted and paginated
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
      */

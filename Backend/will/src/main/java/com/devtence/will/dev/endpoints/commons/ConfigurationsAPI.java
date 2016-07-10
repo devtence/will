@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  * Google Endpoint Class that implements the API methods to operate on the Configuration model.
- * all the methods of this class are secured by the default Authenticator
+ * All the methods on this class are secured by the default Authenticator.
  *
  * @author plessmann
  * @since 2016-03-06
@@ -34,10 +34,11 @@ public class ConfigurationsAPI extends BaseController<Configuration> {
     private static final Logger log = Logger.getLogger(ConfigurationsAPI.class.getName());
 
     /**
-     * Adds a new configuration object to the Google Cloud Datastore, returns the object inserted if OK
+     * Adds a new configuration object to the Google Cloud Datastore, returns the object inserted if OK.
+     *
      * @param data  BaseModel child containing the data to insert
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return object inserted
      * @throws BadRequestException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -59,10 +60,11 @@ public class ConfigurationsAPI extends BaseController<Configuration> {
     }
 
     /**
-     * returns the configuration queried using the id provided
+     * Returns the configuration queried using the id provided.
+     *
      * @param id    id of the required instance of type T
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return object that belogns to the ID specified
      * @throws NotFoundException if its not found
      * @throws InternalServerErrorException if something fails
      * @throws UnauthorizedException in case the user its not authorized
@@ -85,11 +87,12 @@ public class ConfigurationsAPI extends BaseController<Configuration> {
     }
 
     /**
-     * modifies the selected configuration with the new data sent
+     * Modifies the selected configuration with the new data sent.
+     *
      * @param id    id of the instance of type T to e updated
      * @param data  instance of the same type that holds the new values
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return modified object
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -118,10 +121,11 @@ public class ConfigurationsAPI extends BaseController<Configuration> {
     }
 
     /**
-     * deletes the configuration from the Google Cloud Datastore
+     * Deletes a configuration record from the Google Cloud Datastore.
+     *
      * @param id    id of the required instance of type T
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return deleted object
      * @throws NotFoundException if the configurations doesnt exist
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -150,14 +154,15 @@ public class ConfigurationsAPI extends BaseController<Configuration> {
     }
 
     /**
-     * returns a sorted list of the configurations in the Google Cloud Datastore
+     * Returns a sorted list of all the configurations stored in the Google Cloud Datastore.
+     *
      * @param index initial point of the segment
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
-     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
-     * @param cursor        index of the previous segmente required using this method
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param sortDirections    array of booleans that define the direction of each sortFields. true if DEC.
+     * @param cursor        index of the previous segment
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return list of configuration objects, sorted and paginated
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
      */

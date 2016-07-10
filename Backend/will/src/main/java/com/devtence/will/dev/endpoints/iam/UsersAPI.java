@@ -21,8 +21,8 @@ import java.util.logging.Logger;
 
 /**
  * Google Endpoint Class that implements the API methods to operate on the User model.
- * it also provides the services to authenticate, recover and update password
- * all the methods of this class are secured by the default Authenticator
+ * It also provides the services to authenticate, recover and update the password.
+ * All the methods of this class are secured by the default Authenticator
  *
  * @author plessmann
  * @since 2016-06-02
@@ -38,10 +38,11 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
     private static final Logger log = Logger.getLogger(UsersAPI.class.getName());
 
     /**
-     * Adds a new User to the Google Cloud Datastore
+     * Adds a new User to the Google Cloud Datastore.
+     *
      * @param data  BaseModel child containing the data to insert
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return the created object
      * @throws BadRequestException
      * @throws ConflictException
      * @throws InternalServerErrorException
@@ -76,10 +77,11 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
     }
 
     /**
-     * Returns the queried user by id
+     * Search the Users database using the id specified.
+     *
      * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return object that matches the id
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -103,11 +105,12 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
     }
 
     /**
-     * Updates the current User with the new data
+     * Updates the current User with the new data.
+     *
      * @param id    id of the instance of type T to e updated
      * @param data  instance of the same type that holds the new values
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return updated object
      * @throws BadRequestException
      * @throws NotFoundException
      * @throws InternalServerErrorException
@@ -145,10 +148,11 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
     }
 
     /**
-     * Removes an User from the Google Cloud Datastore
+     * Removes a User from the Google Cloud Datastore.
+     *
      * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return deleted object
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -178,14 +182,15 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
     }
 
     /**
-     * returns a sorted list of Users
+     * Returns a paginated and sorted list of Users.
+     *
      * @param index initial point of the segment
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
      * @param sortDirections    array of booleans that define wether the sortings is DEC or not
-     * @param cursor        index of the previous segment required using this method
+     * @param cursor        index of the previous segment
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return list of User objects, sorted and paginated
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
      */
@@ -210,6 +215,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 
     /**
      * Checks the received user credentials and the grants access to the user.
+     *
      * @param data  user and password of the AuthenticableEntity
      * @param user  user that accepts the client being used to for the authentication operation
      * @return
@@ -254,7 +260,9 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
     }
 
     /**
-     * Starts the process for password recovery, and creates the event that will send the user the password recovery email.
+     * Starts the process for password recovery, and creates the event that will send the user the password recovery
+     * email notification.
+     *
      * @param data  data to identify the user starting the process
      * @param user  user that accpets the client being used to for the authentication operation
      * @return
@@ -295,6 +303,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 
     /**
      * Checks if the user has initiated the password recovery process and changes the user password.
+     *
      * @param data  data to identify the user starting the process
      * @param user  user that accepts the client being used to for the authentication operation
      * @return
@@ -339,6 +348,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 
     /**
      * Checks if the queried username exists on the user Collection.
+     * 
      * @param data  element of T containing the field to check
      * @param user  user that accepts the client being used to for the authentication operation
      * @return

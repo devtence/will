@@ -12,7 +12,7 @@ import java.util.Calendar;
  * This class exposes objects stored on the Google Cloud Storage to the public by creating temporary URLs. The URL
  * will expire after a configured time defined by the constants in the class.
  * <p>
- * This security layer needs to work with the default permissions set for the bucket in the google cloud storage
+ * This security layer needs to work with the default permissions set for the bucket in the Google Cloud Storage
  * console.
  *
  * @author plessmann
@@ -22,7 +22,7 @@ import java.util.Calendar;
 public class GcsAppIdentityServiceUrlSigner {
 
     /**
-     * Expiration time in minutes.
+     * Expiration time in minutes. Default: 5 minutes.
      */
     private static final int EXPIRATION_TIME = 5;
 
@@ -47,9 +47,9 @@ public class GcsAppIdentityServiceUrlSigner {
 
     /**
      * Creates a signed temporary URL.
-     * @param httpVerb
-     * @param fileName
-     * @param bucket
+     * @param httpVerb String that specifies the HTTP method to use
+     * @param fileName name of the file that's going to be signed
+     * @param bucket the bucket where the file resides
      * @return signed URL
      * @throws Exception
      */
@@ -72,7 +72,8 @@ public class GcsAppIdentityServiceUrlSigner {
     }
 
     /**
-     * builds the string that will be signed
+     * Builds the string that will be signed.
+     *
      * @param expiration time for the url to exists
      * @param filename that is going to be accessed
      * @param httpVerb
@@ -88,9 +89,10 @@ public class GcsAppIdentityServiceUrlSigner {
     }
 
     /**
-     * builds and returns the string that is being signed encoded in base64
-     * @param stringToSign
-     * @return
+     * Builds and returns the string that is being signed encoded in base64
+     *
+     * @param stringToSign string URL to be signed
+     * @return URL signed and encoded in base64
      * @throws UnsupportedEncodingException
      */
     private String sign(final String stringToSign) throws UnsupportedEncodingException {
@@ -99,8 +101,8 @@ public class GcsAppIdentityServiceUrlSigner {
     }
 
     /**
-     * returns the id for the google service account that identifies the app
-     * @return
+     * Returns the ID for the Google Service Account that identifies the app
+     * @return service account name
      */
     private String clientId() {
         return identityService.getServiceAccountName();

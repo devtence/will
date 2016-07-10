@@ -1,10 +1,11 @@
 package com.devtence.will.dev.commons.wrappers;
 
 /**
- * Wrapper Class for the upload data on the FileAPI
+ * Wrapper Class for the upload data on the Google Cloud File API service.
  *
  * @author plessmann
  * @since 2016-03-11
+ *
  */
 public class UploadWrapper {
 

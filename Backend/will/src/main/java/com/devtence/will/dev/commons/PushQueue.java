@@ -6,7 +6,7 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 
 /**
  * Simple wrapper class for accessing the Google AppEngine TaskQueue, in order to create new queue methods it is required to
- * declare the queues in the queue.xml for more info on this please see
+ * declare the queues in the queue.xml file inside the project. For more info on this please read
  * https://cloud.google.com/appengine/docs/java/taskqueue/push/creating-push-queues
  *
  * @author plessmann
@@ -14,12 +14,15 @@ import com.google.appengine.api.taskqueue.TaskOptions;
  */
 public class PushQueue {
 
+    /**
+     * Names for the queues.
+     */
     private static final String MAIL_QUEUE = "mail";
     private static final String GCM_QUEUE = "gcm";
 
     /**
-     * insert task on the mail queue
-     * @param taskOptions
+     * Inserts a task on the mail queue.
+     * @param taskOptions contains various options for a task following the builder pattern
      */
     public static void enqueueMail(TaskOptions taskOptions) {
         //TODO: check the default configuration so this queue can be activated
@@ -29,8 +32,8 @@ public class PushQueue {
     }
 
     /**
-     * inserts task on the GCM Queue
-     * @param taskOptions
+     * Inserts a task on the GCM Queue.
+     * @param taskOptions contains various options for a task following the builder pattern
      */
     public static void enqueueGCM(TaskOptions taskOptions) {
         //TODO: check the default configuration so this queue can be activated
@@ -40,8 +43,8 @@ public class PushQueue {
     }
 
     /**
-     * inserts task on the default task queue
-     * @param taskOptions task to insert on the default queue
+     * Inserts a task on the default task queue
+     * @param taskOptions contains various options for a task following the builder pattern
      */
     public static void enqueueDefault(TaskOptions taskOptions) {
         Queue queue = QueueFactory.getDefaultQueue();

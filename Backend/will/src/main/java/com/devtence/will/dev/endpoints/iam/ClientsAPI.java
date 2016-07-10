@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  * Google Endpoint Class that implements the API methods to operate on the Clients model.
- * all the methods of this class are secured by the default Authenticator
+ * All the methods of this class are secured by the default Authenticator.
  *
  * @author plessmann
  * @since 2016-06-02
@@ -35,10 +35,11 @@ public class ClientsAPI extends BaseController<Client> {
     private static final Logger log = Logger.getLogger(ClientsAPI.class.getName());
 
     /**
-     * Adds a new Client to the Google Cloud Datastore
+     * Adds a new Client to the Google Cloud Datastore.
+     *
      * @param data  BaseModel child containing the data to insert
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return object created
      * @throws BadRequestException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -61,10 +62,11 @@ public class ClientsAPI extends BaseController<Client> {
     }
 
     /**
-     * Searches for the client id received
+     * Search the Clients database using the id specified.
+     *
      * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return the object found
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -88,11 +90,12 @@ public class ClientsAPI extends BaseController<Client> {
     }
 
     /**
-     * Updates the current Client with the new data
+     * Updates the current Client with the new data.
+     *
      * @param id    id of the instance of type T to e updated
      * @param data  instance of the same type that holds the new values
      * @param user  user provided by authentication to restrict access to this operation
-     * @return
+     * @return the object persisted
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -124,8 +127,8 @@ public class ClientsAPI extends BaseController<Client> {
     /**
      * Removes an Existing Client from the Google Cloud Datastore
      * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return deleted object
      * @throws NotFoundException
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
@@ -159,14 +162,15 @@ public class ClientsAPI extends BaseController<Client> {
     }
 
     /**
-     * Returns a sorted list of clients
+     * Returns a paginated and sorted list of clients.
+     *
      * @param index initial point of the segment
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
-     * @param sortDirections    array of booleans that define wether the sortings is DEC or not
-     * @param cursor        index of the previous segmente required using this method
-     * @param user  user provided by authentication to restrict acces to this operation
-     * @return
+     * @param sortDirections    array of booleans that define the direction of each sortFields. true if DEC.
+     * @param cursor        index of the previous segment
+     * @param user  user provided by authentication to restrict access to this operation
+     * @return list of Client objects, sorted and paginated
      * @throws InternalServerErrorException
      * @throws UnauthorizedException
      */

@@ -59,7 +59,7 @@ public class ContentAPI extends BaseController<Content>{
     /**
      * Returns the queried  Content with the id parameter
      * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
+     * @param user  user provided by authentication to restrict access to this operation
      * @return
      * @throws NotFoundException
      * @throws InternalServerErrorException
@@ -126,7 +126,7 @@ public class ContentAPI extends BaseController<Content>{
     /**
      * Removes a Content from the Google Cloud Datastore
      * @param id    id of the required instance of type T
-     * @param user  user provided by authentication to restrict acces to this operation
+     * @param user  user provided by authentication to restrict access to this operation
      * @return
      * @throws NotFoundException
      * @throws InternalServerErrorException
@@ -166,8 +166,8 @@ public class ContentAPI extends BaseController<Content>{
      * @param limit max elements for the segment
      * @param sortFields    array of strings with the names of the fields to be used to sort the data
      * @param sortDirections    array of booleans that define wether the sortings is DEC or not
-     * @param cursor        index of the previous segmente required using this method
-     * @param user  user provided by authentication to restrict acces to this operation
+     * @param cursor        index of the previous segment
+     * @param user  user provided by authentication to restrict access to this operation
      * @return
      * @throws InternalServerErrorException
      * @throws UnauthorizedException

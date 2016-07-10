@@ -36,10 +36,10 @@ import java.util.logging.Logger;
 /**
  * Google Endpoint Class that implements the API methods to create resumable upload sessions to the Google Cloud Datastore,
  * it can create sessions for single files or multiple files.
+ *<p>
+ * All the methods on this class are secured by the default Authenticator.
  *
- * All the methods of this class are secured by the default Authenticator
- *
- * note: to create resumable sessions it is necessary to create and add a google certification file with a valid
+ * Note: to create resumable sessions it's necessary to create and add a google certification file with a valid
  * service account, otherwise it will not be able to create the session.
  *
  * @author plessmann
@@ -58,7 +58,6 @@ import java.util.logging.Logger;
 )
 public class FileAPI {
 
-    /** E-mail address of the service account. */
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String APPLICATION_JSON = "application/json";
     private static final String X_UPLOAD_CONTENT_TYPE = "X-Upload-Content-Type";
@@ -82,7 +81,9 @@ public class FileAPI {
     /** Global instance of the JSON factory. */
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-    //add your configs here
+    /**
+     * Add your configurations here...
+     */
     private static final String SERVICE_ACCOUNT_EMAIL = "";
     private static final String CERTIFICATE_ROUTE = "WEB-INF/";
     private static final String BUCKET = "";
@@ -106,7 +107,8 @@ public class FileAPI {
             .build());
 
     /**
-     * Creates a single resumable file upload session
+     * Creates a single resumable file upload session.
+     *
      * @param type
      * @param idUser
      * @param route
@@ -182,14 +184,14 @@ public class FileAPI {
     }
 
     /**
-     * Creates multiples files upload sessions, every file must have the same Content-Type returns a list of sessions
+     * Creates multiple files upload sessions, every file must have the same Content-Type.
      * @param type
      * @param idUser
      * @param route
-     * @param filesQuantity
+     * @param filesQuantity number of files to be uploaded
      * @param req
      * @param user
-     * @return
+     * @return list of sessions
      * @throws BadRequestException
      * @throws UnauthorizedException
      */
