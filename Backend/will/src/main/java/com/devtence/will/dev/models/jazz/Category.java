@@ -5,20 +5,31 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 /**
- * Created by sorcerer on 6/9/16.
+ * Class that models the Category data and map it's structure to the persistence layer,
+ * it also defines and implements the functions that can be performed with the Categories.
+ *
+ * @author sorcerer
+ * @since 2015-06-09
  */
 @Entity
 public class Category extends BaseModel<Category>{
 
+    /**
+     * Category name
+     */
     @Index
     private String name;
 
+    /**
+     * Category description
+     */
     private String description;
 
+    /**
+     * Languange which the category belongs to
+     */
     @Index
     private Long idLanguage;
-
-    /*setters and getterts*/
 
     public String getName() {
         return name;
@@ -44,11 +55,19 @@ public class Category extends BaseModel<Category>{
         this.idLanguage = idLanguage;
     }
 
-    /*constructors*/
-
+    /**
+     * Default constructor
+     */
     public Category() {
     }
 
+    /**
+     * Recommended constructor
+     * @param id
+     * @param name
+     * @param description
+     * @param idLanguage
+     */
     public Category(Long id, String name, String description, Long idLanguage) {
         setId(id);
         this.name = name;
@@ -57,8 +76,7 @@ public class Category extends BaseModel<Category>{
     }
 
     /**
-     * this method validate fields and save the object into the GDS
-     * in this case no validation is made
+     * Stores the object to the database
      * @throws Exception
      */
     @Override
@@ -67,7 +85,7 @@ public class Category extends BaseModel<Category>{
     }
 
     /**
-     * this method to delete and object from the GDS
+     * Removes the object from the database
      * @throws Exception
      */
     @Override
@@ -76,7 +94,7 @@ public class Category extends BaseModel<Category>{
     }
 
     /**
-     * this method checks the new object with the old, and if its different does the update.
+     * Compares the object to the new data, and executes an update if necessary
      * @param data new data to insert
      * @throws Exception
      */
@@ -104,6 +122,10 @@ public class Category extends BaseModel<Category>{
         }
     }
 
+    /**
+     * Loads the object with the data that matches the id on the Database
+     * @param id
+     */
     @Override
     public void load(long id) {
         Category me  = get(id);
@@ -113,7 +135,7 @@ public class Category extends BaseModel<Category>{
     }
 
     /**
-     * custom method that returns a language object using the basic get function from parent
+     * Returns a Category object using the get function from parent
      * @param id of the object to get
      * @return
      */

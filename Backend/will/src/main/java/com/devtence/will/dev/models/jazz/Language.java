@@ -5,8 +5,12 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 /**
- * basic model for languages
- * Created by sorcerer on 6/9/16.
+ * Class that model the Language data and map it's structure to the persistence layer,
+ * it also defines and implements the functions that can be performed with the Languages.
+ *
+ * @author sorcerer
+ * @since 2015-06-09
+ *
  */
 @Entity
 public class Language extends BaseModel<Language> {
@@ -35,11 +39,19 @@ public class Language extends BaseModel<Language> {
         this.shortName = shortName;
     }
 
-    /*Constructors*/
 
+    /**
+     * Default constructor
+     */
     public Language() {
     }
 
+    /**
+     * Recommended constructor
+     * @param id
+     * @param language
+     * @param shortName
+     */
     public Language(Long id, String language, String shortName) {
         setId(id);
         this.language = language;
@@ -49,8 +61,7 @@ public class Language extends BaseModel<Language> {
     /*basic methods*/
 
     /**
-     * this method validate fields and save the object into the GDS
-     * in this case no validation is made
+     * Saves the object to the data base.
      * @throws Exception
      */
     @Override
@@ -59,7 +70,7 @@ public class Language extends BaseModel<Language> {
     }
 
     /**
-     * this method to delete and object from the GDS
+     * Removes the object from the database.
      * @throws Exception
      */
     @Override
@@ -68,7 +79,7 @@ public class Language extends BaseModel<Language> {
     }
 
     /**
-     * this method checks the new object with the old, and if its different does the update.
+     * Compares the new Data with the object and executes the update if necessary
      * @param data new data to insert
      * @throws Exception
      */
@@ -91,6 +102,10 @@ public class Language extends BaseModel<Language> {
         }
     }
 
+    /**
+     * Loads the object with the data obtained from the database
+     * @param id
+     */
     @Override
     public void load(long id) {
         Language me  = Language.get(id);
@@ -99,7 +114,7 @@ public class Language extends BaseModel<Language> {
     }
 
     /**
-     * custom method that returns a language object using the basic get function from parent
+     * Returns a language object using the get function from parent
      * @param id of the object to get
      * @return
      */

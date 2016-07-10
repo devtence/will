@@ -11,162 +11,204 @@ import com.googlecode.objectify.annotation.Index;
 import java.io.Serializable;
 
 /**
- * Notifications to be sent to different targets. Mostly used via the Notificators
- * Created by plessmann on 11/03/16.
+ * Class that model the Notifications data and map it's structure to the persistence layer,
+ * it also defines and implements the functions that can be performed with the Notifications.
+ *
+ * <p> This objects are to be sent to different targets and will be used via the Notificators classes</p>
+ *
+ * @author plessmann
+ * @since 2015-03-11
+ * @see com.devtence.will.dev.commons.caches.ConfigurationsCache
+ *
  */
 @Entity
 public class Notification extends BaseModel<Notification> implements Serializable{
 
-	private String sender;
-	private String recipients;
-	private String subject;
-	private String message;
-	@Index
-	private String mnemonic;
+    private String sender;
 
-	public Notification() {
-	}
+    private String recipients;
 
-	public Notification(String sender, String recipients, String subject, String message) {
-		this.sender = sender;
-		this.recipients = recipients;
-		this.subject = subject;
-		this.message = message;
-	}
+    private String subject;
 
-	public Notification(String sender, String recipients, String subject, String message, String mnemonic) {
-		this.sender = sender;
-		this.recipients = recipients;
-		this.subject = subject;
-		this.message = message;
-		this.mnemonic = mnemonic;
-	}
+    private String message;
 
-	public String getSender() {
-		return sender;
-	}
+    /**
+     * String identifier for the notification type
+     */
+    @Index
+    private String mnemonic;
 
-	public void setSender(String sender) {
-		this.sender = sender;
-	}
+    public Notification() {
+    }
 
-	public String getRecipients() {
-		return recipients;
-	}
+    public Notification(String sender, String recipients, String subject, String message) {
+        this.sender = sender;
+        this.recipients = recipients;
+        this.subject = subject;
+        this.message = message;
+    }
 
-	public void setRecipients(String recipients) {
-		this.recipients = recipients;
-	}
+    public Notification(String sender, String recipients, String subject, String message, String mnemonic) {
+        this.sender = sender;
+        this.recipients = recipients;
+        this.subject = subject;
+        this.message = message;
+        this.mnemonic = mnemonic;
+    }
 
-	public String getSubject() {
-		return subject;
-	}
+    public String getSender() {
+        return sender;
+    }
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getRecipients() {
+        return recipients;
+    }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    public void setRecipients(String recipients) {
+        this.recipients = recipients;
+    }
 
-	public String getMnemonic() {
-		return mnemonic;
-	}
+    public String getSubject() {
+        return subject;
+    }
 
-	public void setMnemonic(String mnemonic) {
-		this.mnemonic = mnemonic;
-	}
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
-	@Override
-	public void validate() throws Exception {
-		if(subject == null || subject.isEmpty()){
-			throw new MissingFieldException("invalid subject");
-		}
-		if(message == null || message.isEmpty()){
-			throw new MissingFieldException("invalid message");
-		}
-		if(mnemonic == null || mnemonic.isEmpty()){
-			throw new MissingFieldException("invalid mnemonic");
-		}
-		this.save();
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	@Override
-	public void destroy() throws Exception {
-		this.delete();
-	}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	@Override
-	public void update(Notification data) throws Exception {
-		boolean mod = false;
+    public String getMnemonic() {
+        return mnemonic;
+    }
 
-		if (data.getSender() != null){
-			setSender(data.getSender());
-			mod |= true;
-		}
+    public void setMnemonic(String mnemonic) {
+        this.mnemonic = mnemonic;
+    }
 
-		if (data.getSubject() != null){
-			setSubject(data.getSubject());
-			mod |= true;
-		}
+    /**
+     * Validates and Adds a new Notification to the Database
+     * @throws Exception
+     */
+    @Override
+    public void validate() throws Exception {
+        if(subject == null || subject.isEmpty()){
+            throw new MissingFieldException("invalid subject");
+        }
+        if(message == null || message.isEmpty()){
+            throw new MissingFieldException("invalid message");
+        }
+        if(mnemonic == null || mnemonic.isEmpty()){
+            throw new MissingFieldException("invalid mnemonic");
+        }
+        this.save();
+    }
 
-		if (data.getRecipients() != null){
-			setRecipients(data.getRecipients());
-			mod |= true;
-		}
+    /**
+     * Removes the notification from the database
+     * @throws Exception
+     */
+    @Override
+    public void destroy() throws Exception {
+        this.delete();
+    }
 
-		if (data.getMnemonic() != null){
-			setMnemonic(data.getMnemonic());
-			mod |= true;
-		}
+    /**
+     * Updates the Notification withe the new data received, only performs the operation if the data is
+     * different from the old data.
+     * @param data data to be updated on the persistence layer.
+     * @throws Exception
+     */
+    @Override
+    public void update(Notification data) throws Exception {
+        boolean mod = false;
 
-		if (data.getMessage() != null){
-			setMessage(data.getMessage());
-			mod |= true;
-		}
+        if (data.getSender() != null){
+            setSender(data.getSender());
+            mod |= true;
+        }
 
-		if (mod){
-			this.validate();
-		}
-	}
+        if (data.getSubject() != null){
+            setSubject(data.getSubject());
+            mod |= true;
+        }
 
-	@Override
-	public void load(long id) {
-		Notification me = DbObjectify.ofy().load().type(Notification.class).id(id).now();
-		this.setId(me.getId());
-		this.setSender(me.getSender());
-		this.setRecipients(me.getRecipients());
-		this.setSubject(me.getSubject());
-		this.setMessage(me.getMessage());
-	}
+        if (data.getRecipients() != null){
+            setRecipients(data.getRecipients());
+            mod |= true;
+        }
 
-	public static Notification getById(Long id) throws Exception {
-		return DbObjectify.ofy().load().type(Notification.class).id(id).now();
-	}
+        if (data.getMnemonic() != null){
+            setMnemonic(data.getMnemonic());
+            mod |= true;
+        }
 
-	/**
-	 * Query the database using the mnemonic as parameter
-	 * @param mnemonic	mnemonic to search
-	 * @return	the associated DigitalContentStatus data
-	 * @throws Exception	an error ocurred
-	 */
-	public static Notification getByMnemonic(String mnemonic) throws Exception {
-		return DbObjectify.ofy().load().type(Notification.class).filter("mnemonic", mnemonic).first().now();
-	}
+        if (data.getMessage() != null){
+            setMessage(data.getMessage());
+            mod |= true;
+        }
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append("{\"id\":").append(getId())
-				.append(",\"sender\":\"").append(sender)
-				.append("\",\"recipients\":\"").append(recipients)
-				.append("\",\"subject\":\"").append(subject)
-				.append("\",\"message\":\"").append(message).append("\"}");
-		return result.toString();
-	}
+        if (mod){
+            this.validate();
+        }
+    }
+
+    /**
+     * Loads the object with the Data that matches the id.
+     * @param id
+     */
+    @Override
+    public void load(long id) {
+        Notification me = DbObjectify.ofy().load().type(Notification.class).id(id).now();
+        this.setId(me.getId());
+        this.setSender(me.getSender());
+        this.setRecipients(me.getRecipients());
+        this.setSubject(me.getSubject());
+        this.setMessage(me.getMessage());
+    }
+
+    /**
+     * Returns the notification object queried by id
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public static Notification getById(Long id) throws Exception {
+        return DbObjectify.ofy().load().type(Notification.class).id(id).now();
+    }
+
+    /**
+     * Queries the database using the mnemonic as parameter
+     * @param mnemonic	mnemonic to search
+     * @return	the associated DigitalContentStatus data
+     * @throws Exception	an error ocurred
+     */
+    public static Notification getByMnemonic(String mnemonic) throws Exception {
+        return DbObjectify.ofy().load().type(Notification.class).filter("mnemonic", mnemonic).first().now();
+    }
+
+    /**
+     * Returns a String representation of the object
+     * @return
+     */
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("{\"id\":").append(getId())
+                .append(",\"sender\":\"").append(sender)
+                .append("\",\"recipients\":\"").append(recipients)
+                .append("\",\"subject\":\"").append(subject)
+                .append("\",\"message\":\"").append(message).append("\"}");
+        return result.toString();
+    }
 }
