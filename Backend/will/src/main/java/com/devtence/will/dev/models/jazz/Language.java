@@ -5,7 +5,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 /**
- * Class that model the Language data and map it's structure to the persistence layer,
+ * Class that models the Language data and maps it's structure to the persistence layer,
  * it also defines and implements the functions that can be performed with the Languages.
  *
  * @author sorcerer

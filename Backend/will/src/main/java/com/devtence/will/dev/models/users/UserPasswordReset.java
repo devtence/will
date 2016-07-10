@@ -9,10 +9,8 @@ import com.googlecode.objectify.annotation.Index;
 import java.io.Serializable;
 
 /**
- * Class that models the User Password Reset data and map it's structure to the persistence layer,
+ * Class that models the User Password Reset data and maps it's structure to the persistence layer,
  * it also defines and implements the functions that can be performed.
- *
- * <p></p>
  *
  * @author plessmann
  * @since 2015-06-03

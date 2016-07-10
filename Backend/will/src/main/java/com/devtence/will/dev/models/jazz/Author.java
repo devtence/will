@@ -7,7 +7,7 @@ import com.googlecode.objectify.annotation.Index;
 import java.util.List;
 
 /**
- * Class that models the Author data and map it's structure to the persistence layer,
+ * Class that models the Author data and maps it's structure to the persistence layer,
  * it also defines and implements the functions that can be performed with the Author.
  *
  * @author sorcerer

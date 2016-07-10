@@ -11,10 +11,10 @@ import com.googlecode.objectify.annotation.Index;
 import java.io.Serializable;
 
 /**
- * Class that model the Notifications data and map it's structure to the persistence layer,
+ * Class that models the Notifications data and map it's structure to the persistence layer,
  * it also defines and implements the functions that can be performed with the Notifications.
- *
- * <p> This objects are to be sent to different targets and will be used via the Notificators classes</p>
+ * <p>
+ * This objects are to be sent to different targets and will be used via the Notificators classes
  *
  * @author plessmann
  * @since 2015-03-11
