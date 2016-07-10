@@ -1,19 +1,28 @@
 package com.devtence.will.dev.models.jazz;
 
 /**
- * model for basic labels
- * Created by sorcerer on 6/9/16.
+ * Class that models the Label structure, that it's used to categorize Contents
+ *
+ * @author sorcerer
+ * @since 2015-06-09
+ * @see Content
+ *
  */
 public class Label {
 
+    /**
+     * Name defined for the label
+     */
     private String name;
 
-    /*constructor*/
+    /**
+     * Recommended constructor
+     * @param name
+     */
     public Label(String name) {
         this.name = name;
     }
 
-    /*getter and setter*/
     public String getName() {
         return name;
     }
