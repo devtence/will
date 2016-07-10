@@ -348,7 +348,7 @@ public class UsersAPI extends BaseController<User> implements AuthenticableContr
 
     /**
      * Checks if the queried username exists on the user Collection.
-     * 
+     *
      * @param data  element of T containing the field to check
      * @param user  user that accepts the client being used to for the authentication operation
      * @return
