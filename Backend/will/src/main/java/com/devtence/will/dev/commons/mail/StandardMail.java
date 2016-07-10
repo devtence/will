@@ -16,10 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class that extends from Mail that implements the basic functionality to send emails via the Google AppEngine API
- * this class is the default class to send emails, and it doesnt require any special configurations.
- *
- * important note: this class uses the singleton design pattern
+ * Singleton class that extends from Mail and implements the basic functionality to send emails via the Google AppEngine API.
+ * This class is the default class to send emails, and it doesn't require any specific configuration.
  *
  * @author plessmann
  * @since 2016-06-27
@@ -30,16 +28,19 @@ public class StandardMail extends Mail {
     private static final Logger log = Logger.getLogger(StandardMail.class.getName());
 
     /**
-     * protected instance
+     * Protected singleton instance.
      */
     protected static StandardMail me = null;
 
+    /**
+     * Constructor.
+     */
     public StandardMail() {
     }
 
     /**
-     * returns the unique instance of the class, if it doesnt exist calls the constructor so it can be created
-     * @return
+     * Access control for the singleton.
+     * @return the singleton instance object
      * @throws Exception
      */
     public static synchronized StandardMail getInstance() throws Exception {
@@ -50,22 +51,22 @@ public class StandardMail extends Mail {
     }
 
     /**
-     * Sends an email to an array of recipients
-     * @param sender	the mail origin
-     * @param recipients	a list of targets
-     * @param subject	subject of the mail
-     * @param message	the body of the mail
+     * Sends an email to an array of recipients.
+     * @param sender    the mail's origin
+     * @param recipients    an array of recipients
+     * @param subject    subject of the mail
+     * @param message    the body of the mail
      */
     public void sendMail(String sender, String recipients[], String subject, String message) {
         sendMail(sender, Arrays.asList(recipients), subject, message);
     }
 
     /**
-     * Sends an email to a list of recipients
-     * @param sender	the mail origin
-     * @param recipients	a list of targets
-     * @param subject	subject of the mail
-     * @param message	the body of the mail
+     * Sends an email to a list of recipients.
+     * @param sender    the mail's origin
+     * @param recipients    a list of recipients
+     * @param subject    subject of the mail
+     * @param message    the body of the mail
      */
     public void sendMail(String sender, List<String> recipients, String subject, String message) {
         log.warning("Enviando " + subject + " a " + (recipients == null ? 0 : recipients.size()) + " desde " + sender);
@@ -88,11 +89,11 @@ public class StandardMail extends Mail {
     }
 
     /**
-     * Sends an email to a recipient
-     * @param sender	the mail origin
-     * @param recipient	the target of the mail
-     * @param subject	subject of the mail
-     * @param message	the body of the mail
+     * Sends an email to a single recipient.
+     * @param sender    the mail's origin
+     * @param recipient    the recipient of the mail
+     * @param subject    subject of the mail
+     * @param message    the body of the mail
      */
     public void sendMail(String sender, String recipient, String subject, String message) {
         log.warning("Enviando " + subject + " a " + recipient + " desde " + sender);

@@ -110,7 +110,7 @@ public class ClientsCache {
      *
      * @param key key queried
      * @return the Client object in the key position
-     * @throws Exception InvalidValueException if the client doesnt exist in the persistence layer
+     * @throws Exception InvalidValueException if the client doesn't exist in the persistence layer
      */
     public Client getElement(Long key) throws Exception {
         Client client = getCacheElement(key);

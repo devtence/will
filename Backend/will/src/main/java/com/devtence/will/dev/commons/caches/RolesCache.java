@@ -14,30 +14,30 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Cache class that stores the different Roles created in the platform. this roles contains the user permissions
+ * Class that caches the permission Roles. These roles specify the user's permissions on the platform
  * so they are needed to get fast access to this information.
- * 
- * this class is used by the UserAuthentication for diferent validations during the permission check
- *
- * if the USE_CACHE flag is set to TRUE the class uses Memcache, otherwise its go directly to the
- * Google Could Datastore
- *
- * important note: this class uses the Singleton design pattern.
+ * <p>
+ * This class is used by the UserAuthenticator for different validations during the authentication's permission check.
+ * <p>
+ * if the USE_CACHE flag is set to TRUE on the Constants class, Memcached is used, otherwise it'll query the
+ * Google Could Datastore.
  *
  * @author plessmann
  * @since 2016-03-10
+ *
+ * @see com.devtence.will.dev.commons.authenticators.UserAuthenticator
  *
  */
 @SuppressWarnings("unchecked")
 public class RolesCache {
 
     /**
-     * The protected instance
+     * The protected instance for the singleton.
      */
     protected static RolesCache me = null;
 
     /**
-     * The Member Cache element using the JCache library
+     * The Member Cache element using the JCache library.
      */
     private Cache cache;
 
@@ -48,8 +48,9 @@ public class RolesCache {
     }
 
     /**
-     * initializes the role cache
-     * @throws Exception
+     * Cache initialization.
+     *
+     * @throws Exception if its not able to create the new cache
      */
     private void initCache() throws Exception {
         CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
@@ -59,9 +60,10 @@ public class RolesCache {
     }
 
     /**
-     * returns the role from the cache if exists
-     * @param key
-     * @return
+     * Returns the value of the key queried.
+     *
+     * @param key key queried
+     * @return Role object
      * @throws Exception
      */
     private Role getCacheElement(Long key) throws Exception {
@@ -76,9 +78,10 @@ public class RolesCache {
     }
 
     /**
-     * puts the role in the cache
-     * @param key
-     * @param value
+     * Creates/Updates the Role data for the key specified.
+     *
+     * @param key key to be created or updated
+     * @param value value to be placed on the key position
      * @throws Exception
      */
     private void putCacheElement(Long key, Role value) throws Exception{
@@ -91,8 +94,8 @@ public class RolesCache {
     }
 
     /**
-     * Access control for the singleton
-     * @return the created instance
+     * Access control for the singleton.
+     * @return the singleton instance object
      * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
      */
     public static synchronized RolesCache getInstance() throws Exception {
@@ -103,10 +106,12 @@ public class RolesCache {
     }
 
     /**
-     * return the Role, if the role doesnt exist on the cache it searches for it on the persistance layer
-     * @param key
-     * @return
-     * @throws Exception InvalidValueException if the role doesnt exist
+     * Queries the Role that belongs to the key provided, if the Role is not on the cache,
+     * it searches the Google Cloud Datastore.
+     *
+     * @param key key queried
+     * @return the Role object in the key position
+     * @throws Exception InvalidValueException if the client doesn't exist in the persistence layer
      */
     public Role getElement(Long key) throws Exception {
         Role role = getCacheElement(key);

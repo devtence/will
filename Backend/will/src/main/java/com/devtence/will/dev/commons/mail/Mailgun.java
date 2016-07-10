@@ -14,13 +14,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class that extends from Mail to implement the integration with the Mailgun API, so it send email messages.
- *
- * important note: this class uses the singleton design parttern
+ * Singleton class that extends from Mail to implement the integration with the Mailgun Email Service API.
  *
  * @author plessmann
  * @since 2016-06-27
+ *
  * @see Mail
+ *
  */
 public class Mailgun extends Mail {
 
@@ -35,16 +35,19 @@ public class Mailgun extends Mail {
     private static final Logger log = Logger.getLogger(Mailgun.class.getName());
 
     /**
-     * protected instance
+     * Protected singleton instance.
      */
     protected static Mailgun me = null;
 
+    /**
+     * Constructor.
+     */
     public Mailgun() {
     }
 
     /**
-     * returns the access control to the protected instance if it doesnt exists the constructor is called
-     * @return the protected instance
+     * Access control for the singleton.
+     * @return the singleton instance object
      * @throws Exception
      */
     public static synchronized Mailgun getInstance() throws Exception {
@@ -55,9 +58,9 @@ public class Mailgun extends Mail {
     }
 
     /**
-     * sends an email to an array of recipients
-     * @param sender    the mail origin
-     * @param recipients    a list of targets
+     * Sends an email to an array of recipients.
+     * @param sender    the mail's origin
+     * @param recipients    an array of recipients
      * @param subject    subject of the mail
      * @param message    the body of the mail
      */
@@ -66,9 +69,9 @@ public class Mailgun extends Mail {
     }
 
     /**
-     * sends an email to a list of recipients
-     * @param sender    the mail origin
-     * @param recipients    a list of targets
+     * Sends an email to a list of recipients.
+     * @param sender    the mail's origin
+     * @param recipients    a list of recipients
      * @param subject    subject of the mail
      * @param message    the body of the mail
      */
@@ -90,9 +93,9 @@ public class Mailgun extends Mail {
     }
 
     /**
-     * sends an email to a single recipient
-     * @param sender    the mail origin
-     * @param recipient    the target of the mail
+     * Sends an email to a single recipient.
+     * @param sender    the mail's origin
+     * @param recipient    the recipient of the mail
      * @param subject    subject of the mail
      * @param message    the body of the mail
      */
