@@ -22,28 +22,68 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by plessmann on 02/06/16.
+ * Class that models the User data and maps it's structure to the persistence layer,
+ * it also defines and implements the functions that can be performed with the Users.
+ *
+ * @author plessmann
+ * @since 2015-06-02
+ *
  */
 @Entity
 public class User extends BaseModel<User> implements AuthenticableEntity{
 
+    /**
+     * user status
+     * todo: change to enum
+     */
     private Integer status;
+
     private Boolean lastLoginStatus;
+
+    /**
+     * Counter with the amount of consecutive failed login attempts
+     */
     private Integer failedLoginCounter;
+
+    /**
+     * flag to represent when the user is in password recovery status
+     */
     private Integer passwordRecoveryStatus;
+
+    /**
+     * user email
+     */
     @Index
     private String email;
+
+    /**
+     * username
+     */
     @Index
     private String user;
+
+    /**
+     * user password stored, encrypted value
+     */
     private String password;
+
+    /**
+     * Json web token with access keys
+     */
     @Index
     private String jwt;
+
+    /**
+     * secret key to decode the Json Web Token of the user
+     */
     private String secret;
 
-	@Index
+    /**
+     * List of the roles the user has
+     */
+    @Index
     private List<Long> roles;
 
-    /*constructors*/
 
     public User() {
     }
@@ -66,6 +106,19 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.password = password;
     }
 
+    /**
+     * Recommended constructor
+     * @param status
+     * @param lastLoginStatus
+     * @param failedLoginCounter
+     * @param passwordRecoveryStatus
+     * @param email
+     * @param user
+     * @param password
+     * @param jwt
+     * @param secret
+     * @param roles
+     */
     public User(Integer status, Boolean lastLoginStatus, Integer failedLoginCounter, Integer passwordRecoveryStatus, String email, String user, String password, String jwt, String secret, List<Long> roles) {
         this.status = status;
         this.lastLoginStatus = lastLoginStatus;
@@ -78,8 +131,6 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         this.secret = secret;
         this.roles = roles;
     }
-
-    /*getters and setters*/
 
     public User(String user) {
         this.user = user;
@@ -166,15 +217,15 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
     }
 
     /***
-     * this method implements the password validation for users, it receives the
-     * password in plain text and does the comparsion
-     * @param inputPassword password in plain text and does the encrypted compararison
+     * Compares the inputPassword to the stored password using jasypt libraries, the password must be passed to this
+     * method in plain text
+     * @param inputPassword password in plain text and does the encrypted comparison
      * @return
      * @throws Exception
      */
-	@Override
+    @Override
     public boolean goodLogin(String inputPassword) throws Exception {
-		BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
         lastLoginStatus = passwordEncryptor.checkPassword(inputPassword, password);
         if (lastLoginStatus) {
             failedLoginCounter = 0;
@@ -182,11 +233,17 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         } else {
             failedLoginCounter++;
         }
-		this.save();
+        this.save();
         return lastLoginStatus;
     }
 
-	@Override
+    /**
+     * Generates and returns the keys to authorize user access, this keys are stored on the cache, and on the persistence layer
+     * @return
+     * @throws Exception
+     * TODO: check the method implementation, and change hardcoded variables
+     */
+    @Override
     public AuthorizationWrapper authorize() throws Exception{
         int authTimeout = 60 * 60000;
         try {
@@ -196,12 +253,12 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         jwt = Jwts.builder().setSubject(user).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + authTimeout)).signWith(SignatureAlgorithm.HS512, key).compact();
         secret = Base64.encodeBase64String(key.getEncoded());
         AuthorizationCache.getInstance().setAuth(new CacheAuthWrapper(getId(), jwt, secret, roles));
-		this.save();
+        this.save();
         return new AuthorizationWrapper(jwt, getId(), 0);
     }
 
     /**
-     * this method validate fields and save the object into the GDS
+     * Validates the required fields, and stores the object to the database.
      *
      * @throws Exception
      */
@@ -228,24 +285,24 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
      * Method to find an Partner in the database
      * @param id	id of the Partner to find
      * @return	An Partner
-     * @throws Exception an error ocurred
+     * @throws Exception an error occurred
      */
     public static User getById(Long id) throws Exception {
         return DbObjectify.ofy().load().type(User.class).id(id).now();
     }
 
     /**
-     * Query the database using the user as parameter
+     * Return the user with a Query the database using the user as parameter
      * @param user	username to search
      * @return	the associated Partner data
-     * @throws Exception	an error ocurred
+     * @throws Exception	an error occurred
      */
     public static User getByUser(String user) throws Exception {
         return DbObjectify.ofy().load().type(User.class).filter("user", user).first().now();
     }
 
     /**
-     * this method checks the new object with the old, and if its different does the update.
+     * Compares the object to the new data, executes the update if necessary
      * @param data new data to insert
      * @throws Exception
      */
@@ -308,6 +365,10 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
         }
     }
 
+    /**
+     * Loads the object with the User from the database
+     * @param id
+     */
     @Override
     public void load(long id) {
         User me  = (User) get(id, User.class);
@@ -324,7 +385,7 @@ public class User extends BaseModel<User> implements AuthenticableEntity{
     }
 
     /**
-     * this method to delete and object from the GDS
+     * Removes the object from the database
      * @throws Exception
      */
     @Override

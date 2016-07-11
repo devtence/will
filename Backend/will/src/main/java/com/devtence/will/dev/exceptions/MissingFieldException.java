@@ -1,12 +1,15 @@
 package com.devtence.will.dev.exceptions;
 
 /**
- * A custom Exception used to manage missing entity fields
- * Created by plessmann on 16/03/16.
+ * Exception created  to manage missing entity fields on all base models BaseModels.
+ *
+ * @author plessmann
+ * @since 2016-03-16
+ *
  */
 public class MissingFieldException extends Exception {
 
-	public MissingFieldException(String message) {
-		super(message);
-	}
+    public MissingFieldException(String message) {
+        super(message);
+    }
 }

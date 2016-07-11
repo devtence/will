@@ -7,23 +7,38 @@ import com.googlecode.objectify.annotation.Index;
 import java.util.List;
 
 /**
- * Created by sorcerer on 6/9/16.
+ * Class that models the Author data and maps it's structure to the persistence layer,
+ * it also defines and implements the functions that can be performed with the Author.
+ *
+ * @author sorcerer
+ * @since 2015-06-09
  */
 @Entity
 public class Author extends BaseModel<Author> {
 
+    /**
+     * Author full name
+     */
     @Index
     private String name;
 
+    /**
+     * Author biography
+     */
     private String bio;
 
-    //TODO: change to enum
+    /**
+     * Author status
+     *
+     * TODO: change to enum
+     */
     @Index
     private Integer status;
 
+    /**
+     * List of languages the author uses
+     */
     private List<Language> languages;
-
-    /*getters and setters*/
 
     public String getName() {
         return name;
@@ -57,11 +72,20 @@ public class Author extends BaseModel<Author> {
         this.languages = languages;
     }
 
-    /*constructors*/
-
+    /**
+     * Default constructor
+     */
     public Author() {
     }
 
+    /**
+     * Recommended constructor
+     * @param id
+     * @param name
+     * @param bio
+     * @param status
+     * @param languages
+     */
     public Author(Long id, String name, String bio, Integer status, List<Language> languages) {
         this.setId(id);
         this.name = name;
@@ -71,8 +95,7 @@ public class Author extends BaseModel<Author> {
     }
 
     /**
-     * this method validate fields and save the object into the GDS
-     * in this case no validation is made
+     * Stores the object to the database
      * @throws Exception
      */
     @Override
@@ -81,7 +104,7 @@ public class Author extends BaseModel<Author> {
     }
 
     /**
-     * this method to delete and object from the GDS
+     * Removes the object from the database
      * @throws Exception
      */
     @Override
@@ -90,7 +113,7 @@ public class Author extends BaseModel<Author> {
     }
 
     /**
-     * this method checks the new object with the old, and if its different does the update.
+     * Compares the object to the new Data, and executes an update if necessary
      * @param data new data to insert
      * @throws Exception
      */
@@ -126,11 +149,11 @@ public class Author extends BaseModel<Author> {
 
     @Override
     public void load(long id) {
-
+        //not required, not needed to implement
     }
 
     /**
-     * custom method that returns a language object using the basic get function from parent
+     * Returns an Author object using the get function from parent
      * @param id of the object to get
      * @return
      */

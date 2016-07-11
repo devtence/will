@@ -14,8 +14,12 @@ import java.util.List;
 
 
 /**
- * sample API that uses Google SearchAPI
- * Created by sorcerer on 6/22/16.
+ * Sample Google Endpoint Class that implements the Search API from Google Cloud
+ *
+ * @author sorcerer
+ * @since 2016-06-22
+ *
+ * @see Search
  */
 @Api(
         scopes = {Constants.EMAIL_SCOPE},
@@ -29,9 +33,9 @@ public class TestAPI {
 
 
     /**
-     * this api method adds documents to the data store and the search api
-     * @param toAdd object to add
-     * @return object added
+     * This API method adds documents to the Google Datastore and the Search API from Google Cloud
+     * @param toAdd object to be added to the Datastore and to be indexed on the Search API
+     * @return Object indexed and saved
      */
     @ApiMethod(
             httpMethod = ApiMethod.HttpMethod.POST,
@@ -39,9 +43,9 @@ public class TestAPI {
             path = "search")
     public Search testAdd(Search toAdd){
         try {
-            //saving
+            // Saving to Datastore
             toAdd.validate();
-            //adding data to the SearchAPI
+            // Adding data to the SearchAPI index
             toAdd.addIndex();
         }catch (Exception ex){
             ex.printStackTrace();
@@ -50,10 +54,11 @@ public class TestAPI {
     }
 
     /**
-     * this api method searches the SearchAPI Index and only returns documents with value < 100 and
-     * finds the document in the GDS
-     * @param id index to search
-     * @return list of objects that matches the index and are no bigger than 100
+     * This API method queries the Search API Index and only returns documents with value < 100 and
+     * retrieves the document in the Datastore.
+     *
+     * @param id the Search API index identifier to be used for the search
+     * @return list of objects that matches the Search API index and are no bigger than 100
      */
     @ApiMethod(
             httpMethod = ApiMethod.HttpMethod.GET,
@@ -62,7 +67,10 @@ public class TestAPI {
     public List<Search> testSearch(@Named("id") String id){
         ArrayList tr = new ArrayList();
         try {
+            // Hardcoded query for testing purposes
             String query = "value < 100";
+
+            // Search using Google Cloud Search API
             Results<ScoredDocument> result = Search.getDocument(id , query);
             for (ScoredDocument doc : result.getResults()){
                 System.out.println(doc.toString());

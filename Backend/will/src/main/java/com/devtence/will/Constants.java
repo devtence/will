@@ -1,7 +1,7 @@
 package com.devtence.will;
 
 /**
- * Contains the client IDs and scopes for allowed clients consuming your API and other aplications constants.
+ * Contains the client IDs and scopes for allowed clients consuming your API and other applications constants.
  */
 public class Constants {
 	public static final String WEB_CLIENT_ID = "replace this with your web client ID";
@@ -148,5 +148,6 @@ public class Constants {
 	public static final String VALUE_MUST_BE_MINOR_OR_EQUAL = "Value must be minor or equal";
 
 
+	// If set to true, the app will use Memcached. If set to false it'll consult the DB all the time
 	public static final boolean USE_CACHE = true;
 }

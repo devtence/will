@@ -14,79 +14,110 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Singleton to manage the usage of memcache to store the access to the endpoints using JWT.
+ * Cache class that stores the different Notifications created in the platform.
  *
- * Created by plessmann on 10/03/16.
+ * if the USE_CACHE flag is set to TRUE the class uses Memcache, otherwise its go directly to the
+ * Google Could Datastore
+ *
+ * important note: this class uses the Singleton design pattern.
+ *
+ * @author plessmann
+ * @since 2016-03-10
+ * @see Notification
+ *
  */
 @SuppressWarnings("unchecked")
 public class NotificationsCache {
 
-	/**
-	 * The protected instance
-	 */
-	protected static NotificationsCache me = null;
+    /**
+     * The protected instance
+     */
+    protected static NotificationsCache me = null;
 
-	/**
-	 * The Member Cache element using the JCache library
-	 */
-	private Cache cache;
+    /**
+     * The Member Cache element using the JCache library
+     */
+    private Cache cache;
 
-	private NotificationsCache() throws Exception {
-		if(Constants.USE_CACHE) {
-			initCache();
-		}
-	}
+    private NotificationsCache() throws Exception {
+        if(Constants.USE_CACHE) {
+            initCache();
+        }
+    }
 
-	private void initCache() throws Exception {
-		CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-		Map properties = new HashMap<>();
-		properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
-		cache = cacheFactory.createCache(properties);
-	}
+    /**
+     * initializes the cache.
+     * @throws Exception
+     */
+    private void initCache() throws Exception {
+        CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
+        Map properties = new HashMap<>();
+        properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.HOURS.toSeconds(Configuration.getInt("cache-timeout")));
+        cache = cacheFactory.createCache(properties);
+    }
 
-	private Notification getCacheElement(String key) throws Exception {
-		Notification element;
-		if(Constants.USE_CACHE) {
-			if(cache == null) {
-				initCache();
-			}
-			element = (Notification) cache.get(key);
-		}
-		return element;
-	}
+    /**
+     * returns the element from the cache.
+     * @param key
+     * @return
+     * @throws Exception
+     */
+    private Notification getCacheElement(String key) throws Exception {
+        Notification element;
+        if(Constants.USE_CACHE) {
+            if(cache == null) {
+                initCache();
+            }
+            element = (Notification) cache.get(key);
+        }
+        return element;
+    }
 
-	private void putCacheElement(String key, Notification value) throws Exception{
-		if(Constants.USE_CACHE) {
-			if(cache == null) {
-				initCache();
-			}
-			cache.put(key, value);
-		}
-	}
+    /**
+     * sets the notification on the cache
+     * @param key
+     * @param value
+     * @throws Exception
+     */
+    private void putCacheElement(String key, Notification value) throws Exception{
+        if(Constants.USE_CACHE) {
+            if(cache == null) {
+                initCache();
+            }
+            cache.put(key, value);
+        }
+    }
 
-	/**
-	 * Access control for the singleton
-	 * @return the created instance
-	 * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
-	 */
-	public static synchronized NotificationsCache getInstance() throws Exception {
-		if(me == null){
-			me = new NotificationsCache();
-		}
-		return me;
-	}
+    /**
+     * Access control for the singleton
+     * @return the created instance
+     * @throws Exception CacheException if the CacheFactory could not be accessed, Exception if the timeout configuration is not set
+     */
+    public static synchronized NotificationsCache getInstance() throws Exception {
+        if(me == null){
+            me = new NotificationsCache();
+        }
+        return me;
+    }
 
-	public Notification getElement(String key) throws Exception {
-		Notification notification = getCacheElement(key);
-		if(notification == null) {
-			notification = Notification.getByMnemonic(key);
-			if (notification != null) {
-				putCacheElement(key, notification);
-			} else {
-				throw new InvalidValueException(String.format(Constants.INVALID_KEY, key));
-			}
-		}
-		return notification;
-	}
+    /**
+     * returns the element thats being searched, if its not on the cache it searches for it on the persistence layer
+     * if its not found an Exception is thrown
+     * @param key
+     * @return
+     * @throws Exception
+     */
+    public Notification getElement(String key) throws Exception {
+        Notification notification = getCacheElement(key);
+        if(notification == null) {
+            notification = Notification.getByMnemonic(key);
+            if (notification != null) {
+                putCacheElement(key, notification);
+            } else {
+                throw new InvalidValueException(String.format(Constants.INVALID_KEY, key));
+            }
+        }
+        return notification;
+    }
 
 }

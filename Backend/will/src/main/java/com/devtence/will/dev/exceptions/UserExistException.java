@@ -1,9 +1,11 @@
 package com.devtence.will.dev.exceptions;
 
 /**
- * A custom Exception used to manage not existing users
+ * Exception created to manage not existing users on all BaseControllers classes.
  *
- * Created by sorcerer on 6/3/16.
+ * @author sorcerer
+ * @since 2016-06-03
+ *
  */
 public class UserExistException extends Exception {
 

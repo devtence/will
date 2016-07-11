@@ -1,25 +1,49 @@
 package com.devtence.will.dev.models.jazz;
 
 /**
- * model to map basic files to the google data store and google cloud storage
- * Created by sorcerer on 6/9/16.
+ * Class that models Content Files structure, this files will be stored on the Google Cloud Storage, not
+ * in the persistence layer defined by the Google Cloud Datastore.
+ *
+ * @author sorcerer
+ * @since 2015-06-09
+ *
  */
 public class JazzFile {
 
+    /**
+     * Normalized name for the file
+     */
     private String name;
 
+    /**
+     * Received name for the file
+     */
     private String originalName;
 
+    /**
+     * Metadata that indicates the type of file
+     */
     private String contentType;
 
+    /**
+     * Default URL where the file is stored
+     */
     private String url;
 
-    /*CONSTRUCTORS*/
-
+    /**
+     * Default Constructor
+     */
     public JazzFile() {
 
     }
 
+    /**
+     * Recommended constructor
+     * @param name
+     * @param originalName
+     * @param contentType
+     * @param url
+     */
     public JazzFile(String name, String originalName, String contentType, String url) {
         this.name = name;
         this.originalName = originalName;

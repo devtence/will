@@ -14,66 +14,104 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by plessmann on 27/06/16.
+ * Singleton class that extends from Mail to implement the integration with the Mailgun Email Service API.
+ *
+ * @author plessmann
+ * @since 2016-06-27
+ *
+ * @see Mail
+ *
  */
 public class Mailgun extends Mail {
 
-	private static final String MAILGUN_DOMAIN_NAME = System.getenv("MAILGUN_DOMAIN_NAME");
-	private static final String MAILGUN_API_KEY = System.getenv("MAILGUN_API_KEY");
-	private static final String MAILGUN_URL = "https://api.mailgun.net/v3/%s/messages";
-	private static final String TO = "to";
-	private static final String FROM = "from";
-	private static final String SUBJECT = "subject";
-	private static final String TEXT = "text";
-	private static final String API = "api";
-	private static final Logger log = Logger.getLogger(Mailgun.class.getName());
+    private static final String MAILGUN_DOMAIN_NAME = System.getenv("MAILGUN_DOMAIN_NAME");
+    private static final String MAILGUN_API_KEY = System.getenv("MAILGUN_API_KEY");
+    private static final String MAILGUN_URL = "https://api.mailgun.net/v3/%s/messages";
+    private static final String TO = "to";
+    private static final String FROM = "from";
+    private static final String SUBJECT = "subject";
+    private static final String TEXT = "text";
+    private static final String API = "api";
+    private static final Logger log = Logger.getLogger(Mailgun.class.getName());
 
-	protected static Mailgun me = null;
+    /**
+     * Protected singleton instance.
+     */
+    protected static Mailgun me = null;
 
-	public Mailgun() {
-	}
+    /**
+     * Constructor.
+     */
+    public Mailgun() {
+    }
 
-	public static synchronized Mailgun getInstance() throws Exception {
-		if(me == null){
-			me = new Mailgun();
-		}
-		return me;
-	}
+    /**
+     * Access control for the singleton.
+     * @return the singleton instance object
+     * @throws Exception
+     */
+    public static synchronized Mailgun getInstance() throws Exception {
+        if(me == null){
+            me = new Mailgun();
+        }
+        return me;
+    }
 
-	public void sendMail(String sender, String recipients[], String subject, String message) {
-		sendMail(sender, Arrays.asList(recipients), subject, message);
-	}
+    /**
+     * Sends an email to an array of recipients.
+     * @param sender    the mail's origin
+     * @param recipients    an array of recipients
+     * @param subject    subject of the mail
+     * @param message    the body of the mail
+     */
+    public void sendMail(String sender, String recipients[], String subject, String message) {
+        sendMail(sender, Arrays.asList(recipients), subject, message);
+    }
 
-	public void sendMail(String sender, List<String> recipients, String subject, String message) {
-		Client client = Client.create();
-		client.addFilter(new HTTPBasicAuthFilter(API, MAILGUN_API_KEY));
-		WebResource webResource = client.resource(String.format(MAILGUN_URL, MAILGUN_DOMAIN_NAME));
-		MultivaluedMapImpl formData = new MultivaluedMapImpl();
-		formData.add(FROM, sender);
-		for (String recipient : recipients) {
-			formData.add(TO, recipient);
-		}
-		formData.add(SUBJECT, subject);
-		formData.add(TEXT, message);
-		ClientResponse clientResponse = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, formData);
-		if(clientResponse.getStatus() != 200){
-			log.log(Level.WARNING, Constants.ERROR, clientResponse.getStatus());
-		}
-	}
+    /**
+     * Sends an email to a list of recipients.
+     * @param sender    the mail's origin
+     * @param recipients    a list of recipients
+     * @param subject    subject of the mail
+     * @param message    the body of the mail
+     */
+    public void sendMail(String sender, List<String> recipients, String subject, String message) {
+        Client client = Client.create();
+        client.addFilter(new HTTPBasicAuthFilter(API, MAILGUN_API_KEY));
+        WebResource webResource = client.resource(String.format(MAILGUN_URL, MAILGUN_DOMAIN_NAME));
+        MultivaluedMapImpl formData = new MultivaluedMapImpl();
+        formData.add(FROM, sender);
+        for (String recipient : recipients) {
+            formData.add(TO, recipient);
+        }
+        formData.add(SUBJECT, subject);
+        formData.add(TEXT, message);
+        ClientResponse clientResponse = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, formData);
+        if(clientResponse.getStatus() != 200){
+            log.log(Level.WARNING, Constants.ERROR, clientResponse.getStatus());
+        }
+    }
 
-	public void sendMail(String sender, String recipient, String subject, String message) {
-		Client client = Client.create();
-		client.addFilter(new HTTPBasicAuthFilter(API, MAILGUN_API_KEY));
-		WebResource webResource = client.resource(String.format(MAILGUN_URL, MAILGUN_DOMAIN_NAME));
-		MultivaluedMapImpl formData = new MultivaluedMapImpl();
-		formData.add(FROM, sender);
-		formData.add(TO, recipient);
-		formData.add(SUBJECT, subject);
-		formData.add(TEXT, message);
-		ClientResponse clientResponse = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, formData);
-		if(clientResponse.getStatus() != 200){
-			log.log(Level.WARNING, Constants.ERROR, clientResponse.getStatus());
-		}
-	}
+    /**
+     * Sends an email to a single recipient.
+     * @param sender    the mail's origin
+     * @param recipient    the recipient of the mail
+     * @param subject    subject of the mail
+     * @param message    the body of the mail
+     */
+    public void sendMail(String sender, String recipient, String subject, String message) {
+        Client client = Client.create();
+        client.addFilter(new HTTPBasicAuthFilter(API, MAILGUN_API_KEY));
+        WebResource webResource = client.resource(String.format(MAILGUN_URL, MAILGUN_DOMAIN_NAME));
+        MultivaluedMapImpl formData = new MultivaluedMapImpl();
+        formData.add(FROM, sender);
+        formData.add(TO, recipient);
+        formData.add(SUBJECT, subject);
+        formData.add(TEXT, message);
+        ClientResponse clientResponse = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, formData);
+        if(clientResponse.getStatus() != 200){
+            log.log(Level.WARNING, Constants.ERROR, clientResponse.getStatus());
+        }
+    }
 
 }

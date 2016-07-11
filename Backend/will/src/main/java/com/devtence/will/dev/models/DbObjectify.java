@@ -16,38 +16,38 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 
 /**
- * basic class to create connections to google data storage (GDS).
- * every new model defined by must be manually registered in this class.
+ * Class that specifies the Models to be connected to the Google Cloud Datastore, every new model needs to be
+ * manually registered in this Class.
  *
- * this class also publishes the ofy() method that is used to call on the GDS
+ * This Class also makes public the ofy() method that creates a bridge between the Model an the Google Cloud Datastore.
  *
- * Created by sorcerer on 7/25/15.
+ * @author sorcerer
+ * @since 2015-7-25
  */
 public class DbObjectify {
 
-    //must add every model here to guaranty that is registered to use
+    // Every Model Class intended to be registered must be added here
     static {
-        //iam classes
+        //IAM Model Classes
         ObjectifyService.register(Configuration.class);
         ObjectifyService.register(Notification.class);
         ObjectifyService.register(Client.class);
         ObjectifyService.register(Role.class);
         ObjectifyService.register(User.class);
         ObjectifyService.register(UserPasswordReset.class);
-        //jazz classes
+        //Jazz Model Classes
         ObjectifyService.register(Author.class);
         ObjectifyService.register(Category.class);
         ObjectifyService.register(Content.class);
         ObjectifyService.register(Language.class);
-        //sample classes
+        //Sample Classes
         ObjectifyService.register(Search.class);
         //new classes
         //add your new classes here
     }
 
     /**
-     * this method gives you access to the service that allows you to operate on the GDS
-     * @return service to operate on the GDS
+     * Method that gives access to the functionality of the Google Cloud Datastore.
      */
     public static Objectify ofy() {
         return ObjectifyService.ofy();

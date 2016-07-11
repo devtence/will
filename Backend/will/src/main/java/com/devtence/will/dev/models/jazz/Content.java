@@ -7,27 +7,63 @@ import com.googlecode.objectify.annotation.Index;
 import java.util.List;
 
 /**
- * base model for the central component of jazz (CMS)
- * this class implements the minimal functionality for creating and managing contents
+ * Class that models the Content data and maps it's structure to the persistence layer,
+ * it also defines and implements the functions that can be performed with the Contents.
  *
- * Created by sorcerer on 6/9/16.
+ * <p> This class is the central component for the Content Management System defined by
+ * the Jazz Classes.
+ *
+ * @author sorcerer
+ * @since 2015-06-09
+ * @see Author
+ * @see Category
+ * @see Label
+ * @see JazzFile
+ * @see Language
+ *
  */
 @Entity
 public class Content extends BaseModel<Content> {
 
+    /**
+     * Content title
+     */
     @Index
     private String title;
 
+    /**
+     * Small description for the content
+     */
     private String description;
 
+    /**
+     * Body of the content
+     */
+    private String body;
+
+    /**
+     * List of Authors that created the content
+     */
     private List<Author> authors;
 
+    /**
+     * List of categories
+     */
     private List<Long> categories;
 
+    /**
+     * List of labels for content categorization
+     */
     private List<Label> labels;
 
+    /**
+     * List of files attached to the Content
+     */
     private List<JazzFile> files;
 
+    /**
+     * Language id used for queries
+     */
     @Index
     private Long idLanguage;
 
@@ -89,11 +125,23 @@ public class Content extends BaseModel<Content> {
         this.idLanguage = idLanguage;
     }
 
-    /*constructors*/
-
+    /**
+     * Default constructor
+     */
     public Content() {
     }
 
+    /**
+     * Recommended constructor
+     * @param id
+     * @param title
+     * @param description
+     * @param authors
+     * @param categories
+     * @param labels
+     * @param files
+     * @param idLanguage
+     */
     public Content(Long id, String title, String description, List<Author> authors, List<Long> categories,
                    List<Label> labels, List<JazzFile> files, Long idLanguage) {
         setId(id);
@@ -106,11 +154,8 @@ public class Content extends BaseModel<Content> {
         this.idLanguage = idLanguage;
     }
 
-    /*implementing basic models*/
-
     /**
-     * this method validate fields and save the object into the GDS
-     * in this case no validation is made
+     * Stores the object to the database
      * @throws Exception
      */
     @Override
@@ -120,7 +165,7 @@ public class Content extends BaseModel<Content> {
     }
 
     /**
-     * this method to delete and object from the GDS
+     * Removes the object from the database
      * @throws Exception
      */
     @Override
@@ -129,7 +174,7 @@ public class Content extends BaseModel<Content> {
     }
 
     /**
-     * this method checks the new object with the old, and if its different does the update.
+     * Compares the new Data with the object and executes the update if necessary
      * @param data new data to insert
      * @throws Exception
      */
@@ -179,6 +224,10 @@ public class Content extends BaseModel<Content> {
 
     }
 
+    /**
+     * Loads the object with the data from the database.
+     * @param id
+     */
     @Override
     public void load(long id) {
         Content me  = get(id);
@@ -192,7 +241,7 @@ public class Content extends BaseModel<Content> {
     }
 
     /**
-     * custom method that returns a language object using the basic get function from parent
+     * Returns a Content object using the get function from parent
      * @param id of the object to get
      * @return
      */
