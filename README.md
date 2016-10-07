@@ -66,6 +66,6 @@ Endpoints project generator for Google App Engine using Datastore
 [6]: https://console.developers.google.com/
 [7]: https://angularjs.org/
 
-License
+## License
 
 Will is distributed under the Apache License Version 2.0
