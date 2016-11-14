@@ -1,6 +1,6 @@
 #!/bin/bash
-DEPENDENCIES="\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>io.jsonwebtoken<\/groupId>\n\t\t\t\t\t<artifactId>jjwt<\/artifactId>\n\t\t\t\t\t<version>0.6.0<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>org.jasypt<\/groupId>\n\t\t\t\t\t<artifactId>jasypt<\/artifactId>\n\t\t\t\t\t<version>1.9.2<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>com.ganyo<\/groupId>\n\t\t\t\t\t<artifactId>gcm-server<\/artifactId>\n\t\t\t\t\t<version>1.0.2<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>commons-codec<\/groupId>\n\t\t\t\t\t<artifactId>commons-codec<\/artifactId>\n\t\t\t\t\t<version>1.10<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>org.apache.commons<\/groupId>\n\t\t\t\t\t<artifactId>commons-collections4<\/artifactId>\n\t\t\t\t\t<version>4.1<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>com.googlecode.objectify<\/groupId>\n\t\t\t\t\t<artifactId>objectify<\/artifactId>\n\t\t\t\t\t<version>5.1.13<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>joda-time<\/groupId>\n\t\t\t\t\t<artifactId>joda-time<\/artifactId>\n\t\t\t\t\t<version>2.9.4<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>org.codehaus.jackson<\/groupId>\n\t\t\t\t\t<artifactId>jackson-mapper-asl<\/artifactId>\n\t\t\t\t\t<version>1.9.13<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>com.google.appengine.tools<\/groupId>\n\t\t\t\t\t<artifactId>appengine-gcs-client<\/artifactId>\n\t\t\t\t\t<version>0.5<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>commons-io<\/groupId>\n\t\t\t\t\t<artifactId>commons-io<\/artifactId>\n\t\t\t\t\t<version>2.5<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>commons-fileupload<\/groupId>\n\t\t\t\t\t<artifactId>commons-fileupload<\/artifactId>\n\t\t\t\t\t<version>1.3.1<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>com.sun.jersey<\/groupId>\n\t\t\t\t\t<artifactId>jersey-core<\/artifactId>\n\t\t\t\t\t<version>1.19<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>com.sun.jersey<\/groupId>\n\t\t\t\t\t<artifactId>jersey-client<\/artifactId>\n\t\t\t\t\t<version>1.19<\/version>\n\t\t\t\t<\/dependency>\n\t\t\t\t<dependency>\n\t\t\t\t\t<groupId>com.sun.jersey.contribs<\/groupId>\n\t\t\t\t\t<artifactId>jersey-multipart<\/artifactId>\n\t\t\t\t\t<version>1.19<\/version>\n\t\t\t\t<\/dependency>\n"
-OBJECTIFY_FILTER="\t<filter>\n\t\t<filter-name>ObjectifyFilter<\/filter-name>\n\t\t<filter-class>com.googlecode.objectify.ObjectifyFilter<\/filter-class>\n\t<\/filter>\n\t<filter-mapping>\n\t\t<filter-name>ObjectifyFilter<\/filter-name>\n\t\t<url-pattern>\/*<\/url-pattern>\n\t<\/filter-mapping>\n"
+DEPENDENCIES="<dependency><groupId>io.jsonwebtoken<\/groupId><artifactId>jjwt<\/artifactId><version>0.6.0<\/version><\/dependency><dependency><groupId>org.jasypt<\/groupId><artifactId>jasypt<\/artifactId><version>1.9.2<\/version><\/dependency><dependency><groupId>com.ganyo<\/groupId><artifactId>gcm-server<\/artifactId><version>1.0.2<\/version><\/dependency><dependency><groupId>commons-codec<\/groupId><artifactId>commons-codec<\/artifactId><version>1.10<\/version><\/dependency><dependency><groupId>org.apache.commons<\/groupId><artifactId>commons-collections4<\/artifactId><version>4.1<\/version><\/dependency><dependency><groupId>com.googlecode.objectify<\/groupId><artifactId>objectify<\/artifactId><version>5.1.13<\/version><\/dependency><dependency><groupId>joda-time<\/groupId><artifactId>joda-time<\/artifactId><version>2.9.4<\/version><\/dependency><dependency><groupId>org.codehaus.jackson<\/groupId><artifactId>jackson-mapper-asl<\/artifactId><version>1.9.13<\/version><\/dependency><dependency><groupId>com.google.appengine.tools<\/groupId><artifactId>appengine-gcs-client<\/artifactId><version>0.5<\/version><\/dependency><dependency><groupId>commons-io<\/groupId><artifactId>commons-io<\/artifactId><version>2.5<\/version><\/dependency><dependency><groupId>commons-fileupload<\/groupId><artifactId>commons-fileupload<\/artifactId><version>1.3.1<\/version><\/dependency><dependency><groupId>com.sun.jersey<\/groupId><artifactId>jersey-core<\/artifactId><version>1.19<\/version><\/dependency><dependency><groupId>com.sun.jersey<\/groupId><artifactId>jersey-client<\/artifactId><version>1.19<\/version><\/dependency><dependency><groupId>com.sun.jersey.contribs<\/groupId><artifactId>jersey-multipart<\/artifactId><version>1.19<\/version><\/dependency>"
+OBJECTIFY_FILTER="<filter><filter-name>ObjectifyFilter<\/filter-name><filter-class>com.googlecode.objectify.ObjectifyFilter<\/filter-class><\/filter><filter-mapping><filter-name>ObjectifyFilter<\/filter-name><url-pattern>\/*<\/url-pattern><\/filter-mapping>"
 WILL_ROUTE="$PWD"
 WILL_CODE_ROUTE=$WILL_ROUTE"/Backend/will/src/main/java/com/devtence/will"
 WILL_TESTS_ROUTE=$WILL_ROUTE"/Backend/will/tests"
@@ -23,8 +23,14 @@ echo "Please enter the name of the Project"
 read projectName
 cd $projectName
 BASE="$PWD"
-sed -i 's/.*<\/web-app>.*/'$OBJECTIFY_FILTER'\n&/' src/main/webapp/WEB-INF/web.xml
-sed -i 's/.*<!-- Test Dependencies -->.*/'$DEPENDENCIES'\n&/' pom.xml
+if [ "$(uname -s)" == "Darwin" ] # If the system is Mac OS X
+then
+  sed -i '' 's/.*<\/web-app>.*/'$OBJECTIFY_FILTER'&/' src/main/webapp/WEB-INF/web.xml
+  sed -i '' 's/.*<!-- Test Dependencies -->.*/'$DEPENDENCIES'&/' pom.xml
+else
+  sed -i 's/.*<\/web-app>.*/'$OBJECTIFY_FILTER'\n&/' src/main/webapp/WEB-INF/web.xml
+  sed -i 's/.*<!-- Test Dependencies -->.*/'$DEPENDENCIES'\n&/' pom.xml
+fi
 cp -r $WILL_TESTS_ROUTE .
 cd $SRC_HEADER
 mkdir -p $WILL_PACKAGE_ROUTE
@@ -32,6 +38,4 @@ cd $WILL_PACKAGE_ROUTE
 cp -r $WILL_CODE_ROUTE .
 cd $BASE
 pwd
-mvn versions:use-latest-versions
-mvn versions:commit
 mvn clean install
